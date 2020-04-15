@@ -1,7 +1,9 @@
-#define SER 2
-#define RCLK 3
-#define SRCLK 4
-#define WE 12
+#define SER 6
+#define OUTEN 5
+#define RCLK 4
+#define SRCLK 3
+#define WE 2
+
 #define ADDR_MASK_8 0x0FF
 #define ADDR_MASK_10 0x3FF
 
@@ -9,8 +11,8 @@
 bool clk;
 char data;
 
-//TODO : make a header file
-void printStatus(int address, int val){
+//Print bytes out via SERIAL
+void printStatus(int address, uint8_t val){
 
   char hex[4];
 
@@ -25,19 +27,23 @@ void printStatus(int address, int val){
   
 }
 
+//Clock the shift and storage registers
+//TODO : is this right? is shift one clock behind?
+//that could explain the extra clock when writing 8 bits
 void cycleCLK(){
 
     delay(1);
-    digitalWrite(RCLK, 1);
-    delay(1);
     digitalWrite(SRCLK, 1);
     delay(1);
-    digitalWrite(RCLK, 0);
+    digitalWrite(RCLK, 1);
     delay(1);
     digitalWrite(SRCLK, 0);
+    delay(1);
+    digitalWrite(RCLK, 0);
   
 }
 
+//write 8 bits to the serial register
 void write8Bit(char d, bool LSB){
 
   for(int i = 0; i < 8; i++){
@@ -51,56 +57,109 @@ void write8Bit(char d, bool LSB){
     cycleCLK();
     
   }
-
-  delay(1);
   
 }
 
+//write using only an 8 bit address
+void write16(uint8_t address, char data){
+  
+  //write
+  write8Bit(data, false);//left
+  write8Bit(address, true);//midle
+
+  //initiate write
+  delay(50);
+  digitalWrite(WE, false);
+  delay(10);
+  digitalWrite(WE, true);
+  delay(50);
+  
+}
+
+//write a value at the given address on the EEPROM
 void writeINST(int address, char data, bool LSB, int addr_mask){
 
   int addr_valid = address & addr_mask;
   char addr_l = (char)(addr_valid & 0xFF);
   char addr_h = (char)((addr_valid & 0xF00)>>8);
   
-  //clear all bits
-  write8Bit(0x00, LSB);
-  write8Bit(0x00, LSB);
+  //clear one set
   write8Bit(0x00, LSB);
   //write
   write8Bit(data, LSB);//left
-  write8Bit(addr_l, true);//midle
+  write8Bit(addr_l, LSB);//midle
   write8Bit(addr_h, LSB);//right
-  cycleCLK();
+  //cycleCLK();
 
+  //initiate write
+  delay(500);
   digitalWrite(WE, false);
-  delayMicroseconds(150);
+  delay(100);
   digitalWrite(WE, true);
+  delay(500);
   
 }
 
 void setup() {
-  // put your setup code here, to run once:
+
+  //set up pins
   pinMode(SER, OUTPUT);
   pinMode(RCLK, OUTPUT);
   pinMode(SRCLK, OUTPUT);
   pinMode(WE,OUTPUT);
 
-  
+  //set write enable off
   digitalWrite(WE, true);
+  digitalWrite(SER, false);
+  digitalWrite(RCLK, false);
+  digitalWrite(SRCLK, false);
+  
+  //turn off internal LED
   digitalWrite(LED_BUILTIN, false);
+ 
   Serial.begin(9600);
+  
+  delay(2000);
+  
+  //clear out the shift register
+  write8Bit(0x00, false);
+  write8Bit(0x00, false);
 
-  for(int i = 0; i <= 0xFF; i++){
+  Serial.write("Booting up!");
 
-    writeINST(i, 0x00, false, ADDR_MASK_8);
-    printStatus(i, 0x00);
-    
+  //write 0-255 of the EEPROM
+  /*for(uint8_t i = 0; i < 0xFF; i++){
+    //delay(1000);
+    write16(i, ~i);
+    printStatus(i, ~i);
+  }*/
+
+  uint8_t i = 0;
+  uint8_t data = 0;
+
+  while(1){
+    if (Serial.available() > 0) {
+      data = Serial.read();
+
+      write16(i, data);
+      printStatus(i++, data);
+    }
   }
-  digitalWrite(LED_BUILTIN, true);
+
+  digitalWrite(WE, true);
+  digitalWrite(SER, false);
+  digitalWrite(RCLK, false);
+  digitalWrite(SRCLK, false);
+
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
+
   
 
+  //flash LED to indicate that the write is finished
+  digitalWrite(LED_BUILTIN, true);
+  delay(1000);
+  digitalWrite(LED_BUILTIN, false);
+  delay(800);
 }
