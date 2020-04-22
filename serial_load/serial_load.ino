@@ -3,9 +3,12 @@
 #define RCLK 4
 #define SRCLK 3
 #define WE 2
+#define DELAY 10
 
 #define ADDR_MASK_8 0x0FF
 #define ADDR_MASK_10 0x3FF
+
+char ROM[16] = {0, 0, 0, 0, 0x3E, 0xFF, 0x26, 0x08, 0x2E, 0, 0x36, 0, 0x77, 0, 0, 0};
 
 #include <stdio.h>
 bool clk;
@@ -28,17 +31,15 @@ void printStatus(int address, uint8_t val){
 }
 
 //Clock the shift and storage registers
-//TODO : is this right? is shift one clock behind?
-//that could explain the extra clock when writing 8 bits
 void cycleCLK(){
 
-    delay(1);
+    delay(5);
     digitalWrite(SRCLK, 1);
-    delay(1);
+    delay(5);
     digitalWrite(RCLK, 1);
-    delay(1);
+    delay(5);
     digitalWrite(SRCLK, 0);
-    delay(1);
+    delay(5);
     digitalWrite(RCLK, 0);
   
 }
@@ -62,17 +63,18 @@ void write8Bit(char d, bool LSB){
 
 //write using only an 8 bit address
 void write16(uint8_t address, char data){
-  
+
+  //printStatus(address, data);
   //write
   write8Bit(data, false);//left
   write8Bit(address, true);//midle
 
   //initiate write
-  delay(50);
+  delay(20*DELAY);
   digitalWrite(WE, false);
-  delay(10);
+  delay(1*DELAY);
   digitalWrite(WE, true);
-  delay(50);
+  //delay(20);
   
 }
 
@@ -122,27 +124,50 @@ void setup() {
   delay(2000);
   
   //clear out the shift register
+  //write8Bit(0x00, false);
   write8Bit(0x00, false);
   write8Bit(0x00, false);
 
   Serial.write("Booting up!");
 
-  //write 0-255 of the EEPROM
-  /*for(uint8_t i = 0; i < 0xFF; i++){
-    //delay(1000);
-    write16(i, ~i);
-    printStatus(i, ~i);
-  }*/
+/*
+  for(uint8_t i = 0; i < 255; i++){
+
+    digitalWrite(LED_BUILTIN, (i%2));
+    write16(i, 0xFF);
+      
+  }
+
+
+for(int i = 0; i < 16; i++){
+
+  digitalWrite(LED_BUILTIN, (i%2));
+  write16(i, ROM[i]);
+  
+}
+
+for(int i = 16; i < 255; i++){
+
+  digitalWrite(LED_BUILTIN, (i%2));
+  write16(i, 0x0);
+  
+}
+
+*/
 
   uint8_t i = 0;
   uint8_t data = 0;
 
+
   while(1){
     if (Serial.available() > 0) {
+      
       data = Serial.read();
 
       write16(i, data);
-      printStatus(i++, data);
+      digitalWrite(LED_BUILTIN, (i%2));
+      i++;
+      
     }
   }
 
@@ -150,16 +175,9 @@ void setup() {
   digitalWrite(SER, false);
   digitalWrite(RCLK, false);
   digitalWrite(SRCLK, false);
-
+  digitalWrite(LED_BUILTIN, true);
 }
 
 void loop() {
 
-  
-
-  //flash LED to indicate that the write is finished
-  digitalWrite(LED_BUILTIN, true);
-  delay(1000);
-  digitalWrite(LED_BUILTIN, false);
-  delay(800);
 }
