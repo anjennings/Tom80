@@ -3,9 +3,10 @@
 Files relating to a Z80 based computer I am attempting to build
 
 Current System Specs are:
-	Z80 CPU with 2 MHZ Clock
-	2 Kilobytes EEPROM
-	2 Kilobytes SRAM
+
+	-Z80 CPU with 2 MHZ Clock
+	-2 Kilobytes EEPROM
+	-2 Kilobytes SRAM
 	*Pictures & Video Coming Soon!*
 
 Currently Includes:
