@@ -8,11 +8,11 @@
 #define ADDR_MASK_8 0x0FF
 #define ADDR_MASK_10 0x3FF
 
-char ROM[16] = {0, 0, 0, 0, 0x3E, 0xFF, 0x26, 0x08, 0x2E, 0, 0x36, 0, 0x77, 0, 0, 0};
+char ROM[16] = {0, 0, 0, 0, 0x3E, 0x00, 0xC6, 0x01, 0x76, 0, 0, 0, 0, 0, 0};
 
 #include <stdio.h>
 bool clk;
-char data;
+//char data;
 
 //Print bytes out via SERIAL
 void printStatus(int address, uint8_t val){
@@ -134,50 +134,38 @@ void setup() {
   for(uint8_t i = 0; i < 255; i++){
 
     digitalWrite(LED_BUILTIN, (i%2));
-    write16(i, 0xFF);
+    write16(i, i);
       
   }
-
-
-for(int i = 0; i < 16; i++){
-
-  digitalWrite(LED_BUILTIN, (i%2));
-  write16(i, ROM[i]);
-  
-}
-
-for(int i = 16; i < 255; i++){
-
-  digitalWrite(LED_BUILTIN, (i%2));
-  write16(i, 0x0);
-  
-}
-
-*/
-
-  uint8_t i = 0;
-  uint8_t data = 0;
-
-
-  while(1){
-    if (Serial.available() > 0) {
-      
-      data = Serial.read();
-
-      write16(i, data);
-      digitalWrite(LED_BUILTIN, (i%2));
-      i++;
-      
-    }
-  }
+*/  
 
   digitalWrite(WE, true);
   digitalWrite(SER, false);
   digitalWrite(RCLK, false);
   digitalWrite(SRCLK, false);
   digitalWrite(LED_BUILTIN, true);
+/*
+for(int i = 0; i < 16; i++){
+    write16(i, ROM[i]);
+    digitalWrite(LED_BUILTIN, (i%2));
+}
+*/
 }
 
+uint8_t i = 0;
+uint8_t data = 0;
+
 void loop() {
+
+  if (Serial.available() > 0) {
+      
+    data = Serial.read();
+
+    write16(i, data);
+    digitalWrite(LED_BUILTIN, (i%2));
+    i++;
+    Serial.write(data);
+      
+  }
 
 }
