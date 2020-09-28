@@ -7,18 +7,20 @@ Current (Prototype) Specs are:
 	-Z80 CPU with 2 MHZ Clock
 	-2 Kilobytes EEPROM
 	-2 Kilobytes SRAM
-	
+
+See a video of the prototype here:
+https://www.youtube.com/watch?v=QeUG9fH5Wn8
+
 Final PCB Specs will be
+
 	-Z80 CPU @ 8 MHz
 	-32 Kilobytes EEPROM
 	-32 Kilobytes SRAM
 	-16550 UART Controller
 
-See a video of the prototype here:
-https://www.youtube.com/watch?v=QeUG9fH5Wn8
-
 
 Also Includes:
+
 	-Custom EEPROM Programmer
 		-ATMEGA32A
 		-28 Pin ZIF Socket
