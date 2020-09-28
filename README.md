@@ -7,7 +7,9 @@ Current System Specs are:
 	-Z80 CPU with 2 MHZ Clock
 	-2 Kilobytes EEPROM
 	-2 Kilobytes SRAM
-	*Pictures & Video Coming Soon!*
+
+See a video of it here:
+https://www.youtube.com/watch?v=QeUG9fH5Wn8
 
 Currently Includes:
 
