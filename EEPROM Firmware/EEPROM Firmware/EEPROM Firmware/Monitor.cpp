@@ -5,3 +5,12 @@
  *  Author: Aidan
  */ 
 
+#include "USART.h"
+
+int systemBaud;
+
+void monitorInit(){
+	
+	USART_PrintStr("Pingas");
+	
+}

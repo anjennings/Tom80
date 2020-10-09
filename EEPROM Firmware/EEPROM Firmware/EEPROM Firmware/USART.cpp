@@ -8,7 +8,7 @@
 
 
 /*
- * Initilize USART 
+ * Initialize USART 
  */
 void USART_Init( unsigned int baud )
 {

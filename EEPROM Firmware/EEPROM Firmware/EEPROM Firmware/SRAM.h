@@ -6,31 +6,14 @@
  */ 
 
 
+
 #ifndef SRAM_H_
 #define SRAM_H_
 
-struct PinConfig {
-	
-	/*
-		Define pins here... somehow
-	*/
-	
-	};
-
-/*
- *	Define parameters for SRAM Modules
- */
-struct SRAM_module {
-	
-	char partNumber[20];
-	int sizeKb;
-	int pinCount;
-	PinConfig pins;
-	
-	};
-	
-
-
+	void delay(int x);
+	void writeData(uint8_t d, uint16_t a);
+	uint8_t readData(uint16_t a);
 	void init32Kwrite();
+	void init32Kread();
 
 #endif /* SRAM_H_ */

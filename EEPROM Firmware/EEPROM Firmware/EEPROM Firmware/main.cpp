@@ -7,18 +7,23 @@
 
 #include <avr/io.h>
 #include "USART.h"
-#include "Monitor.h"
+#include "MONITOR.h"
 #include "SRAM.h"
+#include "MAIN.h"
 
 #define clock 14745600
+#define baud (clock/128)
 
 int main(void)
 {
-	USART_Init((unsigned)main_baud);
-    /* Replace with your application code */
+	
+	USART_Init(baud);
+    init32Kwrite();
+	monitorInit();
+	
     while (1) 
     {
-		USART_PrintStr("Hello World!");
+		
     }
 }
 
