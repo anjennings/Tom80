@@ -11,6 +11,9 @@
 
 void monitorInit();
 
+void monitorLoop();
+
+void evaluateExpression(char *b);
 
 
 #endif /* MONITOR_H_ */

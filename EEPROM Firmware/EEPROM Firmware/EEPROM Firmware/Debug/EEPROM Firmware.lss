@@ -3,29 +3,31 @@ EEPROM Firmware.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .text         000000fc  00000000  00000000  00000074  2**1
+  0 .text         00000104  00000000  00000000  00000094  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  1 .data         00000008  00800060  000000fc  00000170  2**0
+  1 .data         00000008  00800060  00000104  00000198  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  2 .comment      00000030  00000000  00000000  00000178  2**0
+  2 .bss          00000002  00800068  00800068  000001a0  2**0
+                  ALLOC
+  3 .comment      00000030  00000000  00000000  000001a0  2**0
                   CONTENTS, READONLY
-  3 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  000001a8  2**2
+  4 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  000001d0  2**2
                   CONTENTS, READONLY
-  4 .debug_aranges 000000b8  00000000  00000000  000001e4  2**0
+  5 .debug_aranges 000000c8  00000000  00000000  0000020c  2**0
                   CONTENTS, READONLY, DEBUGGING
-  5 .debug_info   0000090c  00000000  00000000  0000029c  2**0
+  6 .debug_info   00000ab9  00000000  00000000  000002d4  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_abbrev 00000764  00000000  00000000  00000ba8  2**0
+  7 .debug_abbrev 000007fe  00000000  00000000  00000d8d  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_line   0000047c  00000000  00000000  0000130c  2**0
+  8 .debug_line   0000058f  00000000  00000000  0000158b  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_frame  0000010c  00000000  00000000  00001788  2**2
+  9 .debug_frame  0000012c  00000000  00000000  00001b1c  2**2
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_str    00000491  00000000  00000000  00001894  2**0
+ 10 .debug_str    00000512  00000000  00000000  00001c48  2**0
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_loc    0000013f  00000000  00000000  00001d25  2**0
+ 11 .debug_loc    00000182  00000000  00000000  0000215a  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_ranges 00000078  00000000  00000000  00001e64  2**0
+ 12 .debug_ranges 00000088  00000000  00000000  000022dc  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -65,8 +67,8 @@ Disassembly of section .text:
   60:	10 e0       	ldi	r17, 0x00	; 0
   62:	a0 e6       	ldi	r26, 0x60	; 96
   64:	b0 e0       	ldi	r27, 0x00	; 0
-  66:	ec ef       	ldi	r30, 0xFC	; 252
-  68:	f0 e0       	ldi	r31, 0x00	; 0
+  66:	e4 e0       	ldi	r30, 0x04	; 4
+  68:	f1 e0       	ldi	r31, 0x01	; 1
   6a:	02 c0       	rjmp	.+4      	; 0x70 <__do_copy_data+0x10>
   6c:	05 90       	lpm	r0, Z+
   6e:	0d 92       	st	X+, r0
@@ -84,11 +86,11 @@ Disassembly of section .text:
   7e:	1d 92       	st	X+, r1
 
 00000080 <.do_clear_bss_start>:
-  80:	a8 36       	cpi	r26, 0x68	; 104
+  80:	aa 36       	cpi	r26, 0x6A	; 106
   82:	b2 07       	cpc	r27, r18
   84:	e1 f7       	brne	.-8      	; 0x7e <.do_clear_bss_loop>
   86:	0e 94 49 00 	call	0x92	; 0x92 <main>
-  8a:	0c 94 7c 00 	jmp	0xf8	; 0xf8 <_exit>
+  8a:	0c 94 80 00 	jmp	0x100	; 0x100 <_exit>
 
 0000008e <__bad_interrupt>:
   8e:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
@@ -102,99 +104,102 @@ int main(void)
 	USART_Init(baud);
   92:	80 e0       	ldi	r24, 0x00	; 0
   94:	92 ec       	ldi	r25, 0xC2	; 194
-  96:	0e 94 62 00 	call	0xc4	; 0xc4 <_Z10USART_Initj>
+  96:	0e 94 66 00 	call	0xcc	; 0xcc <_Z10USART_Initj>
     init32Kwrite();
-  9a:	0e 94 57 00 	call	0xae	; 0xae <_Z12init32Kwritev>
+  9a:	0e 94 5b 00 	call	0xb6	; 0xb6 <_Z12init32Kwritev>
 	monitorInit();
   9e:	0e 94 52 00 	call	0xa4	; 0xa4 <_Z11monitorInitv>
   a2:	ff cf       	rjmp	.-2      	; 0xa2 <main+0x10>
 
 000000a4 <_Z11monitorInitv>:
-
-int systemBaud;
+	
+}
 
 void monitorInit(){
 	
 	USART_PrintStr("Pingas");
   a4:	80 e6       	ldi	r24, 0x60	; 96
   a6:	90 e0       	ldi	r25, 0x00	; 0
-  a8:	0e 94 6d 00 	call	0xda	; 0xda <_Z14USART_PrintStrPc>
-  ac:	08 95       	ret
+  a8:	0e 94 71 00 	call	0xe2	; 0xe2 <_Z14USART_PrintStrPc>
+	buff_size = 0;
+  ac:	10 92 69 00 	sts	0x0069, r1	; 0x800069 <__data_end+0x1>
+  b0:	10 92 68 00 	sts	0x0068, r1	; 0x800068 <__data_end>
+  b4:	08 95       	ret
 
-000000ae <_Z12init32Kwritev>:
+000000b6 <_Z12init32Kwritev>:
 }
 
 void init32Kwrite(){
 	
 	//Set GPIO Direction
 	DDRA |= (0xff);	//All Pins Out
-  ae:	8a b3       	in	r24, 0x1a	; 26
-  b0:	8f ef       	ldi	r24, 0xFF	; 255
-  b2:	8a bb       	out	0x1a, r24	; 26
+  b6:	8a b3       	in	r24, 0x1a	; 26
+  b8:	8f ef       	ldi	r24, 0xFF	; 255
+  ba:	8a bb       	out	0x1a, r24	; 26
 	DDRB |= (0xff);	//All Pins Out
-  b4:	97 b3       	in	r25, 0x17	; 23
-  b6:	87 bb       	out	0x17, r24	; 23
+  bc:	97 b3       	in	r25, 0x17	; 23
+  be:	87 bb       	out	0x17, r24	; 23
 	DDRC |= (0xff);	//All Pins Out
-  b8:	94 b3       	in	r25, 0x14	; 20
-  ba:	84 bb       	out	0x14, r24	; 20
+  c0:	94 b3       	in	r25, 0x14	; 20
+  c2:	84 bb       	out	0x14, r24	; 20
 	DDRD |= (1 << DDRD7)|(1 << DDRD6)|(1 << DDRD5);	//5,6,7 are Outputs
-  bc:	81 b3       	in	r24, 0x11	; 17
-  be:	80 6e       	ori	r24, 0xE0	; 224
-  c0:	81 bb       	out	0x11, r24	; 17
-  c2:	08 95       	ret
+  c4:	81 b3       	in	r24, 0x11	; 17
+  c6:	80 6e       	ori	r24, 0xE0	; 224
+  c8:	81 bb       	out	0x11, r24	; 17
+  ca:	08 95       	ret
 
-000000c4 <_Z10USART_Initj>:
+000000cc <_Z10USART_Initj>:
 	/* Wait for data to be received */
 	while ( !(UCSRA & (1<<RXC)) )
 	;
 	/* Get and return received data from buffer */
 	return UDR;
 }
-  c4:	90 bd       	out	0x20, r25	; 32
-  c6:	89 b9       	out	0x09, r24	; 9
-  c8:	88 e1       	ldi	r24, 0x18	; 24
-  ca:	8a b9       	out	0x0a, r24	; 10
-  cc:	8e e8       	ldi	r24, 0x8E	; 142
-  ce:	80 bd       	out	0x20, r24	; 32
-  d0:	08 95       	ret
-
-000000d2 <_Z14USART_Transmith>:
-  d2:	5d 9b       	sbis	0x0b, 5	; 11
-  d4:	fe cf       	rjmp	.-4      	; 0xd2 <_Z14USART_Transmith>
-  d6:	8c b9       	out	0x0c, r24	; 12
+  cc:	90 bd       	out	0x20, r25	; 32
+  ce:	89 b9       	out	0x09, r24	; 9
+  d0:	88 e1       	ldi	r24, 0x18	; 24
+  d2:	8a b9       	out	0x0a, r24	; 10
+  d4:	8e e8       	ldi	r24, 0x8E	; 142
+  d6:	80 bd       	out	0x20, r24	; 32
   d8:	08 95       	ret
 
-000000da <_Z14USART_PrintStrPc>:
+000000da <_Z14USART_Transmith>:
+  da:	5d 9b       	sbis	0x0b, 5	; 11
+  dc:	fe cf       	rjmp	.-4      	; 0xda <_Z14USART_Transmith>
+  de:	8c b9       	out	0x0c, r24	; 12
+  e0:	08 95       	ret
+
+000000e2 <_Z14USART_PrintStrPc>:
 
 void USART_PrintStr(char s[]){
-  da:	cf 93       	push	r28
-  dc:	df 93       	push	r29
-  de:	ec 01       	movw	r28, r24
+  e2:	cf 93       	push	r28
+  e4:	df 93       	push	r29
+  e6:	ec 01       	movw	r28, r24
 	
 	for(int i = 0; s[i] != '\0'; i++){
-  e0:	88 81       	ld	r24, Y
-  e2:	88 23       	and	r24, r24
-  e4:	31 f0       	breq	.+12     	; 0xf2 <_Z14USART_PrintStrPc+0x18>
-  e6:	21 96       	adiw	r28, 0x01	; 1
+  e8:	88 81       	ld	r24, Y
+  ea:	88 23       	and	r24, r24
+  ec:	31 f0       	breq	.+12     	; 0xfa <_Z14USART_PrintStrPc+0x18>
+  ee:	21 96       	adiw	r28, 0x01	; 1
 		USART_Transmit(s[i]);
-  e8:	0e 94 69 00 	call	0xd2	; 0xd2 <_Z14USART_Transmith>
+  f0:	0e 94 6d 00 	call	0xda	; 0xda <_Z14USART_Transmith>
 	return UDR;
 }
 
 void USART_PrintStr(char s[]){
 	
 	for(int i = 0; s[i] != '\0'; i++){
-  ec:	89 91       	ld	r24, Y+
-  ee:	81 11       	cpse	r24, r1
-  f0:	fb cf       	rjmp	.-10     	; 0xe8 <_Z14USART_PrintStrPc+0xe>
+  f4:	89 91       	ld	r24, Y+
+  f6:	81 11       	cpse	r24, r1
+  f8:	fb cf       	rjmp	.-10     	; 0xf0 <_Z14USART_PrintStrPc+0xe>
 		USART_Transmit(s[i]);
 	}
-  f2:	df 91       	pop	r29
-  f4:	cf 91       	pop	r28
-  f6:	08 95       	ret
+  fa:	df 91       	pop	r29
+  fc:	cf 91       	pop	r28
+  fe:	08 95       	ret
 
-000000f8 <_exit>:
-  f8:	f8 94       	cli
+00000100 <_exit>:
+ 100:	f8 94       	cli
 
-000000fa <__stop_program>:
-  fa:	ff cf       	rjmp	.-2      	; 0xfa <__stop_program>
+00000102 <__stop_program>:
+ 102:	ff cf       	rjmp	.-2      	; 0x102 <__stop_program>
