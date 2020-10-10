@@ -1,11 +1,10 @@
 ;ASH - Aidan's SHell
 
-;8K EEPROM (0x0000 - 0x1FFF)
-;8K SRAM (0x2000 - 2FFF)
+;32K EEPROM (0x0000 - 0x7FFF)
+;32K SRAM (0x8000 - FFFF)
 ;IO Provided via 16550 UART
-;Clock is 1.8 something or 3.6 something (I haven't decided yet)
 
-STACK_H equ 0x2F
+STACK_H equ 0xFF
 STACK_L equ 0xFF
 
 ;////////////////
@@ -16,7 +15,7 @@ UART_DHR equ        0x0 ;UART Data R/W register
 UART_IER equ        0x1 ;Interrupt Enable Register
 UART_IFR equ        0x2 ;Interrupt ID Reg (READ), FIFO Control Reg (WRITE)
 UART_LCR equ        0x3 ;Line Control Register
-UART_MCR equ        0x4 ;Modem Control (Unused)
+UART_MCR equ        0x4 ;Modem Control 
 UART_LSR equ        0x5 ;Line Status Register
 UART_MSR equ        0x6 ;Modem Status (Unused)
 UART_SCR equ        0x7 ;Arbitrary data can be stored here
@@ -43,6 +42,30 @@ NOP
 LD H, STACK_H
 LD L, STACK_L
 LD SP, HL
+
+;///////////////////////////////
+;Set up UART
+;///////////////////////////////
+;Enable Received Data Interrupt
+LD A, 01h
+OUT UART_IER, A
+;FIFO Enable?
+
+;Line Control?
+
+;Set OUT pins Low
+LD A, 0Ch
+OUT UART_MCR, A
+;Set DLAB=1
+LD A, 80h
+OUT UART_LCR, A
+;Divide Clock by 6 for 19200 baud
+LD A, 6
+OUT UART_DHR, A
+LD A, 0
+OUT UART_IER, A
+;////////////////////////////////
+
 ;Set up Interrupt mode
 IM 1
 ;Print Boot Screen
@@ -91,6 +114,7 @@ JP WRITE_START
 WRITE_CLOSE:
 POP BC
 POP AF
+IM 1
 ret
 
 
@@ -105,7 +129,7 @@ STR1:
 
 BOOT_MSG:
 .db NEWLINE, RETURN, "ASH v0.01", NEWLINE, RETURN, "(C) 2020 by Aidan Jennings"
-.db NEWLINE, RETURN, "ZILOG Z80 8k EEPROM, 8k SRAM", NEWLINE, RETURN, "TEXT ONLY", EOF
+.db NEWLINE, RETURN, "ZILOG Z80 32k EEPROM, 32k SRAM", NEWLINE, RETURN, "TEXT ONLY", EOF
 
 READY_MSG:
 .db NEWLINE, RETURN, "BOOT PROCESS COMPLETE!", NEWLINE, RETURN, EOF
