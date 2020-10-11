@@ -1,5 +1,4 @@
 ;ASH - Aidan's SHell
-
 ;32K EEPROM (0x0000 - 0x7FFF)
 ;32K SRAM (0x8000 - FFFF)
 ;IO Provided via 16550 UART
@@ -19,6 +18,9 @@ UART_MCR equ        0x4 ;Modem Control
 UART_LSR equ        0x5 ;Line Status Register
 UART_MSR equ        0x6 ;Modem Status (Unused)
 UART_SCR equ        0x7 ;Arbitrary data can be stored here
+
+;According to the datasheet:
+;8 Databits, No parity, 1 Stop
 
 ;///////////
 ;Charactars
@@ -42,45 +44,50 @@ NOP
 LD H, STACK_H
 LD L, STACK_L
 LD SP, HL
-
 ;///////////////////////////////
-;Set up UART
+;Set up UART (Make this a subroutine?)
 ;///////////////////////////////
-;Enable Received Data Interrupt
-LD A, 01h
-OUT UART_IER, A
-;FIFO Enable?
 
-;Line Control?
-
-;Set OUT pins Low
-LD A, 0Ch
-OUT UART_MCR, A
-;Set DLAB=1
-LD A, 80h
+;Set DLAB=0, just in case
+IN A, UART_LCR
+AND 7Fh
 OUT UART_LCR, A
-;Divide Clock by 6 for 19200 baud
+
+;Disable All Interrupt
+LD A, 0 
+OUT UART_IER, A
+
+;FIFO Enable
+LD A, 1
+OUT UART_IFR, A
+
+;Line Control
+LD A, 03h         ;8 Bit word, 1 stop, no parity
+OUT UART_LCR, A
+
+;Set OUT pins Low (as an indicator)
+LD A, 0Ch      
+OUT UART_MCR, A
+
+;Set DLAB=1
+IN A, UART_LCR
+OR 80h
+OUT UART_LCR, A
+
+;Divide Clock by 6 for 19200 baud (Assuming 1.7MHz clock)
 LD A, 6
 OUT UART_DHR, A
 LD A, 0
 OUT UART_IER, A
-;////////////////////////////////
 
+;////////////////////////////////
 ;Set up Interrupt mode
 IM 1
-;Print Boot Screen
-LD BC, BOOT_MSG
-CALL WRITE_STR
-;Enable Interrupt
-EI
-;Print Ready Message
-LD BC, READY_MSG
-CALL WRITE_STR
 ;Boot Sequence Complete
 JP MAIN
 
 ;//////////////////
-;Interrupt Routine
+;Interrupt Routine (Maybe set UART to generate interrupts, idk)
 ;//////////////////
 org 0038h
 NOP
@@ -88,7 +95,12 @@ NOP
 RETI
 
 MAIN:
-LD BC, STR1
+;Print Boot Screen
+LD BC, BOOT_MSG
+CALL WRITE_STR
+
+;Print Ready Message
+LD BC, READY_MSG
 CALL WRITE_STR
 HALT
 
@@ -104,6 +116,10 @@ WRITE_STR:
 DI
 PUSH AF
 PUSH BC
+;Set DLAB 0
+IN A, UART_LCR
+AND 7Fh
+OUT UART_LCR, A
 WRITE_START:
 LD A, (BC)
 CP 0
@@ -114,7 +130,7 @@ JP WRITE_START
 WRITE_CLOSE:
 POP BC
 POP AF
-IM 1
+EI
 ret
 
 
