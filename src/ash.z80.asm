@@ -6,6 +6,11 @@
 STACK_H equ 0xFF
 STACK_L equ 0xFF
 
+;First byte of term buf is the size of the term buf
+TERM_BUF equ 0x8000
+;Maximum size of the buffer
+TERM_BUF_MAX  equ 256
+
 ;////////////////
 ;UART Registers
 ;////////////////
@@ -53,7 +58,7 @@ IN A, UART_LCR
 AND 7Fh
 OUT UART_LCR, A
 
-;Disable All Interrupt
+;Disable All Interrupts
 LD A, 0 
 OUT UART_IER, A
 
@@ -102,11 +107,97 @@ CALL WRITE_STR
 ;Print Ready Message
 LD BC, READY_MSG
 CALL WRITE_STR
+
+;Set Terminal buffer to 0 
+LD BC, TERM_BUF
+LD A, 0
+LD (BC), A
+
+MAIN_LOOP:
+CALL GETCH
+
 HALT
 
 ;//////////////////////
 ;//////Functions///////
 ;//////////////////////
+
+;Get a character from the FIFO, adds to write buffer and echos to screen
+GETCH:
+PUSH AF
+PUSH BC
+;Set DLAB 0
+IN A, UART_LCR
+AND 7Fh
+OUT UART_LCR, A
+GETCH_LOOP:
+;Read Line Status Reg
+IN A, UART_LSR
+;Only care about bit 0
+AND 1
+;If bit 0 is a 1 then FIFO has new data
+CP 1
+;Jump to end if bit 0 was a 0
+JP NZ, GETCH_END
+;Get next char from data holding register
+IN A, UART_DHR
+CALL WRITE_BUFFER
+JP GETCH_LOOP
+
+GETCH_END:
+POP BC
+POP AF
+RET
+
+;Write a charactar to the terminal buffer, and echo to screen
+;expects A to be the character
+WRITE_BUFFER:
+PUSH AF
+PUSH BC
+PUSH DE
+
+;Save character in D
+LD D, A
+;Load address of terminal buffer
+LD BC, TERM_BUF
+;Get size of terminal buffer
+LD A, (BC)
+;Add 1
+INC A
+;Write new length to start of buffer
+LD (BC), A
+;Add A and C for new offset (C should be 0 but just in case)
+ADD A, C
+;Put A into C
+LD C, A
+;Put char back into A
+LD A, D
+;Write to buffer
+LD (BC), A
+
+CALL PRINTCH
+
+POP DE
+POP BC
+POP AF
+RET
+
+;Assumes that A is the charactar to write
+PRINTCH:
+PUSH AF
+
+;Set DLAB 0
+IN A, UART_LCR
+AND 7Fh
+OUT UART_LCR, A
+
+;TODO: read transmit register status? Page 22
+
+;Write Char to UART
+OUT UART_DHR, A
+
+POP AF
+RET
 
 ;Writes a string via IO 
 ;Disables Interrupts while running
