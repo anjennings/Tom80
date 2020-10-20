@@ -470,4 +470,4 @@ PROMPT:
 org 8001h
 .db "A0:7F", NEWLINE
 ;.db "8000<7B", NEWLINE
-;.db "@B800"
+;.db "@B8C0"
