@@ -3,6 +3,13 @@
 ;32K SRAM (0x8000 - FFFF)
 ;IO Provided via 16550 UART
 
+;TODO:
+;Change most DE to HL
+;Change eror to check for non-zero values
+;Finish Tokenizer
+;Start Parser
+;Start Execution Function
+
 STACK_H equ 0xFF
 STACK_L equ 0xFF
 
@@ -254,25 +261,35 @@ WRITE_STR:
 EVALUATE_STMT:
     PUSH AF
 
+    ;Tokenizes and checks for invalid characters
     CALL TOKENIZE_BUFFER
     CP 0xFF
     JP Z, EVALUATE_STMT_TOKEN_FAIL
 
+    ;Checks syntax and prepares for execution
     CALL PARSE_BUFFER
     CP 0xFF
     JP Z, EVALUATE_STMT_SYNTAX_FAIL
 
-    ;Call some final function here?
+    ;CALL EXECUTE_BUFFER
+    ;CP 0xFF
+    ;JP Z, EVALUATE_STMT_EXE_FAIL
+    JP EVALUATE_STMT_RETURN
 
     EVALUATE_STMT_TOKEN_FAIL:
-        ;Print the invalid token string
+        ;Print invalid token string
         LD BC, TOKEN_ERROR
         CALL WRITE_STR
         JP EVALUATE_STMT_RETURN
 
     EVALUATE_STMT_SYNTAX_FAIL:
-        ;Print syntax error token
+        ;Print syntax error string
         LD BC, SYNTAX_ERROR
+        CALL WRITE_STR
+        
+    EVALUATE_STMT_EXE_FAIL:
+        ;Print error string
+        LD BC, EXE_ERROR
         CALL WRITE_STR
 
     EVALUATE_STMT_RETURN:
@@ -323,7 +340,7 @@ TOKENIZE_BUFFER:
         ;Check if return
         ;/////////////////////
         CP NEWLINE
-        CALL C, TOKENIZE_NEWLINE
+        CALL Z, TOKENIZE_NEWLINE
         ;Return to start of loop if return is FF
         CP 0xFF
         JP Z, TOKENIZE_BUFFER_RETURN_SUCCESS
@@ -393,7 +410,12 @@ TOKENIZE_BUFFER:
         ;Return to start of loop if return is FF
         CP 0xFF
         JP Z, TOKENIZE_BUFFER_LOOP
-
+        
+        ;/////////////////////
+        ;Check if whitespace (ignore) (maybe shouldn't ignore?)
+        ;/////////////////////
+        CP 0x20
+        JP Z, TOKENIZE_BUFFER_LOOP
 
         ;If the program gets to this point there is an error
         LD A, 0xFF
@@ -419,20 +441,102 @@ TOKENIZE_NEWLINE:
 ;B should contain the character value, not A
 ;Write token symbol and value (if needed) to TOKEN_BUF
 TOKENIZE_NUMBERS:
+    PUSH BC
+    PUSH DE
+    PUSH HL
+    
+    ;Get size of token buffer
+    LD HL, TOKEN_BUF
+    LD A, (HL)
+    ;Save in C
+    LD C, A
+    ;Increment by 2
+    ADD A, 2
+    LD (HL), A
+    ;Goto next free spot
+    LD A, C
+    ADD A, L
+    INC A
+    LD L, A
+    ;Put Number Token
+    LD (HL), TOKEN_LT
+    INC L
+    ;Put Token Value
+    LD A, B
+    SUB 0x30
+    LD (HL), A
+    
+    POP HL
+    POP DE
+    POP BC
     LD A, 0xFF
     RET
 
 TOKENIZE_CHAR:
+    PUSH BC
+    PUSH DE
+    PUSH HL
+
+    ;Get size of token buffer
+    LD HL, TOKEN_BUF
+    LD A, (HL)
+    ;Save in C
+    LD C, A
+    ;Increment by 2
+    ADD A, 2
+    LD (HL), A
+    ;Goto next free spot
+    LD A, C
+    ADD A, L
+    INC A
+    LD L, A
+    ;Put Number Token
+    LD (HL), TOKEN_LT
+    INC L
+    ;Put Token Value
+    LD A, B
+    SUB 0x37
+    LD (HL), A
+    
+    POP HL
+    POP DE
+    POP BC
     LD A, 0xFF
     RET
+
 
 TOKENIZE_READ:
     LD A, 0xFF
     RET
     
 TOKENIZE_WRITE:
+    PUSH BC
+    PUSH DE
+    PUSH HL
+
+    ;Get size of token buffer
+    LD HL, TOKEN_BUF
+    LD A, (HL)
+    ;Save in C
+    LD C, A
+    ;Increment A
+    INC A
+    LD (HL), A
+    ;Goto next free spot
+    LD A, C
+    ADD A, L
+    INC A
+    LD L, A
+    ;Put Number Token
+    LD (HL), TOKEN_WR
+    INC L
+    
+    POP HL
+    POP DE
+    POP BC
     LD A, 0xFF
     RET
+
     
 TOKENIZE_EXE:
     LD A, 0xFF
@@ -464,10 +568,13 @@ SYNTAX_ERROR:
 TOKEN_ERROR:
 .db NEWLINE, RETURN, "INVALID TOKEN", NEWLINE, RETURN, EOF
 
+EXE_ERROR:
+.db NEWLINE, RETURN, "EXECUTION ERROR", NEWLINE, RETURN, EOF
+
 PROMPT:
 .db RETURN, ">>>:", EOF
 
 org 8001h
-.db "A0:7F", NEWLINE
-;.db "8000<7B", NEWLINE
-;.db "@B8C0"
+;.db "A0:7F", NEWLINE
+.db "A8F4<B7", NEWLINE
+;.db "@B800"
