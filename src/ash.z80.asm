@@ -226,7 +226,6 @@ PRINTCH:
 ;Writes a string via IO 
 ;Disables Interrupts while running
 ;Expects BC to be the address of a string
-;This is really more of a placeholder until I get more info about the UART
 ;////////////////////////////////////////
 WRITE_STR:
     DI
@@ -256,28 +255,50 @@ EVALUATE_STMT:
     PUSH AF
 
     CALL TOKENIZE_BUFFER
+    CP 0xFF
+    JP Z, EVALUATE_STMT_TOKEN_FAIL
+
     CALL PARSE_BUFFER
+    CP 0xFF
+    JP Z, EVALUATE_STMT_SYNTAX_FAIL
+
+    ;Call some final function here?
+
+    EVALUATE_STMT_TOKEN_FAIL:
+        ;Print the invalid token string
+        LD BC, TOKEN_ERROR
+        CALL WRITE_STR
+        JP EVALUATE_STMT_RETURN
+
+    EVALUATE_STMT_SYNTAX_FAIL:
+        ;Print syntax error token
+        LD BC, SYNTAX_ERROR
+        CALL WRITE_STR
+
+    EVALUATE_STMT_RETURN:
 
     POP AF
     RET
 
-
-;There are 5 types of symbols - LIT, @, :, <, ?
-;Current and next token for parser
+;////////////////////////////////////////////////////////////////
+;There are 5 types of symbols - LITERAL, @, :, <, ?
 ;Returns status in register A
 ;0x00 - Good
 ;0xFF - Bad
+;////////////////////////////////////////////////////////////////
+;Current and next token for parser
 PARSE_CUR equ 0x8100
 PARSE_NEXT equ 0x8102
 ;Buffer for tokens, first byte is size of buffer
 TOKEN_BUF equ 0x8110
-
+;Token Symbols in token buffer
 TOKEN_EF equ 0   ;End of buffer
 TOKEN_LT equ 1   ;ABCDEF0123456789 size 3
 TOKEN_EX equ 2   ;@ size 1
 TOKEN_RD equ 3   ;: size 1
 TOKEN_WR equ 4   ;< size 1
 TOKEN_HE equ 5   ;? size 1
+;////////////////////////////////////////////////////////////////
 
 TOKENIZE_BUFFER:
     PUSH BC
@@ -302,7 +323,10 @@ TOKENIZE_BUFFER:
         ;Check if return
         ;/////////////////////
         CP NEWLINE
-        JP Z, TOKENIZE_BUFFER_RETURN
+        CALL C, TOKENIZE_NEWLINE
+        ;Return to start of loop if return is FF
+        CP 0xFF
+        JP Z, TOKENIZE_BUFFER_RETURN_SUCCESS
 
         ;/////////////////////
         ;Check if a number
@@ -373,9 +397,13 @@ TOKENIZE_BUFFER:
 
         ;If the program gets to this point there is an error
         LD A, 0xFF
+        JP TOKENIZE_BUFFER_RETURN
         ;Return
 
 
+    TOKENIZE_BUFFER_RETURN_SUCCESS:
+        ;Signal that the program returned successful!
+        LD A, 00
     TOKENIZE_BUFFER_RETURN:
     POP DE
     POP BC
@@ -384,10 +412,12 @@ TOKENIZE_BUFFER:
 
 
 ;Each of these should return 0xFF in A before exiting
-PARSE_BUFFER:
+TOKENIZE_NEWLINE:
+    LD A, 0xFF
     RET
 
 ;B should contain the character value, not A
+;Write token symbol and value (if needed) to TOKEN_BUF
 TOKENIZE_NUMBERS:
     LD A, 0xFF
     RET
@@ -413,22 +443,31 @@ TOKENIZE_HELP:
     RET
 
 
+;Return 0xFF on fail, 0x00 on success
+PARSE_BUFFER:
+    RET
+
 ;//////////////////////
 ;/////////DATA/////////
 ;//////////////////////
 
 BOOT_MSG:
-.db NEWLINE, RETURN, "ASH v0.02", NEWLINE, RETURN, "(C) 2020 by Aidan Jennings"
+.db NEWLINE, RETURN, "ASH v0.03", NEWLINE, RETURN, "(C) 2020 by Aidan Jennings"
 .db NEWLINE, RETURN, "ZILOG Z80 32k EEPROM, 32k SRAM", NEWLINE, RETURN, "TEXT ONLY", EOF
 
 READY_MSG:
 .db NEWLINE, RETURN, "BOOT PROCESS COMPLETE!", NEWLINE, RETURN, EOF
 
 SYNTAX_ERROR:
-.db RETURN, "SYNTAX ERROR", NEWLINE, RETURN, EOF
+.db NEWLINE, RETURN, "SYNTAX ERROR", NEWLINE, RETURN, EOF
 
-CURSOR:
+TOKEN_ERROR:
+.db NEWLINE, RETURN, "INVALID TOKEN", NEWLINE, RETURN, EOF
+
+PROMPT:
 .db RETURN, ">>>:", EOF
 
 org 8001h
 .db "A0:7F", NEWLINE
+;.db "8000<7B", NEWLINE
+;.db "@B800"
