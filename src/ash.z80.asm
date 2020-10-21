@@ -309,12 +309,13 @@ PARSE_NEXT equ 0x8102
 ;Buffer for tokens, first byte is size of buffer
 TOKEN_BUF equ 0x8110
 ;Token Symbols in token buffer
-TOKEN_EF equ 0   ;End of buffer
-TOKEN_LT equ 1   ;ABCDEF0123456789 size 3
+TOKEN_EF equ 0   ;End of buffer size 1
+TOKEN_LT equ 1   ;ABCDEF0123456789 size 2
 TOKEN_EX equ 2   ;@ size 1
 TOKEN_RD equ 3   ;: size 1
 TOKEN_WR equ 4   ;< size 1
 TOKEN_HE equ 5   ;? size 1
+TOKEN_WD equ 6   ;Full Word, size 3
 ;////////////////////////////////////////////////////////////////
 
 TOKENIZE_BUFFER:
@@ -339,8 +340,9 @@ TOKENIZE_BUFFER:
         ;/////////////////////
         ;Check if return
         ;/////////////////////
+        LD C, TOKEN_EF
         CP NEWLINE
-        CALL Z, TOKENIZE_NEWLINE
+        CALL Z, TOKENIZE_INSTR
         ;Return to start of loop if return is FF
         CP 0xFF
         JP Z, TOKENIZE_BUFFER_RETURN_SUCCESS
@@ -372,8 +374,9 @@ TOKENIZE_BUFFER:
         ;/////////////////////
         ;Check if a ?
         ;/////////////////////
+        LD C, TOKEN_HE
         CP SYM_HELP
-        CALL Z, TOKENIZE_HELP
+        CALL Z, TOKENIZE_INSTR
         ;Return to start of loop if return is FF
         CP 0xFF
         JP Z, TOKENIZE_BUFFER_LOOP
@@ -383,8 +386,9 @@ TOKENIZE_BUFFER:
         ;/////////////////////
         ;Check if a :
         ;/////////////////////
+        LD C, TOKEN_RD
         CP SYM_READ
-        CALL Z, TOKENIZE_READ
+        CALL Z, TOKENIZE_INSTR
         ;Return to start of loop if return is FF
         CP 0xFF
         JP Z, TOKENIZE_BUFFER_LOOP
@@ -394,8 +398,9 @@ TOKENIZE_BUFFER:
         ;/////////////////////
         ;Check if a <
         ;/////////////////////
+        LD C, TOKEN_WR
         CP SYM_WRITE
-        CALL Z, TOKENIZE_WRITE
+        CALL Z, TOKENIZE_INSTR
         ;Return to start of loop if return is FF
         CP 0xFF
         JP Z, TOKENIZE_BUFFER_LOOP
@@ -405,8 +410,9 @@ TOKENIZE_BUFFER:
         ;/////////////////////
         ;Check if a @
         ;/////////////////////
+        LD C, TOKEN_EX
         CP SYM_EXE
-        CALL Z, TOKENIZE_EXE
+        CALL Z, TOKENIZE_INSTR
         ;Return to start of loop if return is FF
         CP 0xFF
         JP Z, TOKENIZE_BUFFER_LOOP
@@ -431,12 +437,36 @@ TOKENIZE_BUFFER:
     POP BC
     RET
 
+;Expects C to be the token value
+;Return 0xFF in A when complete
+TOKENIZE_INSTR:
+    PUSH BC
+    PUSH DE
+    PUSH HL
 
-
-;Each of these should return 0xFF in A before exiting
-TOKENIZE_NEWLINE:
+    ;Get size of token buffer
+    LD HL, TOKEN_BUF
+    LD A, (HL)
+    ;Save in D
+    LD D, A
+    ;Increment A
+    INC A
+    LD (HL), A
+    ;Goto next free spot
+    LD A, D
+    ADD A, L
+    INC A
+    LD L, A
+    ;Put Instruction Token
+    LD (HL), C
+    INC L
+    
+    POP HL
+    POP DE
+    POP BC
     LD A, 0xFF
     RET
+
 
 ;B should contain the character value, not A
 ;Write token symbol and value (if needed) to TOKEN_BUF
@@ -472,6 +502,7 @@ TOKENIZE_NUMBERS:
     LD A, 0xFF
     RET
 
+
 TOKENIZE_CHAR:
     PUSH BC
     PUSH DE
@@ -505,48 +536,6 @@ TOKENIZE_CHAR:
     RET
 
 
-TOKENIZE_READ:
-    LD A, 0xFF
-    RET
-    
-TOKENIZE_WRITE:
-    PUSH BC
-    PUSH DE
-    PUSH HL
-
-    ;Get size of token buffer
-    LD HL, TOKEN_BUF
-    LD A, (HL)
-    ;Save in C
-    LD C, A
-    ;Increment A
-    INC A
-    LD (HL), A
-    ;Goto next free spot
-    LD A, C
-    ADD A, L
-    INC A
-    LD L, A
-    ;Put Number Token
-    LD (HL), TOKEN_WR
-    INC L
-    
-    POP HL
-    POP DE
-    POP BC
-    LD A, 0xFF
-    RET
-
-    
-TOKENIZE_EXE:
-    LD A, 0xFF
-    RET
-
-TOKENIZE_HELP:
-    LD A, 0xFF
-    RET
-
-
 ;Return 0xFF on fail, 0x00 on success
 PARSE_BUFFER:
     RET
@@ -575,6 +564,6 @@ PROMPT:
 .db RETURN, ">>>:", EOF
 
 org 8001h
-;.db "A0:7F", NEWLINE
-.db "A8F4<B7", NEWLINE
+.db "A0:7F", NEWLINE
+;.db "A8F4<B7", NEWLINE
 ;.db "@B800"
