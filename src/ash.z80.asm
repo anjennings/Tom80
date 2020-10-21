@@ -303,9 +303,6 @@ EVALUATE_STMT:
 ;0x00 - Good
 ;0xFF - Bad
 ;////////////////////////////////////////////////////////////////
-;Current and next token for parser
-PARSE_CUR equ 0x8100
-PARSE_NEXT equ 0x8102
 ;Buffer for tokens, first byte is size of buffer
 TOKEN_BUF equ 0x8110
 ;Token Symbols in token buffer
@@ -468,7 +465,7 @@ TOKENIZE_INSTR:
     RET
 
 
-;B should contain the character value, not A
+;Expects B to hold next char value
 ;Write token symbol and value (if needed) to TOKEN_BUF
 TOKENIZE_NUMBERS:
     PUSH BC
@@ -535,9 +532,236 @@ TOKENIZE_CHAR:
     LD A, 0xFF
     RET
 
+;TODO: Can this just write over the other buffers?
+;Buffer for Parser
+PARSE_BUF equ 0x8200
+;Current and next token for parser
+PARSE_CUR equ 0x8200
+PARSE_NEXT equ 0x8201
+;Location of state for FSM
+PARSE_STATE equ 0x8202
+;Incrementor location for parser
+PARSE_INC equ 0x8203
+;High and low values for literals
+PARSE_LIT_H equ 0x8204
+PARSE_LIT_L equ 0x8205
 
-;Return 0xFF on fail, 0x00 on success
+;STATES:
+STATE_START equ 0   ;Start State
+STATE_HELP equ 1    ;? Symbol
+STATE_EXE equ 2     ;@ Symbol
+STATE_LIEX equ 3    ;Literal following @
+STATE_LIT equ 4     ;Leftmost literal (branches)
+STATE_READ equ 5    ;Read :
+STATE_WRITE equ 6   ;Write <
+STATE_LITRD equ 7   ;Literal following :
+STATE_LITWR equ 8   ;Literal following <
+
+;TOKEN_EF equ 0   ;End of buffer size 1
+;TOKEN_LT equ 1   ;ABCDEF0123456789 size 2
+;TOKEN_EX equ 2   ;@ size 1
+;TOKEN_RD equ 3   ;: size 1
+;TOKEN_WR equ 4   ;< size 1
+;TOKEN_HE equ 5   ;? size 1
+;TOKEN_WD equ 6   ;Full Word, size 3
+
+;This should organize each token into a fully readable form
+;This also checks syntax of following tokens
+;Return 0x00 on success
 PARSE_BUFFER:
+    PUSH BC
+    PUSH DE
+    PUSH HL
+
+    ;Get start of token buffer
+    LD HL, TOKEN_BUF
+    ;Get size of buffer
+    LD A, (HL)
+    ;Return if its empty
+    CP 0
+    JP Z, PARSE_BUFFER_RETUN_SUCCESS
+
+    ;Clear literal storage
+    LD HL, PARSE_LIT_L
+    LD (HL), 0
+    LD HL, PARSE_LIT_H
+    LD (HL), 0
+
+    ;Set state to be start
+    LD HL, PARSE_STATE
+    LD (HL), STATE_START
+
+    ;Set incrementor
+    LD HL, PARSE_INC
+    LD (HL), 1
+
+    PARSE_BUFFER_LOOP:
+
+        ;Get incrementor
+        LD HL, PARSE_INC
+        LD A, (HL)
+
+        ;Go to next location in token buffer
+        LD HL, TOKEN_BUF
+        ADD A, L
+        LD L, A
+
+        ;Get Token, save to A and B
+        LD A, (HL) 
+        LD B, A
+
+        ;Check if its the end of the buffer
+        CP TOKEN_EF
+        JP Z, PARSE_BUFFER_RETUN_SUCCESS
+
+        ;Check if current token is a single literal value
+        CP TOKEN_LT
+        CALL PARSE_LITERAL
+        CP 0xFF
+        JP PARSE_BUFFER_LOOP
+
+        ;Check if current token is an @ symbol
+        CP TOKEN_EX
+        CALL PARSE_EXE
+        CP 0xFF
+        JP PARSE_BUFFER_LOOP
+
+        ;Check if current token is an : symbol
+        CP TOKEN_RD
+        CALL PARSE_READ
+        CP 0xFF
+        JP PARSE_BUFFER_LOOP
+
+        ;Check if current token is an < symbol
+        CP TOKEN_WR
+        CALL PARSE_WRITE
+        CP 0xFF
+        JP PARSE_BUFFER_LOOP
+
+        ;Check if current token is an < symbol
+        CP TOKEN_HE
+        CALL PARSE_HELP
+        CP 0xFF
+        JP PARSE_BUFFER_LOOP
+
+        ;If parser reaches this point there is an invalid token
+        LD A, 0xFF
+        JP PARSE_BUFFER_RETURN
+        
+
+    PARSE_BUFFER_RETUN_SUCCESS:
+        LD A, 0x00
+    PARSE_BUFFER_RETURN:
+    POP HL
+    POP DE
+    POP BC
+    RET
+
+
+;HL should be location of next token
+;A should be the token
+PARSE_LITERAL:
+    PUSH BC
+    PUSH DE
+    PUSH HL
+    
+    PARSE_LITERAL_LOOP:
+        ;Check if this is a literal token
+        CP TOKEN_LT
+        JP NZ, PARSE_LITERAL_CHECK_SYNTAX
+
+        ;The goal of this next section is to shift the current token into two 8 bit values to create a single 16 bit value
+        ;This is horrible and ugly but im too tired to make it better right now
+
+        ;Get value
+        INC L
+        LD A, (HL)
+        
+        ;Save HL for later
+        PUSH HL
+        
+        ;Save value into E
+        LD E, A
+        ;Get high literal value
+        LD HL, PARSE_LIT_H
+        LD A, (HL)
+        ;Rotate A by 4 to the left (may have to rotate 5 times?) so now low bytes are high
+        RLA
+        RLA
+        RLA
+        RLA
+        ;Zero out lower bytes
+        AND 0xF0
+        ;Save rotated high byte into B
+        LD B, A
+        ;Get Low literal value
+        LD HL, PARSE_LIT_L
+        LD A, (HL)
+        ;Rotate A by 4 to the left (so now low and high bytes are swapped)
+        RLA
+        RLA
+        RLA
+        RLA
+        ;Save into C
+        LD C, A
+        ;Zero out high bytes
+        AND 0x0F
+        ;Now A should contain the HIGH byte
+        OR B
+        LD HL, PARSE_LIT_H
+        LD (HL), A
+        ;Now get the value of the token
+        LD A, C
+        ;Put the new token (stored in E) into the low bytes of A
+        AND 0xF0
+        OR E
+        ;Save
+        LD HL, PARSE_LIT_L
+        LD (HL), A
+
+        ;Now save somehow into the parser buffer if this is the last literal in the sequence
+        ;TODO
+        POP HL
+        INC L
+        LD A, (HL)
+        JP PARSE_LITERAL_LOOP
+        
+
+    PARSE_LITERAL_CHECK_SYNTAX:
+        ;Check if next token is valid
+
+    PARSE_LITERAL_RETURN_SUCCESS:
+        ;HL should hold location of next token
+        ;Get start of parse buffer
+        LD DE, PARSE_BUF
+        ;Subtract offset from start
+        LD A, L
+        SUB E
+        ;Save new offset
+        LD HL, PARSE_INC
+        LD (HL), A
+    
+        LD A, 0xFF
+    PARSE_LITERAL_RETURN:
+    POP HL
+    POP DE
+    POP BC
+    RET
+
+PARSE_EXE:
+    LD A, 0xFF
+    RET
+
+PARSE_READ:
+    LD A, 0xFF
+    RET
+
+PARSE_WRITE:
+    LD A, 0xFF
+    RET
+
+PARSE_HELP:
+    LD A, 0xFF
     RET
 
 ;//////////////////////
