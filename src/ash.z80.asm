@@ -618,37 +618,39 @@ PARSE_BUFFER:
 
         ;Check if its the end of the buffer
         CP TOKEN_EF
+        CALL Z, PARSE_INST
+        CP 0xFF
         JP Z, PARSE_BUFFER_RETUN_SUCCESS
 
         ;Check if current token is a single literal value
         CP TOKEN_LT
         CALL Z, PARSE_LITERAL
         CP 0xFF
-        JP PARSE_BUFFER_LOOP
+        JP Z, PARSE_BUFFER_LOOP
 
         ;Check if current token is an @ symbol
         CP TOKEN_EX
-        CALL Z, PARSE_EXE
+        CALL Z, PARSE_INST
         CP 0xFF
-        JP PARSE_BUFFER_LOOP
+        JP Z, PARSE_BUFFER_LOOP
 
         ;Check if current token is an : symbol
         CP TOKEN_RD
-        CALL Z, PARSE_READ
+        CALL Z, PARSE_INST
         CP 0xFF
-        JP PARSE_BUFFER_LOOP
+        JP Z, PARSE_BUFFER_LOOP
 
         ;Check if current token is an < symbol
         CP TOKEN_WR
-        CALL Z, PARSE_WRITE
+        CALL Z, PARSE_INST
         CP 0xFF
-        JP PARSE_BUFFER_LOOP
+        JP Z, PARSE_BUFFER_LOOP
 
         ;Check if current token is an < symbol
         CP TOKEN_HE
-        CALL Z, PARSE_HELP
+        CALL Z, PARSE_INST
         CP 0xFF
-        JP PARSE_BUFFER_LOOP
+        JP Z, PARSE_BUFFER_LOOP
 
         ;If parser reaches this point there is an invalid token
         LD A, 0xFF
@@ -777,16 +779,13 @@ PARSE_LITERAL:
         POP HL
 
     PARSE_LITERAL_RETURN_SUCCESS:
-        ;HL should hold location of next token
-        ;Get start of parse buffer
-        ;LD DE, PARSE_BUF
-        ;Subtract offset from start
-        ;LD A, L
-        ;SUB E
-        ;Save new offset
-        ;LD HL, PARSE_INC
-        ;LD (HL), A
     
+        ;Clear for next time
+        ;LD HL, PARSE_LIT_H
+        ;LD (HL), 0
+        ;LD HL, PARSE_LIT_L
+        ;LD (HL), 0
+        ;Set return value
         LD A, 0xFF
 
     PARSE_LITERAL_RETURN:
@@ -795,21 +794,48 @@ PARSE_LITERAL:
     POP BC
     RET
 
-PARSE_EXE:
+;A should just be the instruciton token, no additional work needed
+PARSE_INST:
+
+    PUSH BC
+    PUSH DE
+    PUSH HL
+
+    ;Save token into B
+    LD B, A
+
+    LD HL, PARSE_BUF
+    LD A, (HL)
+
+    ;Go to next empty spot
+    ADD A, L
+    INC A
+    LD L, A
+
+    ;Put token
+    LD (HL), B
+
+    ;Go back to start of buffer, get size
+    LD HL, PARSE_BUF
+    LD A, (HL)
+    ;Increment by size of token
+    INC A
+    LD (HL), A
+
+    ;Update TOKEN incrementor
+    LD HL, PARSE_INC
+    LD A, (HL)
+    INC A
+    LD (HL), A
+
+    ;Set return value
     LD A, 0xFF
+
+    POP HL
+    POP DE
+    POP BC
     RET
 
-PARSE_READ:
-    LD A, 0xFF
-    RET
-
-PARSE_WRITE:
-    LD A, 0xFF
-    RET
-
-PARSE_HELP:
-    LD A, 0xFF
-    RET
 
 ;//////////////////////
 ;/////////DATA/////////
@@ -835,6 +861,6 @@ PROMPT:
 .db RETURN, ">>>:", EOF
 
 org 8001h
-.db "A0:7F", NEWLINE
-;.db "A8F4<B7", NEWLINE
+;.db "A0:7F", NEWLINE
+.db "A8F4<B7", NEWLINE
 ;.db "@B800"
