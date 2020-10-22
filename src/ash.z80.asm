@@ -534,7 +534,7 @@ TOKENIZE_CHAR:
 
 ;TODO: Can this just write over the other buffers?
 ;Buffer for Parser
-PARSE_BUF equ 0x8200
+PARSE_RAM equ 0x8200
 ;Current and next token for parser
 PARSE_CUR equ 0x8200
 PARSE_NEXT equ 0x8201
@@ -545,6 +545,8 @@ PARSE_INC equ 0x8203
 ;High and low values for literals
 PARSE_LIT_H equ 0x8204
 PARSE_LIT_L equ 0x8205
+
+PARSE_BUF equ 0x8210
 
 ;STATES:
 STATE_START equ 0   ;Start State
@@ -591,6 +593,10 @@ PARSE_BUFFER:
     LD HL, PARSE_STATE
     LD (HL), STATE_START
 
+    ;Set size of buffer to be 0
+    LD HL, PARSE_BUF
+    LD (HL), 0
+
     ;Set incrementor
     LD HL, PARSE_INC
     LD (HL), 1
@@ -616,31 +622,31 @@ PARSE_BUFFER:
 
         ;Check if current token is a single literal value
         CP TOKEN_LT
-        CALL PARSE_LITERAL
+        CALL Z, PARSE_LITERAL
         CP 0xFF
         JP PARSE_BUFFER_LOOP
 
         ;Check if current token is an @ symbol
         CP TOKEN_EX
-        CALL PARSE_EXE
+        CALL Z, PARSE_EXE
         CP 0xFF
         JP PARSE_BUFFER_LOOP
 
         ;Check if current token is an : symbol
         CP TOKEN_RD
-        CALL PARSE_READ
+        CALL Z, PARSE_READ
         CP 0xFF
         JP PARSE_BUFFER_LOOP
 
         ;Check if current token is an < symbol
         CP TOKEN_WR
-        CALL PARSE_WRITE
+        CALL Z, PARSE_WRITE
         CP 0xFF
         JP PARSE_BUFFER_LOOP
 
         ;Check if current token is an < symbol
         CP TOKEN_HE
-        CALL PARSE_HELP
+        CALL Z, PARSE_HELP
         CP 0xFF
         JP PARSE_BUFFER_LOOP
 
@@ -668,7 +674,7 @@ PARSE_LITERAL:
     PARSE_LITERAL_LOOP:
         ;Check if this is a literal token
         CP TOKEN_LT
-        JP NZ, PARSE_LITERAL_CHECK_SYNTAX
+        JP NZ, PARSE_LITERAL_SAVE
 
         ;The goal of this next section is to shift the current token into two 8 bit values to create a single 16 bit value
         ;This is horrible and ugly but im too tired to make it better right now
@@ -719,29 +725,70 @@ PARSE_LITERAL:
         LD HL, PARSE_LIT_L
         LD (HL), A
 
-        ;Now save somehow into the parser buffer if this is the last literal in the sequence
-        ;TODO
+        ;Get TOKEN incrementor
+        LD HL, PARSE_INC
+        LD A, (HL)
+        ADD A, 2
+        LD (HL), A
+
+        ;Increment pointer and return to start
         POP HL
         INC L
         LD A, (HL)
         JP PARSE_LITERAL_LOOP
         
 
-    PARSE_LITERAL_CHECK_SYNTAX:
-        ;Check if next token is valid
+    PARSE_LITERAL_SAVE:
+        ;First, save this token and the full value
+        ;Get size of parse buffer
+
+        ;HL Holds the location of the next (non literal) token
+        PUSH HL
+
+        LD HL, PARSE_BUF
+        LD A, (HL)
+
+        ;Go to next empty spot
+        ADD A, L
+        INC A
+        LD L, A
+
+        ;First put word token
+        LD (HL), TOKEN_WD
+        INC L
+        ;Next Put High Byte
+        LD DE, PARSE_LIT_H
+        LD A, (DE)
+        LD (HL), A
+        INC L
+        ;Next put low byte
+        LD DE, PARSE_LIT_L
+        LD A, (DE)
+        LD (HL), A
+        INC L
+
+        ;Go back to start of buffer, get size
+        LD HL, PARSE_BUF
+        LD A, (HL)
+        ;Increment by size of token
+        ADD A, 0x3
+        LD (HL), A
+
+        POP HL
 
     PARSE_LITERAL_RETURN_SUCCESS:
         ;HL should hold location of next token
         ;Get start of parse buffer
-        LD DE, PARSE_BUF
+        ;LD DE, PARSE_BUF
         ;Subtract offset from start
-        LD A, L
-        SUB E
+        ;LD A, L
+        ;SUB E
         ;Save new offset
-        LD HL, PARSE_INC
-        LD (HL), A
+        ;LD HL, PARSE_INC
+        ;LD (HL), A
     
         LD A, 0xFF
+
     PARSE_LITERAL_RETURN:
     POP HL
     POP DE
