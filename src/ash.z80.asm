@@ -271,9 +271,9 @@ EVALUATE_STMT:
     CP 0xFF
     JP Z, EVALUATE_STMT_SYNTAX_FAIL
 
-    ;CALL EXECUTE_BUFFER
-    ;CP 0xFF
-    ;JP Z, EVALUATE_STMT_EXE_FAIL
+    CALL EXECUTE_BUFFER
+    CP 0xFF
+    JP Z, EVALUATE_STMT_EXE_FAIL
     JP EVALUATE_STMT_RETURN
 
     EVALUATE_STMT_TOKEN_FAIL:
@@ -548,27 +548,8 @@ PARSE_LIT_L equ 0x8205
 
 PARSE_BUF equ 0x8210
 
-;STATES:
-STATE_START equ 0   ;Start State
-STATE_HELP equ 1    ;? Symbol
-STATE_EXE equ 2     ;@ Symbol
-STATE_LIEX equ 3    ;Literal following @
-STATE_LIT equ 4     ;Leftmost literal (branches)
-STATE_READ equ 5    ;Read :
-STATE_WRITE equ 6   ;Write <
-STATE_LITRD equ 7   ;Literal following :
-STATE_LITWR equ 8   ;Literal following <
-
-;TOKEN_EF equ 0   ;End of buffer size 1
-;TOKEN_LT equ 1   ;ABCDEF0123456789 size 2
-;TOKEN_EX equ 2   ;@ size 1
-;TOKEN_RD equ 3   ;: size 1
-;TOKEN_WR equ 4   ;< size 1
-;TOKEN_HE equ 5   ;? size 1
-;TOKEN_WD equ 6   ;Full Word, size 3
-
 ;This should organize each token into a fully readable form
-;This also checks syntax of following tokens
+;I'm using the term 'Parse' very loosely
 ;Return 0x00 on success
 PARSE_BUFFER:
     PUSH BC
@@ -646,7 +627,7 @@ PARSE_BUFFER:
         CP 0xFF
         JP Z, PARSE_BUFFER_LOOP
 
-        ;Check if current token is an < symbol
+        ;Check if current token is an ? symbol
         CP TOKEN_HE
         CALL Z, PARSE_INST
         CP 0xFF
@@ -781,12 +762,6 @@ PARSE_LITERAL:
 
     PARSE_LITERAL_RETURN_SUCCESS:
     
-        ;Clear for next time
-        ;LD HL, PARSE_LIT_H
-        ;LD (HL), 0
-        ;LD HL, PARSE_LIT_L
-        ;LD (HL), 0
-        ;Set return value
         LD A, 0xFF
 
     PARSE_LITERAL_RETURN:
@@ -837,6 +812,117 @@ PARSE_INST:
     POP BC
     RET
 
+;STATES:
+STATE_START equ 0   ;Start State
+STATE_HELP equ 1    ;? Symbol
+STATE_EXE equ 2     ;@ Symbol
+STATE_LIEX equ 3    ;Literal following @
+STATE_LIT equ 4     ;Leftmost literal (branches)
+STATE_READ equ 5    ;Read :
+STATE_WRITE equ 6   ;Write <
+STATE_LITRD equ 7   ;Literal following :
+STATE_LITWR equ 8   ;Literal following <
+
+EXE_RAM equ 0x8300
+EXE_STATE equ 0x8301
+EXE_INC equ 0x8302
+EXE_BUF equ 0x8310
+
+EXECUTE_BUFFER:
+    PUSH BC
+    PUSH DE
+    PUSH HL
+
+    ;Set state
+    LD HL, EXE_STATE
+    LD (HL), STATE_START
+
+    ;Set incrementor
+    LD HL, EXE_INC
+    LD (HL), 1
+
+    EXECUTE_BUFFER_LOOP:
+        ;Pingas
+
+        ;Get incrementor
+        LD HL, EXE_INC
+        LD A, (HL)
+
+        ;Go to next token
+        LD HL, PARSE_BUF
+        ADD A, L
+        LD L, A
+
+        ;Get token, Save copy to B
+        LD A, (HL)
+        LD B, A
+
+        ;Check if its the end of the buffer
+        CP TOKEN_EF
+        CALL Z, EVAL_EOF
+        CP 0xFF
+        JP Z, EXECUTE_BUFFER_RETUN_SUCCESS
+
+        ;Check if current token is a single literal value
+        CP TOKEN_LT
+        CALL Z, EVAL_LITERAL
+        CP 0xFF
+        JP Z, EXECUTE_BUFFER_LOOP
+
+        ;Check if current token is an @ symbol
+        CP TOKEN_EX
+        CALL Z, EVAL_EXE
+        CP 0xFF
+        JP Z, EXECUTE_BUFFER_LOOP
+
+        ;Check if current token is an : symbol
+        CP TOKEN_RD
+        CALL Z, EVAL_READ
+        CP 0xFF
+        JP Z, EXECUTE_BUFFER_LOOP
+
+        ;Check if current token is an < symbol
+        CP TOKEN_WR
+        CALL Z, EVAL_WRITE
+        CP 0xFF
+        JP Z, EXECUTE_BUFFER_LOOP
+
+        ;Check if current token is an ? symbol
+        CP TOKEN_HE
+        CALL Z, EVAL_HELP
+        CP 0xFF
+        JP Z, EXECUTE_BUFFER_LOOP
+
+        ;If parser reaches this point there is an invalid token
+        LD A, 0xFF
+        JP EXECUTE_BUFFER_RETURN
+
+    EXECUTE_BUFFER_RETUN_SUCCESS:
+        LD A, 0x00
+
+    EXECUTE_BUFFER_RETURN:
+    POP HL
+    POP DE
+    POP BC
+    RET
+
+EVAL_EOF:
+    RET
+
+EVAL_LITERAL:
+    RET
+
+EVAL_EXE:
+    RET
+
+EVAL_READ:
+    RET
+
+EVAL_WRITE:
+    RET
+
+EVAL_HELP:
+    RET
 
 ;//////////////////////
 ;/////////DATA/////////
