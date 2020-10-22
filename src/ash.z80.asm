@@ -675,6 +675,7 @@ PARSE_LITERAL:
     
     PARSE_LITERAL_LOOP:
         ;Check if this is a literal token
+        ;TODO jump to an error state, not save
         CP TOKEN_LT
         JP NZ, PARSE_LITERAL_SAVE
 
@@ -694,10 +695,10 @@ PARSE_LITERAL:
         LD HL, PARSE_LIT_H
         LD A, (HL)
         ;Rotate A by 4 to the left (may have to rotate 5 times?) so now low bytes are high
-        RLA
-        RLA
-        RLA
-        RLA
+        RLCA
+        RLCA
+        RLCA
+        RLCA
         ;Zero out lower bytes
         AND 0xF0
         ;Save rotated high byte into B
@@ -706,10 +707,10 @@ PARSE_LITERAL:
         LD HL, PARSE_LIT_L
         LD A, (HL)
         ;Rotate A by 4 to the left (so now low and high bytes are swapped)
-        RLA
-        RLA
-        RLA
-        RLA
+        RLCA
+        RLCA
+        RLCA
+        RLCA
         ;Save into C
         LD C, A
         ;Zero out high bytes
