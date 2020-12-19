@@ -9,6 +9,8 @@
 #ifndef MONITOR_H_
 #define MONITOR_H_
 
+void dumbMonitor();
+
 void monitorInit();
 
 void monitorLoop();

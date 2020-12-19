@@ -5,20 +5,23 @@
  *  Author: Aidan
  */ 
 
+#define F_CPU 14745600UL
+#define BAUDRATE 19200
+#define BAUD_SCALLER (((F_CPU / (BAUDRATE * 16UL))) - 1)
+
+#include <util/delay.h>
 
 #ifndef USART_H_
 #define USART_H_
 
-//Placeholder baud, check MCP2221 sheet for best
-#define main_baud (clock/128)
+void USART_init(void);
 
-void USART_Init( unsigned int baud );
+unsigned char USART_receive(void);
 
-void USART_Transmit( unsigned char data );
+void USART_send( unsigned char data);
 
-unsigned char USART_Receive( void );
+uint8_t USART_echo(uint16_t addr);
 
-void USART_PrintStr(char s[]);
+void USART_print(char * str);
 
-
-#endif /* USART_H_ */
+#endif 

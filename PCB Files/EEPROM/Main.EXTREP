@@ -1,0 +1,35 @@
+------------------------------------------------------------------------------------------
+Gerber File Extension Report For: Main.GBR   11/16/2020  10:14:53 PM
+------------------------------------------------------------------------------------------
+
+
+------------------------------------------------------------------------------------------
+Layer Extension     Layer Description                      
+------------------------------------------------------------------------------------------
+.GTL                Top Layer                               
+.GBL                Bottom Layer                            
+.GPB                Bottom Pad Master                       
+.GPT                Top Pad Master                          
+.GTO                Top Overlay                             
+.GTP                Top Paste                               
+.GTS                Top Solder                              
+.GBS                Bottom Solder                           
+.GBP                Bottom Paste                            
+.GBO                Bottom Overlay                          
+.GKO                Keep-Out Layer                          
+.Outline            Outline                                 
+.Assembly Text Top  Assembly Text Top                       
+.Assembly Text BottomAssembly Text Bottom                    
+.Assembly Top       Assembly Top                            
+.Assembly Bottom    Assembly Bottom                         
+.Dimensions Top     Dimensions Top                          
+.Dimensions Bottom  Dimensions Bottom                       
+.3D Top             3D Top                                  
+.3D Bottom          3D Bottom                               
+.Courtyard Top      Courtyard Top                           
+.Courtyard Bottom   Courtyard Bottom                        
+.Test Points Top    Test Points Top                         
+.Test Points Bottom Test Points Bottom                      
+.GML                Multi-Layer                             
+.1                  Dielectric 1                            
+------------------------------------------------------------------------------------------

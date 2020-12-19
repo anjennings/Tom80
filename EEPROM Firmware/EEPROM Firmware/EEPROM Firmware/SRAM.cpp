@@ -5,109 +5,209 @@
  *  Author: Aidan
  */ 
 
-#include "avr\io.h"
+//#include "avr\io.h"
+//#include <util/delay.h>
+//#include "SRAM.h"
+//#include "USART.h"
 
-#define DATA PORTA
-#define D0 PA0
-#define D1 PA1
-#define D2 PA2
-#define D3 PA3
-#define D4 PA4
-#define D5 PA5
-#define D6 PA6
-#define D7 PA7
+#include "FIRMWARE.h"
 
-#define ADDR_L PORTB
-#define A0 PB0
-#define A1 PB1
-#define A2 PB2
-#define A3 PB3
-#define A4 PB4
-#define A5 PB5
-#define A6 PB6
-#define A7 PB7
-
-#define ADDR_H PORTC
-#define A8 PC0
-#define A9 PC1
-#define A10 PC2
-#define A11 PC3
-#define A12 PC4
-#define A13 PC5
-#define A14 PC6
-
-//UART is on PortD so don't write to any other pins
-#define CONTROL PORTD
-#define N_OUTPUT PD5
-#define N_WRITE PD6
-#define N_ENABLE PD7
-
-void delay(int x){
+/**
+	flush():
 	
-	//Quick and dirty, this is only a placeholder
-	for(int i = 0; i < x; i++);
+	Set all pins to 0 to prevent floating values
+	Assumes that we are already in 'write mode'
+
+**/
+void flush(){
 	
+	//Put all control pins in a known state
+	disableEEPROM();
+	disableWrite();
+	disableOutput();
+	
+	//Set GPIO Direction
+	DDRA = (0xff);	//All Pins Out
+	DDRB = (0xff);	//All Pins Out
+	DDRC = (0xff);	//All Pins Out
+	
+	//Clear data pins
+	DATA = 0;
+	
+	//Clear address pins
+	ADDR_L = 0;
+	ADDR_H = 0;
+}
+
+void enableEEPROM(){
+	CONTROL &= ~(1 << N_ENABLE);
+}
+
+void disableEEPROM(){
+	CONTROL |= (1 << N_ENABLE);
+}
+
+void enableWrite(){
+	CONTROL &= ~(1 << N_WRITE);
+}
+
+void disableWrite(){
+	CONTROL |= (1 << N_WRITE);
+}
+
+void enableOutput(){
+	CONTROL &= ~(1 << N_OUTPUT);
+}
+
+void disableOutput(){
+	CONTROL |= (1 << N_OUTPUT);
+}
+
+void setControl(){
+	DDRD |= (1 << DDRD7)|(1 << DDRD6)|(1 << DDRD5);	//5,6,7 are Outputs
+}
+
+uint8_t getData(){
+	DDRA = 0;
+	return PINA;
+}
+
+void setAddresss(uint16_t a){
+	DDRB = 0xff;
+	DDRC = 0xff;
+	ADDR_H = (uint8_t)((a >> 8) & 0xff);
+	ADDR_L = (uint8_t)(a & 0xff);
+}
+
+void setData(uint8_t d){
+	DDRA = 0xff;
+	DATA = d;
 }
 
 void writeData(uint8_t d, uint16_t a){
 	
-	//Put all control pins in a known state
-	CONTROL |= (1 << N_OUTPUT);		//Disable output
-	CONTROL &= ~(1 << N_ENABLE);	//Enable the chip
-	CONTROL |= (1 << N_WRITE);		//Disable write
 	
-	//Put the data and address in the right place
-	DATA = d;
-	ADDR_L = (uint8_t)(a&0xff);
-	ADDR_H = (uint8_t)((a >> 8)&0xff);
+	//Set GPIO Direction
+	//DDRA = (0xff);	//All Pins Out
+	//DDRB = (0xff);	//All Pins Out
+	//DDRC = (0xff);	//All Pins Out
+	//DDRD |= (1 << DDRD7)|(1 << DDRD6)|(1 << DDRD5);	//5,6,7 are Outputs
+	setControl();
 	
-	//Set write pin low (enabled)
-	CONTROL ^= (1 << N_WRITE);
+	//Zero out all of the lines and disable all controls
+	flush();
 	
-	//wait, see ROM data-sheet for min time
-	delay(1000);
+	//See waveform on page 13 of datasheet
+	disableOutput();
+	//ADDR_L = (a & 0xFF);
+	//ADDR_H = ((a >> 8) & 0xFF);
+	setAddresss(a);
+	enableEEPROM();
+	_delay_ms(10);	//T-CS
 	
-	//Set write pin high (disabled)
-	CONTROL ^= (1 << N_WRITE);
+	enableWrite();
+	_delay_ms(1);	//T-WP, T-AH
+	
+	//PORTA = d;	//DATA Lines
+	setData(d);
+	_delay_ms(1);	//T-DS
+	
+	disableWrite();
+	_delay_ms(1);	//T-CH
+	
+	disableEEPROM();
+	_delay_ms(1);	//T-WPH, T-DH
+	
+	//Data should now be written
+	
 }
 
 uint8_t readData( uint16_t a){
 	
+	//Set data and address lines low
+	flush();
+	
+	//Set all pins to read
+	init32Kread();
+	
 	//Put all control pins in a known state
-	CONTROL &= ~(1 << N_OUTPUT);	//Enable output
-	CONTROL &= ~(1 << N_ENABLE);	//Enable the chip
-	CONTROL |= (1 << N_WRITE);		//Disable write
+	enableOutput();
+	enableEEPROM();
+	disableWrite();
 	
 	//Put the data and address in the right place
-	ADDR_L = (uint8_t)(a & 0xff);
-	ADDR_H = (uint8_t)((a >> 8) & 0xff);
+	//ADDR_L = (uint8_t)(a & 0xff);
+	//ADDR_H = (uint8_t)((a >> 8) & 0xff);
+	setAddresss(a);
 	
-	//wait, see ROM data-sheet for min time
-	delay(1000);
+	//Without a delay, the chip doesn't always read correctly
+	_delay_ms(1);
 	
 	//Read from Port A
-	return PINA;
+	uint8_t val = getData();
+	disableEEPROM();
+	disableOutput();
+	disableWrite();
+	return val;
 	
 }
 
 void init32Kwrite(){
 	
 	//Set GPIO Direction
-	DDRA |= (0xff);	//All Pins Out
-	DDRB |= (0xff);	//All Pins Out
-	DDRC |= (0xff);	//All Pins Out
-	DDRD |= (1 << DDRD7)|(1 << DDRD6)|(1 << DDRD5);	//5,6,7 are Outputs
+	DDRA = (0xff);	//All Pins Out
+	DDRB = (0xff);	//All Pins Out
+	DDRC = (0xff);	//All Pins Out
+	//DDRD |= (1 << DDRD7)|(1 << DDRD6)|(1 << DDRD5);	//5,6,7 are Outputs
+	void setControl();
 
-	//Pulldown resistors?
+	//Put all control pins in a known state
+	disableEEPROM();	
+	disableWrite();	
+	disableOutput();
+
 }
 
 void init32Kread(){
 	
 	//Set GPIO Direction
-	DDRA &= ~(0xff);//All Pins In
-	DDRB |= (0xff);	//All Pins OUT
-	DDRC |= (0xff);	//All Pins Out
-	DDRD |= (1 << DDRD7)|(1 << DDRD6)|(1 << DDRD5);	//5,6,7 are Outputs
+	DDRA = 0;//All Pins IN
+	DDRB = 0xff;	//All Pins OUT
+	DDRC = 0xff;	//All Pins OUT
+	//DDRD |= (1 << DDRD7)|(1 << DDRD6)|(1 << DDRD5);	//5,6,7 are Outputs
+	setControl();
 
-	//Pulldown resistors?
+	//Put all control pins in a known state
+	disableEEPROM();
+	disableWrite();
+	disableOutput();
+}
+
+void disableSoftwareProtection(){
+	
+	init32Kwrite();
+	
+	//idk if this is the problem but its worth trying
+	writeData(0xaa, 0x5555);
+	_delay_ms(10);
+	
+	writeData(0x55, 0x2aaa);
+	_delay_ms(10);
+	
+	writeData(0x80, 0x5555);
+	_delay_ms(10);
+	
+	writeData(0xAA, 0x5555);
+	_delay_ms(10);
+	
+	writeData(0x55, 0x2aaa);
+	_delay_ms(10);
+	
+	writeData(0x80, 0x5555);
+	_delay_ms(10);
+	
+	writeData(0, 0);
+	_delay_ms(10);
+	
+	
 }

@@ -1,0 +1,1165 @@
+*************************************************************
+FileName = Main.GBR
+AutoAperture = True
+*************************************************************
+Generating : Top Layer
+      File : Main.GTL
+
+    Adding Layer      : Top Layer
+
+    Adding Layer      : Outline
+
+    Adding Layer      : Assembly Text Top
+
+    Adding Layer      : Assembly Text Bottom
+
+    Adding Layer      : Assembly Top
+
+    Adding Layer      : Assembly Bottom
+
+    Adding Layer      : Dimensions Top
+
+    Adding Layer      : Dimensions Bottom
+
+    Adding Layer      : 3D Top
+
+    Adding Layer      : 3D Bottom
+
+    Adding Layer      : Courtyard Top
+
+    Adding Layer      : Courtyard Bottom
+
+    Adding Layer      : Test Points Top
+
+    Adding Layer      : Test Points Bottom
+
+    Adding Layer      : Multi-Layer
+
+
+Used DCodes :
+    D10
+    D11
+    D12
+    D13
+    D14
+    D15
+    D16
+    D17
+    D18
+    D19
+    D20
+    D21
+    D22
+    D23
+    D24
+    D25
+    D26
+    D27
+*************************************************************
+
+*************************************************************
+Generating : Bottom Layer
+      File : Main.GBL
+
+    Adding Layer      : Bottom Layer
+
+    Adding Layer      : Outline
+
+    Adding Layer      : Assembly Text Top
+
+    Adding Layer      : Assembly Text Bottom
+
+    Adding Layer      : Assembly Top
+
+    Adding Layer      : Assembly Bottom
+
+    Adding Layer      : Dimensions Top
+
+    Adding Layer      : Dimensions Bottom
+
+    Adding Layer      : 3D Top
+
+    Adding Layer      : 3D Bottom
+
+    Adding Layer      : Courtyard Top
+
+    Adding Layer      : Courtyard Bottom
+
+    Adding Layer      : Test Points Top
+
+    Adding Layer      : Test Points Bottom
+
+    Adding Layer      : Multi-Layer
+
+
+Used DCodes :
+    D10
+    D11
+    D12
+    D13
+    D14
+    D15
+    D16
+    D17
+    D18
+    D19
+    D20
+    D21
+    D22
+    D23
+    D24
+    D25
+    D26
+    D27
+*************************************************************
+
+*************************************************************
+Generating : Bottom Pad Master
+      File : Main.GPB
+
+    Adding Layer      : Bottom Layer
+
+    Adding Layer      : Multi-Layer
+
+    Adding Layer      : Outline
+
+    Adding Layer      : Assembly Text Top
+
+    Adding Layer      : Assembly Text Bottom
+
+    Adding Layer      : Assembly Top
+
+    Adding Layer      : Assembly Bottom
+
+    Adding Layer      : Dimensions Top
+
+    Adding Layer      : Dimensions Bottom
+
+    Adding Layer      : 3D Top
+
+    Adding Layer      : 3D Bottom
+
+    Adding Layer      : Courtyard Top
+
+    Adding Layer      : Courtyard Bottom
+
+    Adding Layer      : Test Points Top
+
+    Adding Layer      : Test Points Bottom
+
+
+Used DCodes :
+    D11
+    D12
+    D13
+    D14
+    D15
+    D16
+    D17
+    D18
+    D19
+    D20
+    D21
+    D22
+    D23
+    D24
+    D25
+    D26
+    D27
+*************************************************************
+
+*************************************************************
+Generating : Top Pad Master
+      File : Main.GPT
+
+    Adding Layer      : Top Layer
+
+    Adding Layer      : Multi-Layer
+
+    Adding Layer      : Outline
+
+    Adding Layer      : Assembly Text Top
+
+    Adding Layer      : Assembly Text Bottom
+
+    Adding Layer      : Assembly Top
+
+    Adding Layer      : Assembly Bottom
+
+    Adding Layer      : Dimensions Top
+
+    Adding Layer      : Dimensions Bottom
+
+    Adding Layer      : 3D Top
+
+    Adding Layer      : 3D Bottom
+
+    Adding Layer      : Courtyard Top
+
+    Adding Layer      : Courtyard Bottom
+
+    Adding Layer      : Test Points Top
+
+    Adding Layer      : Test Points Bottom
+
+
+Used DCodes :
+    D11
+    D12
+    D13
+    D14
+    D15
+    D16
+    D17
+    D18
+    D19
+    D20
+    D21
+    D22
+    D23
+    D24
+    D25
+    D26
+    D27
+*************************************************************
+
+*************************************************************
+Generating : Top Overlay
+      File : Main.GTO
+
+    Adding Layer      : Top Overlay
+
+    Adding Layer      : Outline
+
+    Adding Layer      : Assembly Text Top
+
+    Adding Layer      : Assembly Text Bottom
+
+    Adding Layer      : Assembly Top
+
+    Adding Layer      : Assembly Bottom
+
+    Adding Layer      : Dimensions Top
+
+    Adding Layer      : Dimensions Bottom
+
+    Adding Layer      : 3D Top
+
+    Adding Layer      : 3D Bottom
+
+    Adding Layer      : Courtyard Top
+
+    Adding Layer      : Courtyard Bottom
+
+    Adding Layer      : Test Points Top
+
+    Adding Layer      : Test Points Bottom
+
+
+Used DCodes :
+    D10
+    D11
+    D12
+    D13
+    D14
+    D28
+    D29
+    D30
+    D31
+*************************************************************
+
+*************************************************************
+Generating : Top Paste
+      File : Main.GTP
+
+    Adding Layer      : Top Paste
+
+    Adding Layer      : Outline
+
+    Adding Layer      : Assembly Text Top
+
+    Adding Layer      : Assembly Text Bottom
+
+    Adding Layer      : Assembly Top
+
+    Adding Layer      : Assembly Bottom
+
+    Adding Layer      : Dimensions Top
+
+    Adding Layer      : Dimensions Bottom
+
+    Adding Layer      : 3D Top
+
+    Adding Layer      : 3D Bottom
+
+    Adding Layer      : Courtyard Top
+
+    Adding Layer      : Courtyard Bottom
+
+    Adding Layer      : Test Points Top
+
+    Adding Layer      : Test Points Bottom
+
+    Adding Layer      : Top Layer
+
+    Adding Layer      : Multi-Layer
+
+
+Used DCodes :
+    D11
+    D12
+    D13
+    D14
+*************************************************************
+
+*************************************************************
+Generating : Top Solder
+      File : Main.GTS
+
+    Adding Layer      : Top Solder
+
+    Adding Layer      : Outline
+
+    Adding Layer      : Assembly Text Top
+
+    Adding Layer      : Assembly Text Bottom
+
+    Adding Layer      : Assembly Top
+
+    Adding Layer      : Assembly Bottom
+
+    Adding Layer      : Dimensions Top
+
+    Adding Layer      : Dimensions Bottom
+
+    Adding Layer      : 3D Top
+
+    Adding Layer      : 3D Bottom
+
+    Adding Layer      : Courtyard Top
+
+    Adding Layer      : Courtyard Bottom
+
+    Adding Layer      : Test Points Top
+
+    Adding Layer      : Test Points Bottom
+
+    Adding Layer      : Top Layer
+
+    Adding Layer      : Multi-Layer
+
+
+Used DCodes :
+    D11
+    D12
+    D13
+    D14
+    D32
+    D33
+    D34
+    D35
+    D36
+    D37
+    D38
+    D39
+    D40
+    D41
+    D42
+    D43
+    D44
+*************************************************************
+
+*************************************************************
+Generating : Bottom Solder
+      File : Main.GBS
+
+    Adding Layer      : Bottom Solder
+
+    Adding Layer      : Outline
+
+    Adding Layer      : Assembly Text Top
+
+    Adding Layer      : Assembly Text Bottom
+
+    Adding Layer      : Assembly Top
+
+    Adding Layer      : Assembly Bottom
+
+    Adding Layer      : Dimensions Top
+
+    Adding Layer      : Dimensions Bottom
+
+    Adding Layer      : 3D Top
+
+    Adding Layer      : 3D Bottom
+
+    Adding Layer      : Courtyard Top
+
+    Adding Layer      : Courtyard Bottom
+
+    Adding Layer      : Test Points Top
+
+    Adding Layer      : Test Points Bottom
+
+    Adding Layer      : Bottom Layer
+
+    Adding Layer      : Multi-Layer
+
+
+Used DCodes :
+    D11
+    D12
+    D13
+    D14
+    D32
+    D33
+    D34
+    D35
+    D36
+    D37
+    D38
+    D39
+    D40
+    D41
+    D42
+    D43
+    D44
+*************************************************************
+
+*************************************************************
+Generating : Bottom Paste
+      File : Main.GBP
+
+    Adding Layer      : Bottom Paste
+
+    Adding Layer      : Outline
+
+    Adding Layer      : Assembly Text Top
+
+    Adding Layer      : Assembly Text Bottom
+
+    Adding Layer      : Assembly Top
+
+    Adding Layer      : Assembly Bottom
+
+    Adding Layer      : Dimensions Top
+
+    Adding Layer      : Dimensions Bottom
+
+    Adding Layer      : 3D Top
+
+    Adding Layer      : 3D Bottom
+
+    Adding Layer      : Courtyard Top
+
+    Adding Layer      : Courtyard Bottom
+
+    Adding Layer      : Test Points Top
+
+    Adding Layer      : Test Points Bottom
+
+    Adding Layer      : Bottom Layer
+
+    Adding Layer      : Multi-Layer
+
+
+Used DCodes :
+    D11
+    D12
+    D13
+    D14
+*************************************************************
+
+*************************************************************
+Generating : Bottom Overlay
+      File : Main.GBO
+
+    Adding Layer      : Bottom Overlay
+
+    Adding Layer      : Outline
+
+    Adding Layer      : Assembly Text Top
+
+    Adding Layer      : Assembly Text Bottom
+
+    Adding Layer      : Assembly Top
+
+    Adding Layer      : Assembly Bottom
+
+    Adding Layer      : Dimensions Top
+
+    Adding Layer      : Dimensions Bottom
+
+    Adding Layer      : 3D Top
+
+    Adding Layer      : 3D Bottom
+
+    Adding Layer      : Courtyard Top
+
+    Adding Layer      : Courtyard Bottom
+
+    Adding Layer      : Test Points Top
+
+    Adding Layer      : Test Points Bottom
+
+
+Used DCodes :
+    D11
+    D12
+    D13
+    D14
+*************************************************************
+
+*************************************************************
+Generating : Keep-Out Layer
+      File : Main.GKO
+
+    Adding Layer      : Keep-Out Layer
+
+    Adding Layer      : Outline
+
+    Adding Layer      : Assembly Text Top
+
+    Adding Layer      : Assembly Text Bottom
+
+    Adding Layer      : Assembly Top
+
+    Adding Layer      : Assembly Bottom
+
+    Adding Layer      : Dimensions Top
+
+    Adding Layer      : Dimensions Bottom
+
+    Adding Layer      : 3D Top
+
+    Adding Layer      : 3D Bottom
+
+    Adding Layer      : Courtyard Top
+
+    Adding Layer      : Courtyard Bottom
+
+    Adding Layer      : Test Points Top
+
+    Adding Layer      : Test Points Bottom
+
+
+Used DCodes :
+    D11
+    D12
+    D13
+    D14
+*************************************************************
+
+*************************************************************
+Generating : Outline
+      File : Main.Outline
+
+    Adding Layer      : Outline
+
+    Adding Layer      : Outline
+
+    Adding Layer      : Assembly Text Top
+
+    Adding Layer      : Assembly Text Bottom
+
+    Adding Layer      : Assembly Top
+
+    Adding Layer      : Assembly Bottom
+
+    Adding Layer      : Dimensions Top
+
+    Adding Layer      : Dimensions Bottom
+
+    Adding Layer      : 3D Top
+
+    Adding Layer      : 3D Bottom
+
+    Adding Layer      : Courtyard Top
+
+    Adding Layer      : Courtyard Bottom
+
+    Adding Layer      : Test Points Top
+
+    Adding Layer      : Test Points Bottom
+
+
+Used DCodes :
+    D11
+    D12
+    D13
+    D14
+*************************************************************
+
+*************************************************************
+Generating : Assembly Text Top
+      File : Main.Assembly Text Top
+
+    Adding Layer      : Assembly Text Top
+
+    Adding Layer      : Outline
+
+    Adding Layer      : Assembly Text Top
+
+    Adding Layer      : Assembly Text Bottom
+
+    Adding Layer      : Assembly Top
+
+    Adding Layer      : Assembly Bottom
+
+    Adding Layer      : Dimensions Top
+
+    Adding Layer      : Dimensions Bottom
+
+    Adding Layer      : 3D Top
+
+    Adding Layer      : 3D Bottom
+
+    Adding Layer      : Courtyard Top
+
+    Adding Layer      : Courtyard Bottom
+
+    Adding Layer      : Test Points Top
+
+    Adding Layer      : Test Points Bottom
+
+
+Used DCodes :
+    D11
+    D12
+    D13
+    D14
+*************************************************************
+
+*************************************************************
+Generating : Assembly Text Bottom
+      File : Main.Assembly Text Bottom
+
+    Adding Layer      : Assembly Text Bottom
+
+    Adding Layer      : Outline
+
+    Adding Layer      : Assembly Text Top
+
+    Adding Layer      : Assembly Text Bottom
+
+    Adding Layer      : Assembly Top
+
+    Adding Layer      : Assembly Bottom
+
+    Adding Layer      : Dimensions Top
+
+    Adding Layer      : Dimensions Bottom
+
+    Adding Layer      : 3D Top
+
+    Adding Layer      : 3D Bottom
+
+    Adding Layer      : Courtyard Top
+
+    Adding Layer      : Courtyard Bottom
+
+    Adding Layer      : Test Points Top
+
+    Adding Layer      : Test Points Bottom
+
+
+Used DCodes :
+    D11
+    D12
+    D13
+    D14
+*************************************************************
+
+*************************************************************
+Generating : Assembly Top
+      File : Main.Assembly Top
+
+    Adding Layer      : Assembly Top
+
+    Adding Layer      : Outline
+
+    Adding Layer      : Assembly Text Top
+
+    Adding Layer      : Assembly Text Bottom
+
+    Adding Layer      : Assembly Top
+
+    Adding Layer      : Assembly Bottom
+
+    Adding Layer      : Dimensions Top
+
+    Adding Layer      : Dimensions Bottom
+
+    Adding Layer      : 3D Top
+
+    Adding Layer      : 3D Bottom
+
+    Adding Layer      : Courtyard Top
+
+    Adding Layer      : Courtyard Bottom
+
+    Adding Layer      : Test Points Top
+
+    Adding Layer      : Test Points Bottom
+
+
+Used DCodes :
+    D11
+    D12
+    D13
+    D14
+*************************************************************
+
+*************************************************************
+Generating : Assembly Bottom
+      File : Main.Assembly Bottom
+
+    Adding Layer      : Assembly Bottom
+
+    Adding Layer      : Outline
+
+    Adding Layer      : Assembly Text Top
+
+    Adding Layer      : Assembly Text Bottom
+
+    Adding Layer      : Assembly Top
+
+    Adding Layer      : Assembly Bottom
+
+    Adding Layer      : Dimensions Top
+
+    Adding Layer      : Dimensions Bottom
+
+    Adding Layer      : 3D Top
+
+    Adding Layer      : 3D Bottom
+
+    Adding Layer      : Courtyard Top
+
+    Adding Layer      : Courtyard Bottom
+
+    Adding Layer      : Test Points Top
+
+    Adding Layer      : Test Points Bottom
+
+
+Used DCodes :
+    D11
+    D12
+    D13
+    D14
+*************************************************************
+
+*************************************************************
+Generating : Dimensions Top
+      File : Main.Dimensions Top
+
+    Adding Layer      : Dimensions Top
+
+    Adding Layer      : Outline
+
+    Adding Layer      : Assembly Text Top
+
+    Adding Layer      : Assembly Text Bottom
+
+    Adding Layer      : Assembly Top
+
+    Adding Layer      : Assembly Bottom
+
+    Adding Layer      : Dimensions Top
+
+    Adding Layer      : Dimensions Bottom
+
+    Adding Layer      : 3D Top
+
+    Adding Layer      : 3D Bottom
+
+    Adding Layer      : Courtyard Top
+
+    Adding Layer      : Courtyard Bottom
+
+    Adding Layer      : Test Points Top
+
+    Adding Layer      : Test Points Bottom
+
+
+Used DCodes :
+    D11
+    D12
+    D13
+    D14
+*************************************************************
+
+*************************************************************
+Generating : Dimensions Bottom
+      File : Main.Dimensions Bottom
+
+    Adding Layer      : Dimensions Bottom
+
+    Adding Layer      : Outline
+
+    Adding Layer      : Assembly Text Top
+
+    Adding Layer      : Assembly Text Bottom
+
+    Adding Layer      : Assembly Top
+
+    Adding Layer      : Assembly Bottom
+
+    Adding Layer      : Dimensions Top
+
+    Adding Layer      : Dimensions Bottom
+
+    Adding Layer      : 3D Top
+
+    Adding Layer      : 3D Bottom
+
+    Adding Layer      : Courtyard Top
+
+    Adding Layer      : Courtyard Bottom
+
+    Adding Layer      : Test Points Top
+
+    Adding Layer      : Test Points Bottom
+
+
+Used DCodes :
+    D11
+    D12
+    D13
+    D14
+*************************************************************
+
+*************************************************************
+Generating : 3D Top
+      File : Main.3D Top
+
+    Adding Layer      : 3D Top
+
+    Adding Layer      : Outline
+
+    Adding Layer      : Assembly Text Top
+
+    Adding Layer      : Assembly Text Bottom
+
+    Adding Layer      : Assembly Top
+
+    Adding Layer      : Assembly Bottom
+
+    Adding Layer      : Dimensions Top
+
+    Adding Layer      : Dimensions Bottom
+
+    Adding Layer      : 3D Top
+
+    Adding Layer      : 3D Bottom
+
+    Adding Layer      : Courtyard Top
+
+    Adding Layer      : Courtyard Bottom
+
+    Adding Layer      : Test Points Top
+
+    Adding Layer      : Test Points Bottom
+
+
+Used DCodes :
+    D11
+    D12
+    D13
+    D14
+*************************************************************
+
+*************************************************************
+Generating : 3D Bottom
+      File : Main.3D Bottom
+
+    Adding Layer      : 3D Bottom
+
+    Adding Layer      : Outline
+
+    Adding Layer      : Assembly Text Top
+
+    Adding Layer      : Assembly Text Bottom
+
+    Adding Layer      : Assembly Top
+
+    Adding Layer      : Assembly Bottom
+
+    Adding Layer      : Dimensions Top
+
+    Adding Layer      : Dimensions Bottom
+
+    Adding Layer      : 3D Top
+
+    Adding Layer      : 3D Bottom
+
+    Adding Layer      : Courtyard Top
+
+    Adding Layer      : Courtyard Bottom
+
+    Adding Layer      : Test Points Top
+
+    Adding Layer      : Test Points Bottom
+
+
+Used DCodes :
+    D11
+    D12
+    D13
+    D14
+*************************************************************
+
+*************************************************************
+Generating : Courtyard Top
+      File : Main.Courtyard Top
+
+    Adding Layer      : Courtyard Top
+
+    Adding Layer      : Outline
+
+    Adding Layer      : Assembly Text Top
+
+    Adding Layer      : Assembly Text Bottom
+
+    Adding Layer      : Assembly Top
+
+    Adding Layer      : Assembly Bottom
+
+    Adding Layer      : Dimensions Top
+
+    Adding Layer      : Dimensions Bottom
+
+    Adding Layer      : 3D Top
+
+    Adding Layer      : 3D Bottom
+
+    Adding Layer      : Courtyard Top
+
+    Adding Layer      : Courtyard Bottom
+
+    Adding Layer      : Test Points Top
+
+    Adding Layer      : Test Points Bottom
+
+
+Used DCodes :
+    D11
+    D12
+    D13
+    D14
+*************************************************************
+
+*************************************************************
+Generating : Courtyard Bottom
+      File : Main.Courtyard Bottom
+
+    Adding Layer      : Courtyard Bottom
+
+    Adding Layer      : Outline
+
+    Adding Layer      : Assembly Text Top
+
+    Adding Layer      : Assembly Text Bottom
+
+    Adding Layer      : Assembly Top
+
+    Adding Layer      : Assembly Bottom
+
+    Adding Layer      : Dimensions Top
+
+    Adding Layer      : Dimensions Bottom
+
+    Adding Layer      : 3D Top
+
+    Adding Layer      : 3D Bottom
+
+    Adding Layer      : Courtyard Top
+
+    Adding Layer      : Courtyard Bottom
+
+    Adding Layer      : Test Points Top
+
+    Adding Layer      : Test Points Bottom
+
+
+Used DCodes :
+    D11
+    D12
+    D13
+    D14
+*************************************************************
+
+*************************************************************
+Generating : Test Points Top
+      File : Main.Test Points Top
+
+    Adding Layer      : Test Points Top
+
+    Adding Layer      : Outline
+
+    Adding Layer      : Assembly Text Top
+
+    Adding Layer      : Assembly Text Bottom
+
+    Adding Layer      : Assembly Top
+
+    Adding Layer      : Assembly Bottom
+
+    Adding Layer      : Dimensions Top
+
+    Adding Layer      : Dimensions Bottom
+
+    Adding Layer      : 3D Top
+
+    Adding Layer      : 3D Bottom
+
+    Adding Layer      : Courtyard Top
+
+    Adding Layer      : Courtyard Bottom
+
+    Adding Layer      : Test Points Top
+
+    Adding Layer      : Test Points Bottom
+
+
+Used DCodes :
+    D11
+    D12
+    D13
+    D14
+*************************************************************
+
+*************************************************************
+Generating : Test Points Bottom
+      File : Main.Test Points Bottom
+
+    Adding Layer      : Test Points Bottom
+
+    Adding Layer      : Outline
+
+    Adding Layer      : Assembly Text Top
+
+    Adding Layer      : Assembly Text Bottom
+
+    Adding Layer      : Assembly Top
+
+    Adding Layer      : Assembly Bottom
+
+    Adding Layer      : Dimensions Top
+
+    Adding Layer      : Dimensions Bottom
+
+    Adding Layer      : 3D Top
+
+    Adding Layer      : 3D Bottom
+
+    Adding Layer      : Courtyard Top
+
+    Adding Layer      : Courtyard Bottom
+
+    Adding Layer      : Test Points Top
+
+    Adding Layer      : Test Points Bottom
+
+
+Used DCodes :
+    D11
+    D12
+    D13
+    D14
+*************************************************************
+
+*************************************************************
+Generating : Multi-Layer
+      File : Main.GML
+
+    Adding Layer      : Multi-Layer
+
+    Adding Layer      : Outline
+
+    Adding Layer      : Assembly Text Top
+
+    Adding Layer      : Assembly Text Bottom
+
+    Adding Layer      : Assembly Top
+
+    Adding Layer      : Assembly Bottom
+
+    Adding Layer      : Dimensions Top
+
+    Adding Layer      : Dimensions Bottom
+
+    Adding Layer      : 3D Top
+
+    Adding Layer      : 3D Bottom
+
+    Adding Layer      : Courtyard Top
+
+    Adding Layer      : Courtyard Bottom
+
+    Adding Layer      : Test Points Top
+
+    Adding Layer      : Test Points Bottom
+
+
+Used DCodes :
+    D11
+    D12
+    D13
+    D14
+    D15
+    D16
+    D17
+    D18
+    D19
+    D20
+    D21
+    D22
+    D23
+    D24
+    D25
+    D26
+    D27
+*************************************************************
+
+*************************************************************
+Generating : Dielectric 1
+      File : Main.1
+
+    Adding Layer      : Dielectric 1
+
+    Adding Layer      : Outline
+
+    Adding Layer      : Assembly Text Top
+
+    Adding Layer      : Assembly Text Bottom
+
+    Adding Layer      : Assembly Top
+
+    Adding Layer      : Assembly Bottom
+
+    Adding Layer      : Dimensions Top
+
+    Adding Layer      : Dimensions Bottom
+
+    Adding Layer      : 3D Top
+
+    Adding Layer      : 3D Bottom
+
+    Adding Layer      : Courtyard Top
+
+    Adding Layer      : Courtyard Bottom
+
+    Adding Layer      : Test Points Top
+
+    Adding Layer      : Test Points Bottom
+
+
+Used DCodes :
+    D11
+    D12
+    D13
+    D14
+*************************************************************
+

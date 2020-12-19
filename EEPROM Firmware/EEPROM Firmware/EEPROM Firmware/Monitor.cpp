@@ -5,10 +5,12 @@
  *  Author: Aidan
  */ 
 
-#include "USART.h"
-#include "Monitor.h"
-#include "SRAM.h"
-#include <stdint-gcc.h>
+//#include "USART.h"
+//#include "Monitor.h"
+//#include "SRAM.h"
+//#include <stdint-gcc.h>
+
+#include "FIRMWARE.h"
 
 #define BUFFSIZE 64
 
@@ -20,16 +22,12 @@ int buff_size;
 void dumbMonitor(){
 	
 	uint16_t addr = 0;
-	uint8_t data;
+	//char data;
 	
 	//The dumbest thing that should technically work
 	while(1){
 		
-		data = USART_Receive();
-		
-		writeData(data, addr);
-		USART_Transmit(data);
-		USART_Transmit('\n');
+		writeData(USART_echo(addr), addr);
 		addr++;
 		
 	}
@@ -38,31 +36,32 @@ void dumbMonitor(){
 
 void monitorInit(){
 	
-	USART_PrintStr("Pingas");
+	USART_print("\rMonitor Init\n\r");
 	buff_size = 0;
 	
 }
 
+/*
 void monitorLoop(){
 	
 	char tmp;
-	//int result;
+	int result;
 	
 	while(1){
 		
-		tmp = USART_Receive();
+		tmp = USART_receive();
 		buff[buff_size] = tmp;
 		buff_size = (buff_size+1)%BUFFSIZE;
 		
-		if(tmp == '\r' || tmp == '\n'){
+		//if(tmp == '\r' || tmp == '\n'){
 			//evaluate the buffer
-			evaluateExpression(buff);
-		}
+		//	evaluateExpression(buff);
+		//}
 		
 	}
 	
 }
-
+*/
 /*
 int evaluateExpression(char *b){
 	

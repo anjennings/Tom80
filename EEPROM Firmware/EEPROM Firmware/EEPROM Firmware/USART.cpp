@@ -1,53 +1,54 @@
-/*
- * USART.cpp
- *
- * Created: 10/6/2020 6:55:02 PM
- *  Author: Aidan
- */ 	
-#include "avr\io.h"
+//#include "avr\io.h"
+//#include "USART.h"
+//#include <stdlib.h>
+//#include <util/delay.h>
 
+#include "FIRMWARE.h"
 
-/*
- * Initialize USART 
- */
-void USART_Init( unsigned int baud )
-{
-	/* Set baud rate */
-	UBRRH = (unsigned char)(baud>>8);
-	UBRRL = (unsigned char)baud;
-	/* Enable receiver and transmitter */
+//* Initialize USART */
+void USART_init(void){
+	UBRRH = (uint8_t)(BAUD_SCALLER>>8);
+	UBRRL = (uint8_t)(BAUD_SCALLER);
 	UCSRB = (1<<RXEN)|(1<<TXEN);
-	/* Set frame format: 8data, 2stop bit */
-	UCSRC = (1<<URSEL)|(1<<USBS)|(3<<UCSZ0);
+	UCSRC = (1<<UCSZ0)|(1<<UCSZ1)|(1<<URSEL);
 }
 
-/*
- *	Send a single character via UART
- */
-void USART_Transmit( unsigned char data )
-{
-	/* Wait for empty transmit buffer */
-	while ( !( UCSRA & (1<<UDRE)) )
-	;
-	/* Put data into buffer, sends the data */
-	UDR = data;
-}
-
-/*
- *	Wait until a single character has been received and return
- */
-unsigned char USART_Receive( void )
-{
-	/* Wait for data to be received */
-	while ( !(UCSRA & (1<<RXC)) )
-	;
-	/* Get and return received data from buffer */
+unsigned char USART_receive(void){
+	while(!(UCSRA & (1<<RXC)));
 	return UDR;
 }
 
-void USART_PrintStr(char s[]){
+void USART_send( unsigned char data){
+	while(!(UCSRA & (1<<UDRE)));
+	UDR = data;
+	//_delay_ms(10);
+}
+
+uint8_t USART_echo(uint16_t addr){
 	
-	for(int i = 0; s[i] != '\0'; i++){
-		USART_Transmit(s[i]);
-	}
+	char snum[5];
+	char a = USART_receive();
+	
+	//Print the char
+	USART_print("\n\rrecieved : ");
+	USART_send(a);
+	
+	//Print the hex val
+	USART_print(" : 0x");
+	itoa((int)a, snum, 16);
+	USART_print(snum);
+	
+	//Print the address
+	USART_print(" : Address 0x");
+	itoa(addr, snum, 16);
+	USART_print(snum);
+	
+	return (uint8_t)a;
+}
+
+void USART_print(char * str){
+	while(*str != 0){
+		USART_send(*str);
+		str++;
+	}	
 }

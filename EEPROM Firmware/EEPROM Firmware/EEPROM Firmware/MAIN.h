@@ -9,9 +9,6 @@
 #ifndef MAIN_H_
 #define MAIN_H_
 
-
-uint8_t dataBuffer[128];
-
 int main(void);
 
 

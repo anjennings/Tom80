@@ -1,0 +1,14 @@
+Output: NC Drill Files
+Type  : NC Drill
+From  : Project [Z80 Computer.PrjPcb]
+   Generated File[64k_Final-Plated.TXT]
+   Generated File[64k_Final.DRL]
+   Generated File[64k_Final-BoardEdgeRout.TXT]
+   Generated File[64k_Final.LDP]
+   Generated File[64k_Final.DRR]
+
+
+Files Generated   : 5
+Documents Printed : 0
+
+Finished Output Generation At 10:11:52 PM On 11/16/2020
