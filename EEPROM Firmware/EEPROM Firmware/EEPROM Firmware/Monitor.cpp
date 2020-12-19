@@ -22,95 +22,53 @@ int buff_size;
 void dumbMonitor(){
 	
 	uint16_t addr = 0;
-	//char data;
 	
 	//The dumbest thing that should technically work
 	while(1){
-		
 		writeData(USART_echo(addr), addr);
 		addr++;
-		
 	}
 	
 }
 
-void monitorInit(){
-	
-	USART_print("\rMonitor Init\n\r");
-	buff_size = 0;
-	
-}
-
-/*
 void monitorLoop(){
 	
-	char tmp;
-	int result;
-	
 	while(1){
+		USART_print("\n\r?:");
+		evaluateExpression(USART_receive());
+		_delay_ms(100);
+	}
+}
+
+
+int evaluateExpression(char i){
+	
+	USART_send(i);
+	USART_print("\n\r");
+	
+	switch(i){
 		
-		tmp = USART_receive();
-		buff[buff_size] = tmp;
-		buff_size = (buff_size+1)%BUFFSIZE;
-		
-		//if(tmp == '\r' || tmp == '\n'){
-			//evaluate the buffer
-		//	evaluateExpression(buff);
-		//}
+		case 'a' : 
+			USART_print("\rbussy\n");
+			break;
+			
+		case 'h' : 
+			USART_print("\ra : bussy\n");
+			USART_print("\rh : help\n");
+			break;
+			
+		case 'w' :
+			USART_print("\rNow in write mode:\n");
+			break;
+			
+		case 'r' : 
+			USART_print("\rNow in read mode:\n");
+			break;
+			
+		default :
+			USART_print("\rError : Unrecognized Instruction, type 'h' for help\n");
+			break;
 		
 	}
 	
 }
-*/
-/*
-int evaluateExpression(char *b){
-	
-	//First char is the instruction
-	//a - read
-	//	a 0000:ffff
-	//b - write
-	//	only to be used by external software, not to be used by user via serial
-	
-	char numberBuf[4];
-	uint16_t start;
-	uint16_t end;
-	bool fail = false;
-	uint8_t charVal;
-	
-	
-	switch(*b) {
-		
-		case 'a':
-		
-			//Jump forward 2 chars
-			b += 2;
-		
-			for(int i=0; (i < 4)|(*b != ':'); i++){
-				
-				//convert char to int
-				charVal = (uint8_t)*b
-				
-				//check if numerical
-				if((charVal >= 48) & (charVal <= 57)){
-					numberBuf[i] = *b;
-				}else{
-					fail = true;
-					break;
-				}
-			
-			}
-		
-			break;
-			
-		case 'b':
-			//go to some subroutine for writing, users should NOT be using this
-			break;
-		
-	}
-	
-	if(fail){
-		USART_PrintStr("THAT ISN'T A VALID INSTRUCTION");
-	}
-	
-	
-}*/

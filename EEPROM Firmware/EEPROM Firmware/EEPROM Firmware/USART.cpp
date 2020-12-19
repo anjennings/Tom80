@@ -30,7 +30,7 @@ uint8_t USART_echo(uint16_t addr){
 	char a = USART_receive();
 	
 	//Print the char
-	USART_print("\n\rrecieved : ");
+	USART_print("\n\r");
 	USART_send(a);
 	
 	//Print the hex val
@@ -39,7 +39,7 @@ uint8_t USART_echo(uint16_t addr){
 	USART_print(snum);
 	
 	//Print the address
-	USART_print(" : Address 0x");
+	USART_print(" -> 0x");
 	itoa(addr, snum, 16);
 	USART_print(snum);
 	

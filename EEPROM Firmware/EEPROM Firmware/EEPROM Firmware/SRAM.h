@@ -56,6 +56,7 @@
 	uint8_t getData();
 	void setAddresss(uint16_t a);
 	void setControl();
+	void setData(uint8_t d);
 
 	void writeData(uint8_t d, uint16_t a);
 	uint8_t readData(uint16_t a);

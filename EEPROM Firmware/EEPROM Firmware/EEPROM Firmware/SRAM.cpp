@@ -69,6 +69,7 @@ void setControl(){
 
 uint8_t getData(){
 	DDRA = 0;
+	_delay_ms(1);	//need to wait a bit for the port state to change
 	return PINA;
 }
 
@@ -87,11 +88,7 @@ void setData(uint8_t d){
 void writeData(uint8_t d, uint16_t a){
 	
 	
-	//Set GPIO Direction
-	//DDRA = (0xff);	//All Pins Out
-	//DDRB = (0xff);	//All Pins Out
-	//DDRC = (0xff);	//All Pins Out
-	//DDRD |= (1 << DDRD7)|(1 << DDRD6)|(1 << DDRD5);	//5,6,7 are Outputs
+	//Set up control pins
 	setControl();
 	
 	//Zero out all of the lines and disable all controls
@@ -99,26 +96,22 @@ void writeData(uint8_t d, uint16_t a){
 	
 	//See waveform on page 13 of datasheet
 	disableOutput();
-	//ADDR_L = (a & 0xFF);
-	//ADDR_H = ((a >> 8) & 0xFF);
 	setAddresss(a);
 	enableEEPROM();
-	_delay_ms(10);	//T-CS
+	
+	//I have no idea why but that 10 is pretty important
+	_delay_ms(8);	//T-CS
 	
 	enableWrite();
-	_delay_ms(1);	//T-WP, T-AH
-	
-	//PORTA = d;	//DATA Lines
 	setData(d);
-	_delay_ms(1);	//T-DS
-	
 	disableWrite();
-	_delay_ms(1);	//T-CH
-	
 	disableEEPROM();
-	_delay_ms(1);	//T-WPH, T-DH
 	
-	//Data should now be written
+	//Leave the chip alone
+	flush();
+	disableEEPROM();
+	disableOutput();
+	disableWrite();
 	
 }
 
@@ -127,17 +120,12 @@ uint8_t readData( uint16_t a){
 	//Set data and address lines low
 	flush();
 	
-	//Set all pins to read
-	init32Kread();
-	
 	//Put all control pins in a known state
 	enableOutput();
 	enableEEPROM();
 	disableWrite();
 	
 	//Put the data and address in the right place
-	//ADDR_L = (uint8_t)(a & 0xff);
-	//ADDR_H = (uint8_t)((a >> 8) & 0xff);
 	setAddresss(a);
 	
 	//Without a delay, the chip doesn't always read correctly
@@ -148,6 +136,7 @@ uint8_t readData( uint16_t a){
 	disableEEPROM();
 	disableOutput();
 	disableWrite();
+	flush();
 	return val;
 	
 }
@@ -159,7 +148,7 @@ void init32Kwrite(){
 	DDRB = (0xff);	//All Pins Out
 	DDRC = (0xff);	//All Pins Out
 	//DDRD |= (1 << DDRD7)|(1 << DDRD6)|(1 << DDRD5);	//5,6,7 are Outputs
-	void setControl();
+	setControl();
 
 	//Put all control pins in a known state
 	disableEEPROM();	
@@ -171,9 +160,9 @@ void init32Kwrite(){
 void init32Kread(){
 	
 	//Set GPIO Direction
-	DDRA = 0;//All Pins IN
-	DDRB = 0xff;	//All Pins OUT
-	DDRC = 0xff;	//All Pins OUT
+	//DDRA = 0;//All Pins IN
+	//DDRB = 0xff;	//All Pins OUT
+	//DDRC = 0xff;	//All Pins OUT
 	//DDRD |= (1 << DDRD7)|(1 << DDRD6)|(1 << DDRD5);	//5,6,7 are Outputs
 	setControl();
 
@@ -185,29 +174,20 @@ void init32Kread(){
 
 void disableSoftwareProtection(){
 	
-	init32Kwrite();
-	
-	//idk if this is the problem but its worth trying
 	writeData(0xaa, 0x5555);
-	_delay_ms(10);
-	
+	_delay_ms(1);
 	writeData(0x55, 0x2aaa);
-	_delay_ms(10);
-	
+	_delay_ms(1);
 	writeData(0x80, 0x5555);
-	_delay_ms(10);
-	
+	_delay_ms(1);
 	writeData(0xAA, 0x5555);
-	_delay_ms(10);
-	
+	_delay_ms(1);
 	writeData(0x55, 0x2aaa);
-	_delay_ms(10);
-	
-	writeData(0x80, 0x5555);
-	_delay_ms(10);
-	
+	_delay_ms(1);
+	writeData(0x20, 0x5555);
+	_delay_ms(1);
 	writeData(0, 0);
-	_delay_ms(10);
+	_delay_ms(1);
 	
 	
 }

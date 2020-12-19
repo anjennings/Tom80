@@ -11,11 +11,8 @@
 
 void dumbMonitor();
 
-void monitorInit();
-
 void monitorLoop();
 
-void evaluateExpression(char *b);
-
+int evaluateExpression(char i);
 
 #endif /* MONITOR_H_ */

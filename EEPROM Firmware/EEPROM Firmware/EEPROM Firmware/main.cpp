@@ -18,18 +18,28 @@
 
 #include "FIRMWARE.h"
 
-int main(void)
-{
+char snum[8];
+
+int nnewmain(void){
 	
 	USART_init();
-	//monitorInit();
 	
-	char snum[5];
+	while(1){
+		dumbMonitor();
+	}
+	return 0;
+}
+
+
+int main(void) {
+	
+	USART_init();
+	
 	uint8_t x = 0;
+	//uint16_t z = 0;
 	
-	//Just in case?
+	//Just in case
 	disableSoftwareProtection();
-	
 	
     while (1) 
     {
@@ -37,17 +47,17 @@ int main(void)
 		USART_receive();
 		
 		//Write the first 16 bytes
-		USART_print("\rWriting to EEPROM...\n");
-		for(uint16_t i = 0; i <= 0x10; i++){
-			writeData(0xa, i);
-		}
+		//USART_print("\n\n\rWriting to EEPROM...\n\r");
+		//for(uint16_t i = 0; i < 0x800; i++){
+		//	writeData(0x5, i);
+		//}
 		
-		_delay_ms(100);
+		//_delay_ms(10);
 		
 		//Read those bytes back and print to 
 		USART_print("\n\n\n\n\rReading from EEPROM...\n");
 		
-		for(uint16_t j = 0; j < 0x10; j++){
+		for(uint16_t j = 0; j < 0x600; j++){
 			
 			itoa(j, snum, 16);
 			USART_print("\r0x");
@@ -64,6 +74,7 @@ int main(void)
 		//Finished
 		USART_print("\rDone!\r\n\n");
     }
-	
+	return 0;
 }
+
 
