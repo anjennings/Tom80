@@ -3,31 +3,29 @@ EEPROM Firmware.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .text         0000032c  00000000  00000000  00000094  2**1
+  0 .text         000003dc  00000000  00000000  00000074  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  1 .data         00000032  00800060  0000032c  000003c0  2**0
+  1 .data         00000036  00800060  000003dc  00000450  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  2 .bss          00000008  00800092  00800092  000003f2  2**0
-                  ALLOC
-  3 .comment      00000030  00000000  00000000  000003f2  2**0
+  2 .comment      00000030  00000000  00000000  00000486  2**0
                   CONTENTS, READONLY
-  4 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  00000424  2**2
+  3 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  000004b8  2**2
                   CONTENTS, READONLY
-  5 .debug_aranges 00000100  00000000  00000000  00000460  2**0
+  4 .debug_aranges 00000140  00000000  00000000  000004f4  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_info   0000135b  00000000  00000000  00000560  2**0
+  5 .debug_info   00001890  00000000  00000000  00000634  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_abbrev 000009fb  00000000  00000000  000018bb  2**0
+  6 .debug_abbrev 00000c0c  00000000  00000000  00001ec4  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_line   0000080e  00000000  00000000  000022b6  2**0
+  7 .debug_line   00000a15  00000000  00000000  00002ad0  2**0
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_frame  000001f4  00000000  00000000  00002ac4  2**2
+  8 .debug_frame  00000284  00000000  00000000  000034e8  2**2
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_str    00000650  00000000  00000000  00002cb8  2**0
+  9 .debug_str    000006f7  00000000  00000000  0000376c  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_loc    00000649  00000000  00000000  00003308  2**0
+ 10 .debug_loc    000009e8  00000000  00000000  00003e63  2**0
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_ranges 000000d0  00000000  00000000  00003951  2**0
+ 11 .debug_ranges 00000100  00000000  00000000  0000484b  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -67,18 +65,18 @@ Disassembly of section .text:
   60:	10 e0       	ldi	r17, 0x00	; 0
   62:	a0 e6       	ldi	r26, 0x60	; 96
   64:	b0 e0       	ldi	r27, 0x00	; 0
-  66:	ec e2       	ldi	r30, 0x2C	; 44
+  66:	ec ed       	ldi	r30, 0xDC	; 220
   68:	f3 e0       	ldi	r31, 0x03	; 3
   6a:	02 c0       	rjmp	.+4      	; 0x70 <__do_copy_data+0x10>
   6c:	05 90       	lpm	r0, Z+
   6e:	0d 92       	st	X+, r0
-  70:	a2 39       	cpi	r26, 0x92	; 146
+  70:	a6 39       	cpi	r26, 0x96	; 150
   72:	b1 07       	cpc	r27, r17
   74:	d9 f7       	brne	.-10     	; 0x6c <__do_copy_data+0xc>
 
 00000076 <__do_clear_bss>:
   76:	20 e0       	ldi	r18, 0x00	; 0
-  78:	a2 e9       	ldi	r26, 0x92	; 146
+  78:	a6 e9       	ldi	r26, 0x96	; 150
   7a:	b0 e0       	ldi	r27, 0x00	; 0
   7c:	01 c0       	rjmp	.+2      	; 0x80 <.do_clear_bss_start>
 
@@ -86,468 +84,593 @@ Disassembly of section .text:
   7e:	1d 92       	st	X+, r1
 
 00000080 <.do_clear_bss_start>:
-  80:	aa 39       	cpi	r26, 0x9A	; 154
+  80:	a6 39       	cpi	r26, 0x96	; 150
   82:	b2 07       	cpc	r27, r18
   84:	e1 f7       	brne	.-8      	; 0x7e <.do_clear_bss_loop>
   86:	0e 94 49 00 	call	0x92	; 0x92 <main>
-  8a:	0c 94 94 01 	jmp	0x328	; 0x328 <_exit>
+  8a:	0c 94 ec 01 	jmp	0x3d8	; 0x3d8 <_exit>
 
 0000008e <__bad_interrupt>:
   8e:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
 
 00000092 <main>:
-}
 
+char snum[8];
 
-int main(void) {
+int main(void){
 	
 	USART_init();
-  92:	0e 94 40 01 	call	0x280	; 0x280 <_Z10USART_initv>
-	
-	uint8_t x = 0;
-	//uint16_t z = 0;
+  92:	0e 94 98 01 	call	0x330	; 0x330 <_Z10USART_initv>
 	
 	//Just in case
 	disableSoftwareProtection();
-  96:	0e 94 f9 00 	call	0x1f2	; 0x1f2 <_Z25disableSoftwareProtectionv>
+  96:	0e 94 51 01 	call	0x2a2	; 0x2a2 <_Z25disableSoftwareProtectionv>
 	
-    while (1) 
-    {
-		//Wait for user input
-		USART_receive();
-  9a:	0e 94 48 01 	call	0x290	; 0x290 <_Z13USART_receivev>
-		//}
-		
-		//_delay_ms(10);
-		
-		//Read those bytes back and print to 
-		USART_print("\n\n\n\n\rReading from EEPROM...\n");
-  9e:	80 e6       	ldi	r24, 0x60	; 96
-  a0:	90 e0       	ldi	r25, 0x00	; 0
-  a2:	0e 94 50 01 	call	0x2a0	; 0x2a0 <_Z11USART_printPc>
-		
-		for(uint16_t j = 0; j < 0x600; j++){
-  a6:	c0 e0       	ldi	r28, 0x00	; 0
-  a8:	d0 e0       	ldi	r29, 0x00	; 0
+	while(1){
+		monitor();
+  9a:	0e 94 c0 00 	call	0x180	; 0x180 <_Z7monitorv>
+  9e:	fd cf       	rjmp	.-6      	; 0x9a <main+0x8>
+
+000000a0 <_Z4dumpv>:
+			USART_print("\rError\n");
+			break;
+	}
+}
+
+void dump(){
+  a0:	0f 93       	push	r16
+  a2:	1f 93       	push	r17
+  a4:	cf 93       	push	r28
+  a6:	df 93       	push	r29
+  a8:	cd b7       	in	r28, 0x3d	; 61
+  aa:	de b7       	in	r29, 0x3e	; 62
+  ac:	28 97       	sbiw	r28, 0x08	; 8
+  ae:	0f b6       	in	r0, 0x3f	; 63
+  b0:	f8 94       	cli
+  b2:	de bf       	out	0x3e, r29	; 62
+  b4:	0f be       	out	0x3f, r0	; 63
+  b6:	cd bf       	out	0x3d, r28	; 61
+	
+	USART_print("\rReading from EEPROM...\n");
+  b8:	80 e6       	ldi	r24, 0x60	; 96
+  ba:	90 e0       	ldi	r25, 0x00	; 0
+  bc:	0e 94 a8 01 	call	0x350	; 0x350 <_Z11USART_printPc>
+	
+	char snum[8];
+	
+	for(uint16_t j = 0; j < 0x100; j++){
+  c0:	00 e0       	ldi	r16, 0x00	; 0
+  c2:	10 e0       	ldi	r17, 0x00	; 0
     } else if (__radix < 2 || __radix > 36) {
 	*__s = 0;
 	return __s;
     } else {
 	extern char *__itoa_ncheck (int, char *, unsigned char);
 	return __itoa_ncheck (__val, __s, __radix);
-  aa:	40 e1       	ldi	r20, 0x10	; 16
-  ac:	62 e9       	ldi	r22, 0x92	; 146
-  ae:	70 e0       	ldi	r23, 0x00	; 0
-  b0:	ce 01       	movw	r24, r28
-  b2:	0e 94 5f 01 	call	0x2be	; 0x2be <__itoa_ncheck>
-			
-			itoa(j, snum, 16);
-			USART_print("\r0x");
-  b6:	8d e7       	ldi	r24, 0x7D	; 125
-  b8:	90 e0       	ldi	r25, 0x00	; 0
-  ba:	0e 94 50 01 	call	0x2a0	; 0x2a0 <_Z11USART_printPc>
-			USART_print(snum);
-  be:	82 e9       	ldi	r24, 0x92	; 146
-  c0:	90 e0       	ldi	r25, 0x00	; 0
-  c2:	0e 94 50 01 	call	0x2a0	; 0x2a0 <_Z11USART_printPc>
-			USART_print(" : 0x");
-  c6:	81 e8       	ldi	r24, 0x81	; 129
-  c8:	90 e0       	ldi	r25, 0x00	; 0
-  ca:	0e 94 50 01 	call	0x2a0	; 0x2a0 <_Z11USART_printPc>
-			
-			x = readData(j);
-  ce:	ce 01       	movw	r24, r28
-  d0:	0e 94 d7 00 	call	0x1ae	; 0x1ae <_Z8readDataj>
-  d4:	40 e1       	ldi	r20, 0x10	; 16
-  d6:	62 e9       	ldi	r22, 0x92	; 146
-  d8:	70 e0       	ldi	r23, 0x00	; 0
-  da:	90 e0       	ldi	r25, 0x00	; 0
-  dc:	0e 94 5f 01 	call	0x2be	; 0x2be <__itoa_ncheck>
-			itoa(x, snum, 16);
-			USART_print(snum);
-  e0:	82 e9       	ldi	r24, 0x92	; 146
-  e2:	90 e0       	ldi	r25, 0x00	; 0
-  e4:	0e 94 50 01 	call	0x2a0	; 0x2a0 <_Z11USART_printPc>
-			USART_print("\n");
-  e8:	8f e8       	ldi	r24, 0x8F	; 143
-  ea:	90 e0       	ldi	r25, 0x00	; 0
-  ec:	0e 94 50 01 	call	0x2a0	; 0x2a0 <_Z11USART_printPc>
-		//_delay_ms(10);
+  c4:	40 e1       	ldi	r20, 0x10	; 16
+  c6:	be 01       	movw	r22, r28
+  c8:	6f 5f       	subi	r22, 0xFF	; 255
+  ca:	7f 4f       	sbci	r23, 0xFF	; 255
+  cc:	c8 01       	movw	r24, r16
+  ce:	0e 94 b7 01 	call	0x36e	; 0x36e <__itoa_ncheck>
 		
-		//Read those bytes back and print to 
-		USART_print("\n\n\n\n\rReading from EEPROM...\n");
+		itoa(j, snum, 16);
+		USART_print("\r0x");
+  d2:	89 e7       	ldi	r24, 0x79	; 121
+  d4:	90 e0       	ldi	r25, 0x00	; 0
+  d6:	0e 94 a8 01 	call	0x350	; 0x350 <_Z11USART_printPc>
+		USART_print(snum);
+  da:	ce 01       	movw	r24, r28
+  dc:	01 96       	adiw	r24, 0x01	; 1
+  de:	0e 94 a8 01 	call	0x350	; 0x350 <_Z11USART_printPc>
+		USART_print(" : 0x");
+  e2:	8d e7       	ldi	r24, 0x7D	; 125
+  e4:	90 e0       	ldi	r25, 0x00	; 0
+  e6:	0e 94 a8 01 	call	0x350	; 0x350 <_Z11USART_printPc>
 		
-		for(uint16_t j = 0; j < 0x600; j++){
-  f0:	21 96       	adiw	r28, 0x01	; 1
-  f2:	c1 15       	cp	r28, r1
-  f4:	86 e0       	ldi	r24, 0x06	; 6
-  f6:	d8 07       	cpc	r29, r24
-  f8:	c1 f6       	brne	.-80     	; 0xaa <main+0x18>
-			USART_print("\n");
-			
-		}
-		
-		//Finished
-		USART_print("\rDone!\r\n\n");
-  fa:	87 e8       	ldi	r24, 0x87	; 135
-  fc:	90 e0       	ldi	r25, 0x00	; 0
-  fe:	0e 94 50 01 	call	0x2a0	; 0x2a0 <_Z11USART_printPc>
-	//uint16_t z = 0;
+		itoa(readData(j), snum, 16);
+  ea:	c8 01       	movw	r24, r16
+  ec:	0e 94 2f 01 	call	0x25e	; 0x25e <_Z8readDataj>
+  f0:	40 e1       	ldi	r20, 0x10	; 16
+  f2:	be 01       	movw	r22, r28
+  f4:	6f 5f       	subi	r22, 0xFF	; 255
+  f6:	7f 4f       	sbci	r23, 0xFF	; 255
+  f8:	90 e0       	ldi	r25, 0x00	; 0
+  fa:	0e 94 b7 01 	call	0x36e	; 0x36e <__itoa_ncheck>
+		USART_print(snum);
+  fe:	ce 01       	movw	r24, r28
+ 100:	01 96       	adiw	r24, 0x01	; 1
+ 102:	0e 94 a8 01 	call	0x350	; 0x350 <_Z11USART_printPc>
+		USART_print("\n");
+ 106:	8b e8       	ldi	r24, 0x8B	; 139
+ 108:	90 e0       	ldi	r25, 0x00	; 0
+ 10a:	0e 94 a8 01 	call	0x350	; 0x350 <_Z11USART_printPc>
 	
-	//Just in case
-	disableSoftwareProtection();
+	USART_print("\rReading from EEPROM...\n");
 	
-    while (1) 
- 102:	cb cf       	rjmp	.-106    	; 0x9a <main+0x8>
+	char snum[8];
+	
+	for(uint16_t j = 0; j < 0x100; j++){
+ 10e:	0f 5f       	subi	r16, 0xFF	; 255
+ 110:	1f 4f       	sbci	r17, 0xFF	; 255
+ 112:	01 15       	cp	r16, r1
+ 114:	81 e0       	ldi	r24, 0x01	; 1
+ 116:	18 07       	cpc	r17, r24
+ 118:	a9 f6       	brne	.-86     	; 0xc4 <_Z4dumpv+0x24>
+		USART_print("\n");
+		
+	}
+	
+	//Finished
+	USART_print("\rDone!\r\n\n");
+ 11a:	83 e8       	ldi	r24, 0x83	; 131
+ 11c:	90 e0       	ldi	r25, 0x00	; 0
+ 11e:	0e 94 a8 01 	call	0x350	; 0x350 <_Z11USART_printPc>
+	
+ 122:	28 96       	adiw	r28, 0x08	; 8
+ 124:	0f b6       	in	r0, 0x3f	; 63
+ 126:	f8 94       	cli
+ 128:	de bf       	out	0x3e, r29	; 62
+ 12a:	0f be       	out	0x3f, r0	; 63
+ 12c:	cd bf       	out	0x3d, r28	; 61
+ 12e:	df 91       	pop	r29
+ 130:	cf 91       	pop	r28
+ 132:	1f 91       	pop	r17
+ 134:	0f 91       	pop	r16
+ 136:	08 95       	ret
 
-00000104 <_Z12enableEEPROMv>:
+00000138 <_Z18evaluateExpressionPc>:
+	//	evaluateExpression(USART_receive());
+	//	_delay_ms(100);
+	}
+}
+
+void evaluateExpression(char *i){
+ 138:	fc 01       	movw	r30, r24
+	
+	char inst = *i;
+	uint8_t addr_l = ( (uint8_t)(*(i+2)) );
+	uint8_t addr_h = ( (uint8_t)(*(i+1)) );
+	uint16_t addr = addr_h;
+	addr = ((addr<<8) | addr_l);
+ 13a:	61 81       	ldd	r22, Z+1	; 0x01
+ 13c:	70 e0       	ldi	r23, 0x00	; 0
+ 13e:	76 2f       	mov	r23, r22
+ 140:	66 27       	eor	r22, r22
+ 142:	82 81       	ldd	r24, Z+2	; 0x02
+ 144:	68 2b       	or	r22, r24
+	uint8_t data = (*(i+3));
+	
+	switch(inst){
+ 146:	80 81       	ld	r24, Z
+ 148:	82 37       	cpi	r24, 0x72	; 114
+ 14a:	61 f0       	breq	.+24     	; 0x164 <_Z18evaluateExpressionPc+0x2c>
+ 14c:	87 37       	cpi	r24, 0x77	; 119
+ 14e:	19 f0       	breq	.+6      	; 0x156 <_Z18evaluateExpressionPc+0x1e>
+ 150:	81 36       	cpi	r24, 0x61	; 97
+ 152:	89 f4       	brne	.+34     	; 0x176 <_Z18evaluateExpressionPc+0x3e>
+ 154:	0d c0       	rjmp	.+26     	; 0x170 <_Z18evaluateExpressionPc+0x38>
+		case i_WRITE : 
+			writeData(data, addr);
+ 156:	83 81       	ldd	r24, Z+3	; 0x03
+ 158:	0e 94 06 01 	call	0x20c	; 0x20c <_Z9writeDatahj>
+			USART_send('0');
+ 15c:	80 e3       	ldi	r24, 0x30	; 48
+ 15e:	0e 94 a4 01 	call	0x348	; 0x348 <_Z10USART_sendh>
+			break;
+ 162:	08 95       	ret
+		case i_READ : 
+			USART_send(readData(addr));
+ 164:	cb 01       	movw	r24, r22
+ 166:	0e 94 2f 01 	call	0x25e	; 0x25e <_Z8readDataj>
+ 16a:	0e 94 a4 01 	call	0x348	; 0x348 <_Z10USART_sendh>
+			break;
+ 16e:	08 95       	ret
+		case i_DUMP :
+			dump();
+ 170:	0e 94 50 00 	call	0xa0	; 0xa0 <_Z4dumpv>
+			break;
+ 174:	08 95       	ret
+		default :
+			USART_print("\rError\n");
+ 176:	8d e8       	ldi	r24, 0x8D	; 141
+ 178:	90 e0       	ldi	r25, 0x00	; 0
+ 17a:	0e 94 a8 01 	call	0x350	; 0x350 <_Z11USART_printPc>
+ 17e:	08 95       	ret
+
+00000180 <_Z7monitorv>:
+	0 : Instruction
+	1 : Address High
+	2 : Address Low
+	3 : Data (if write instruction)
+*/
+void monitor(){
+ 180:	cf 93       	push	r28
+ 182:	df 93       	push	r29
+ 184:	00 d0       	rcall	.+0      	; 0x186 <_Z7monitorv+0x6>
+ 186:	00 d0       	rcall	.+0      	; 0x188 <_Z7monitorv+0x8>
+ 188:	cd b7       	in	r28, 0x3d	; 61
+ 18a:	de b7       	in	r29, 0x3e	; 62
+	
+	char iB[4];
+	uint8_t bP = 0;
+ 18c:	10 e0       	ldi	r17, 0x00	; 0
+	
+	while(1){
+		
+		*(iB + bP) = USART_receive();
+ 18e:	0e 94 a0 01 	call	0x340	; 0x340 <_Z13USART_receivev>
+ 192:	e1 e0       	ldi	r30, 0x01	; 1
+ 194:	f0 e0       	ldi	r31, 0x00	; 0
+ 196:	ec 0f       	add	r30, r28
+ 198:	fd 1f       	adc	r31, r29
+ 19a:	e1 0f       	add	r30, r17
+ 19c:	f1 1d       	adc	r31, r1
+ 19e:	80 83       	st	Z, r24
+
+		if(bP == 3){
+ 1a0:	13 30       	cpi	r17, 0x03	; 3
+ 1a2:	31 f4       	brne	.+12     	; 0x1b0 <_Z7monitorv+0x30>
+			evaluateExpression(iB);
+ 1a4:	ce 01       	movw	r24, r28
+ 1a6:	01 96       	adiw	r24, 0x01	; 1
+ 1a8:	0e 94 9c 00 	call	0x138	; 0x138 <_Z18evaluateExpressionPc>
+			bP = 0;
+ 1ac:	10 e0       	ldi	r17, 0x00	; 0
+ 1ae:	ef cf       	rjmp	.-34     	; 0x18e <_Z7monitorv+0xe>
+		}else{
+			bP++;
+ 1b0:	1f 5f       	subi	r17, 0xFF	; 255
+ 1b2:	ed cf       	rjmp	.-38     	; 0x18e <_Z7monitorv+0xe>
+
+000001b4 <_Z12enableEEPROMv>:
 	setControl();
 
 	//Put all control pins in a known state
 	disableEEPROM();
 	disableWrite();
 	disableOutput();
- 104:	97 98       	cbi	0x12, 7	; 18
- 106:	08 95       	ret
+ 1b4:	97 98       	cbi	0x12, 7	; 18
+ 1b6:	08 95       	ret
 
-00000108 <_Z13disableEEPROMv>:
- 108:	97 9a       	sbi	0x12, 7	; 18
- 10a:	08 95       	ret
+000001b8 <_Z13disableEEPROMv>:
+ 1b8:	97 9a       	sbi	0x12, 7	; 18
+ 1ba:	08 95       	ret
 
-0000010c <_Z11enableWritev>:
- 10c:	96 98       	cbi	0x12, 6	; 18
- 10e:	08 95       	ret
+000001bc <_Z11enableWritev>:
+ 1bc:	96 98       	cbi	0x12, 6	; 18
+ 1be:	08 95       	ret
 
-00000110 <_Z12disableWritev>:
- 110:	96 9a       	sbi	0x12, 6	; 18
- 112:	08 95       	ret
+000001c0 <_Z12disableWritev>:
+ 1c0:	96 9a       	sbi	0x12, 6	; 18
+ 1c2:	08 95       	ret
 
-00000114 <_Z12enableOutputv>:
- 114:	95 98       	cbi	0x12, 5	; 18
- 116:	08 95       	ret
+000001c4 <_Z12enableOutputv>:
+ 1c4:	95 98       	cbi	0x12, 5	; 18
+ 1c6:	08 95       	ret
 
-00000118 <_Z13disableOutputv>:
- 118:	95 9a       	sbi	0x12, 5	; 18
- 11a:	08 95       	ret
+000001c8 <_Z13disableOutputv>:
+ 1c8:	95 9a       	sbi	0x12, 5	; 18
+ 1ca:	08 95       	ret
 
-0000011c <_Z5flushv>:
- 11c:	0e 94 84 00 	call	0x108	; 0x108 <_Z13disableEEPROMv>
- 120:	0e 94 88 00 	call	0x110	; 0x110 <_Z12disableWritev>
- 124:	0e 94 8c 00 	call	0x118	; 0x118 <_Z13disableOutputv>
- 128:	8f ef       	ldi	r24, 0xFF	; 255
- 12a:	8a bb       	out	0x1a, r24	; 26
- 12c:	87 bb       	out	0x17, r24	; 23
- 12e:	84 bb       	out	0x14, r24	; 20
- 130:	1b ba       	out	0x1b, r1	; 27
- 132:	18 ba       	out	0x18, r1	; 24
- 134:	15 ba       	out	0x15, r1	; 21
- 136:	08 95       	ret
+000001cc <_Z5flushv>:
+ 1cc:	0e 94 dc 00 	call	0x1b8	; 0x1b8 <_Z13disableEEPROMv>
+ 1d0:	0e 94 e0 00 	call	0x1c0	; 0x1c0 <_Z12disableWritev>
+ 1d4:	0e 94 e4 00 	call	0x1c8	; 0x1c8 <_Z13disableOutputv>
+ 1d8:	8f ef       	ldi	r24, 0xFF	; 255
+ 1da:	8a bb       	out	0x1a, r24	; 26
+ 1dc:	87 bb       	out	0x17, r24	; 23
+ 1de:	84 bb       	out	0x14, r24	; 20
+ 1e0:	1b ba       	out	0x1b, r1	; 27
+ 1e2:	18 ba       	out	0x18, r1	; 24
+ 1e4:	15 ba       	out	0x15, r1	; 21
+ 1e6:	08 95       	ret
 
-00000138 <_Z10setControlv>:
- 138:	81 b3       	in	r24, 0x11	; 17
- 13a:	80 6e       	ori	r24, 0xE0	; 224
- 13c:	81 bb       	out	0x11, r24	; 17
- 13e:	08 95       	ret
+000001e8 <_Z10setControlv>:
+ 1e8:	81 b3       	in	r24, 0x11	; 17
+ 1ea:	80 6e       	ori	r24, 0xE0	; 224
+ 1ec:	81 bb       	out	0x11, r24	; 17
+ 1ee:	08 95       	ret
 
-00000140 <_Z7getDatav>:
- 140:	1a ba       	out	0x1a, r1	; 26
- 142:	86 e6       	ldi	r24, 0x66	; 102
- 144:	9e e0       	ldi	r25, 0x0E	; 14
- 146:	01 97       	sbiw	r24, 0x01	; 1
- 148:	f1 f7       	brne	.-4      	; 0x146 <_Z7getDatav+0x6>
- 14a:	00 00       	nop
- 14c:	89 b3       	in	r24, 0x19	; 25
- 14e:	08 95       	ret
+000001f0 <_Z7getDatav>:
+ 1f0:	1a ba       	out	0x1a, r1	; 26
+ 1f2:	86 e6       	ldi	r24, 0x66	; 102
+ 1f4:	9e e0       	ldi	r25, 0x0E	; 14
+ 1f6:	01 97       	sbiw	r24, 0x01	; 1
+ 1f8:	f1 f7       	brne	.-4      	; 0x1f6 <_Z7getDatav+0x6>
+ 1fa:	00 00       	nop
+ 1fc:	89 b3       	in	r24, 0x19	; 25
+ 1fe:	08 95       	ret
 
-00000150 <_Z11setAddresssj>:
- 150:	2f ef       	ldi	r18, 0xFF	; 255
- 152:	27 bb       	out	0x17, r18	; 23
- 154:	24 bb       	out	0x14, r18	; 20
- 156:	95 bb       	out	0x15, r25	; 21
- 158:	88 bb       	out	0x18, r24	; 24
- 15a:	08 95       	ret
+00000200 <_Z11setAddresssj>:
+ 200:	2f ef       	ldi	r18, 0xFF	; 255
+ 202:	27 bb       	out	0x17, r18	; 23
+ 204:	24 bb       	out	0x14, r18	; 20
+ 206:	95 bb       	out	0x15, r25	; 21
+ 208:	88 bb       	out	0x18, r24	; 24
+ 20a:	08 95       	ret
 
-0000015c <_Z9writeDatahj>:
- 15c:	0f 93       	push	r16
- 15e:	1f 93       	push	r17
- 160:	cf 93       	push	r28
- 162:	c8 2f       	mov	r28, r24
- 164:	8b 01       	movw	r16, r22
- 166:	0e 94 9c 00 	call	0x138	; 0x138 <_Z10setControlv>
- 16a:	0e 94 8e 00 	call	0x11c	; 0x11c <_Z5flushv>
- 16e:	0e 94 8c 00 	call	0x118	; 0x118 <_Z13disableOutputv>
- 172:	c8 01       	movw	r24, r16
- 174:	0e 94 a8 00 	call	0x150	; 0x150 <_Z11setAddresssj>
- 178:	0e 94 82 00 	call	0x104	; 0x104 <_Z12enableEEPROMv>
- 17c:	83 e3       	ldi	r24, 0x33	; 51
- 17e:	93 e7       	ldi	r25, 0x73	; 115
- 180:	01 97       	sbiw	r24, 0x01	; 1
- 182:	f1 f7       	brne	.-4      	; 0x180 <_Z9writeDatahj+0x24>
- 184:	0e 94 86 00 	call	0x10c	; 0x10c <_Z11enableWritev>
- 188:	8f ef       	ldi	r24, 0xFF	; 255
- 18a:	8a bb       	out	0x1a, r24	; 26
- 18c:	cb bb       	out	0x1b, r28	; 27
- 18e:	0e 94 88 00 	call	0x110	; 0x110 <_Z12disableWritev>
- 192:	0e 94 84 00 	call	0x108	; 0x108 <_Z13disableEEPROMv>
- 196:	0e 94 8e 00 	call	0x11c	; 0x11c <_Z5flushv>
- 19a:	0e 94 84 00 	call	0x108	; 0x108 <_Z13disableEEPROMv>
- 19e:	0e 94 8c 00 	call	0x118	; 0x118 <_Z13disableOutputv>
- 1a2:	0e 94 88 00 	call	0x110	; 0x110 <_Z12disableWritev>
- 1a6:	cf 91       	pop	r28
- 1a8:	1f 91       	pop	r17
- 1aa:	0f 91       	pop	r16
- 1ac:	08 95       	ret
+0000020c <_Z9writeDatahj>:
+ 20c:	0f 93       	push	r16
+ 20e:	1f 93       	push	r17
+ 210:	cf 93       	push	r28
+ 212:	c8 2f       	mov	r28, r24
+ 214:	8b 01       	movw	r16, r22
+ 216:	0e 94 f4 00 	call	0x1e8	; 0x1e8 <_Z10setControlv>
+ 21a:	0e 94 e6 00 	call	0x1cc	; 0x1cc <_Z5flushv>
+ 21e:	0e 94 e4 00 	call	0x1c8	; 0x1c8 <_Z13disableOutputv>
+ 222:	c8 01       	movw	r24, r16
+ 224:	0e 94 00 01 	call	0x200	; 0x200 <_Z11setAddresssj>
+ 228:	0e 94 da 00 	call	0x1b4	; 0x1b4 <_Z12enableEEPROMv>
+ 22c:	83 e3       	ldi	r24, 0x33	; 51
+ 22e:	93 e7       	ldi	r25, 0x73	; 115
+ 230:	01 97       	sbiw	r24, 0x01	; 1
+ 232:	f1 f7       	brne	.-4      	; 0x230 <_Z9writeDatahj+0x24>
+ 234:	0e 94 de 00 	call	0x1bc	; 0x1bc <_Z11enableWritev>
+ 238:	8f ef       	ldi	r24, 0xFF	; 255
+ 23a:	8a bb       	out	0x1a, r24	; 26
+ 23c:	cb bb       	out	0x1b, r28	; 27
+ 23e:	0e 94 e0 00 	call	0x1c0	; 0x1c0 <_Z12disableWritev>
+ 242:	0e 94 dc 00 	call	0x1b8	; 0x1b8 <_Z13disableEEPROMv>
+ 246:	0e 94 e6 00 	call	0x1cc	; 0x1cc <_Z5flushv>
+ 24a:	0e 94 dc 00 	call	0x1b8	; 0x1b8 <_Z13disableEEPROMv>
+ 24e:	0e 94 e4 00 	call	0x1c8	; 0x1c8 <_Z13disableOutputv>
+ 252:	0e 94 e0 00 	call	0x1c0	; 0x1c0 <_Z12disableWritev>
+ 256:	cf 91       	pop	r28
+ 258:	1f 91       	pop	r17
+ 25a:	0f 91       	pop	r16
+ 25c:	08 95       	ret
 
-000001ae <_Z8readDataj>:
- 1ae:	cf 93       	push	r28
- 1b0:	df 93       	push	r29
- 1b2:	ec 01       	movw	r28, r24
- 1b4:	0e 94 8e 00 	call	0x11c	; 0x11c <_Z5flushv>
- 1b8:	0e 94 8a 00 	call	0x114	; 0x114 <_Z12enableOutputv>
- 1bc:	0e 94 82 00 	call	0x104	; 0x104 <_Z12enableEEPROMv>
- 1c0:	0e 94 88 00 	call	0x110	; 0x110 <_Z12disableWritev>
- 1c4:	ce 01       	movw	r24, r28
- 1c6:	0e 94 a8 00 	call	0x150	; 0x150 <_Z11setAddresssj>
- 1ca:	86 e6       	ldi	r24, 0x66	; 102
- 1cc:	9e e0       	ldi	r25, 0x0E	; 14
- 1ce:	01 97       	sbiw	r24, 0x01	; 1
- 1d0:	f1 f7       	brne	.-4      	; 0x1ce <_Z8readDataj+0x20>
- 1d2:	00 00       	nop
- 1d4:	0e 94 a0 00 	call	0x140	; 0x140 <_Z7getDatav>
- 1d8:	c8 2f       	mov	r28, r24
- 1da:	0e 94 84 00 	call	0x108	; 0x108 <_Z13disableEEPROMv>
- 1de:	0e 94 8c 00 	call	0x118	; 0x118 <_Z13disableOutputv>
- 1e2:	0e 94 88 00 	call	0x110	; 0x110 <_Z12disableWritev>
- 1e6:	0e 94 8e 00 	call	0x11c	; 0x11c <_Z5flushv>
- 1ea:	8c 2f       	mov	r24, r28
- 1ec:	df 91       	pop	r29
- 1ee:	cf 91       	pop	r28
- 1f0:	08 95       	ret
+0000025e <_Z8readDataj>:
+ 25e:	cf 93       	push	r28
+ 260:	df 93       	push	r29
+ 262:	ec 01       	movw	r28, r24
+ 264:	0e 94 e6 00 	call	0x1cc	; 0x1cc <_Z5flushv>
+ 268:	0e 94 e2 00 	call	0x1c4	; 0x1c4 <_Z12enableOutputv>
+ 26c:	0e 94 da 00 	call	0x1b4	; 0x1b4 <_Z12enableEEPROMv>
+ 270:	0e 94 e0 00 	call	0x1c0	; 0x1c0 <_Z12disableWritev>
+ 274:	ce 01       	movw	r24, r28
+ 276:	0e 94 00 01 	call	0x200	; 0x200 <_Z11setAddresssj>
+ 27a:	86 e6       	ldi	r24, 0x66	; 102
+ 27c:	9e e0       	ldi	r25, 0x0E	; 14
+ 27e:	01 97       	sbiw	r24, 0x01	; 1
+ 280:	f1 f7       	brne	.-4      	; 0x27e <_Z8readDataj+0x20>
+ 282:	00 00       	nop
+ 284:	0e 94 f8 00 	call	0x1f0	; 0x1f0 <_Z7getDatav>
+ 288:	c8 2f       	mov	r28, r24
+ 28a:	0e 94 dc 00 	call	0x1b8	; 0x1b8 <_Z13disableEEPROMv>
+ 28e:	0e 94 e4 00 	call	0x1c8	; 0x1c8 <_Z13disableOutputv>
+ 292:	0e 94 e0 00 	call	0x1c0	; 0x1c0 <_Z12disableWritev>
+ 296:	0e 94 e6 00 	call	0x1cc	; 0x1cc <_Z5flushv>
+ 29a:	8c 2f       	mov	r24, r28
+ 29c:	df 91       	pop	r29
+ 29e:	cf 91       	pop	r28
+ 2a0:	08 95       	ret
 
-000001f2 <_Z25disableSoftwareProtectionv>:
+000002a2 <_Z25disableSoftwareProtectionv>:
 }
 
 void disableSoftwareProtection(){
 	
 	writeData(0xaa, 0x5555);
- 1f2:	65 e5       	ldi	r22, 0x55	; 85
- 1f4:	75 e5       	ldi	r23, 0x55	; 85
- 1f6:	8a ea       	ldi	r24, 0xAA	; 170
- 1f8:	0e 94 ae 00 	call	0x15c	; 0x15c <_Z9writeDatahj>
+ 2a2:	65 e5       	ldi	r22, 0x55	; 85
+ 2a4:	75 e5       	ldi	r23, 0x55	; 85
+ 2a6:	8a ea       	ldi	r24, 0xAA	; 170
+ 2a8:	0e 94 06 01 	call	0x20c	; 0x20c <_Z9writeDatahj>
 	#else
 		//round up by default
 		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
 	#endif
 
 	__builtin_avr_delay_cycles(__ticks_dc);
- 1fc:	86 e6       	ldi	r24, 0x66	; 102
- 1fe:	9e e0       	ldi	r25, 0x0E	; 14
- 200:	01 97       	sbiw	r24, 0x01	; 1
- 202:	f1 f7       	brne	.-4      	; 0x200 <_Z25disableSoftwareProtectionv+0xe>
- 204:	00 00       	nop
+ 2ac:	86 e6       	ldi	r24, 0x66	; 102
+ 2ae:	9e e0       	ldi	r25, 0x0E	; 14
+ 2b0:	01 97       	sbiw	r24, 0x01	; 1
+ 2b2:	f1 f7       	brne	.-4      	; 0x2b0 <_Z25disableSoftwareProtectionv+0xe>
+ 2b4:	00 00       	nop
 	_delay_ms(1);
 	writeData(0x55, 0x2aaa);
- 206:	6a ea       	ldi	r22, 0xAA	; 170
- 208:	7a e2       	ldi	r23, 0x2A	; 42
- 20a:	85 e5       	ldi	r24, 0x55	; 85
- 20c:	0e 94 ae 00 	call	0x15c	; 0x15c <_Z9writeDatahj>
- 210:	86 e6       	ldi	r24, 0x66	; 102
- 212:	9e e0       	ldi	r25, 0x0E	; 14
- 214:	01 97       	sbiw	r24, 0x01	; 1
- 216:	f1 f7       	brne	.-4      	; 0x214 <_Z25disableSoftwareProtectionv+0x22>
- 218:	00 00       	nop
+ 2b6:	6a ea       	ldi	r22, 0xAA	; 170
+ 2b8:	7a e2       	ldi	r23, 0x2A	; 42
+ 2ba:	85 e5       	ldi	r24, 0x55	; 85
+ 2bc:	0e 94 06 01 	call	0x20c	; 0x20c <_Z9writeDatahj>
+ 2c0:	86 e6       	ldi	r24, 0x66	; 102
+ 2c2:	9e e0       	ldi	r25, 0x0E	; 14
+ 2c4:	01 97       	sbiw	r24, 0x01	; 1
+ 2c6:	f1 f7       	brne	.-4      	; 0x2c4 <_Z25disableSoftwareProtectionv+0x22>
+ 2c8:	00 00       	nop
 	_delay_ms(1);
 	writeData(0x80, 0x5555);
- 21a:	65 e5       	ldi	r22, 0x55	; 85
- 21c:	75 e5       	ldi	r23, 0x55	; 85
- 21e:	80 e8       	ldi	r24, 0x80	; 128
- 220:	0e 94 ae 00 	call	0x15c	; 0x15c <_Z9writeDatahj>
- 224:	86 e6       	ldi	r24, 0x66	; 102
- 226:	9e e0       	ldi	r25, 0x0E	; 14
- 228:	01 97       	sbiw	r24, 0x01	; 1
- 22a:	f1 f7       	brne	.-4      	; 0x228 <_Z25disableSoftwareProtectionv+0x36>
- 22c:	00 00       	nop
+ 2ca:	65 e5       	ldi	r22, 0x55	; 85
+ 2cc:	75 e5       	ldi	r23, 0x55	; 85
+ 2ce:	80 e8       	ldi	r24, 0x80	; 128
+ 2d0:	0e 94 06 01 	call	0x20c	; 0x20c <_Z9writeDatahj>
+ 2d4:	86 e6       	ldi	r24, 0x66	; 102
+ 2d6:	9e e0       	ldi	r25, 0x0E	; 14
+ 2d8:	01 97       	sbiw	r24, 0x01	; 1
+ 2da:	f1 f7       	brne	.-4      	; 0x2d8 <_Z25disableSoftwareProtectionv+0x36>
+ 2dc:	00 00       	nop
 	_delay_ms(1);
 	writeData(0xAA, 0x5555);
- 22e:	65 e5       	ldi	r22, 0x55	; 85
- 230:	75 e5       	ldi	r23, 0x55	; 85
- 232:	8a ea       	ldi	r24, 0xAA	; 170
- 234:	0e 94 ae 00 	call	0x15c	; 0x15c <_Z9writeDatahj>
- 238:	86 e6       	ldi	r24, 0x66	; 102
- 23a:	9e e0       	ldi	r25, 0x0E	; 14
- 23c:	01 97       	sbiw	r24, 0x01	; 1
- 23e:	f1 f7       	brne	.-4      	; 0x23c <_Z25disableSoftwareProtectionv+0x4a>
- 240:	00 00       	nop
+ 2de:	65 e5       	ldi	r22, 0x55	; 85
+ 2e0:	75 e5       	ldi	r23, 0x55	; 85
+ 2e2:	8a ea       	ldi	r24, 0xAA	; 170
+ 2e4:	0e 94 06 01 	call	0x20c	; 0x20c <_Z9writeDatahj>
+ 2e8:	86 e6       	ldi	r24, 0x66	; 102
+ 2ea:	9e e0       	ldi	r25, 0x0E	; 14
+ 2ec:	01 97       	sbiw	r24, 0x01	; 1
+ 2ee:	f1 f7       	brne	.-4      	; 0x2ec <_Z25disableSoftwareProtectionv+0x4a>
+ 2f0:	00 00       	nop
 	_delay_ms(1);
 	writeData(0x55, 0x2aaa);
- 242:	6a ea       	ldi	r22, 0xAA	; 170
- 244:	7a e2       	ldi	r23, 0x2A	; 42
- 246:	85 e5       	ldi	r24, 0x55	; 85
- 248:	0e 94 ae 00 	call	0x15c	; 0x15c <_Z9writeDatahj>
- 24c:	86 e6       	ldi	r24, 0x66	; 102
- 24e:	9e e0       	ldi	r25, 0x0E	; 14
- 250:	01 97       	sbiw	r24, 0x01	; 1
- 252:	f1 f7       	brne	.-4      	; 0x250 <_Z25disableSoftwareProtectionv+0x5e>
- 254:	00 00       	nop
+ 2f2:	6a ea       	ldi	r22, 0xAA	; 170
+ 2f4:	7a e2       	ldi	r23, 0x2A	; 42
+ 2f6:	85 e5       	ldi	r24, 0x55	; 85
+ 2f8:	0e 94 06 01 	call	0x20c	; 0x20c <_Z9writeDatahj>
+ 2fc:	86 e6       	ldi	r24, 0x66	; 102
+ 2fe:	9e e0       	ldi	r25, 0x0E	; 14
+ 300:	01 97       	sbiw	r24, 0x01	; 1
+ 302:	f1 f7       	brne	.-4      	; 0x300 <_Z25disableSoftwareProtectionv+0x5e>
+ 304:	00 00       	nop
 	_delay_ms(1);
 	writeData(0x20, 0x5555);
- 256:	65 e5       	ldi	r22, 0x55	; 85
- 258:	75 e5       	ldi	r23, 0x55	; 85
- 25a:	80 e2       	ldi	r24, 0x20	; 32
- 25c:	0e 94 ae 00 	call	0x15c	; 0x15c <_Z9writeDatahj>
- 260:	86 e6       	ldi	r24, 0x66	; 102
- 262:	9e e0       	ldi	r25, 0x0E	; 14
- 264:	01 97       	sbiw	r24, 0x01	; 1
- 266:	f1 f7       	brne	.-4      	; 0x264 <_Z25disableSoftwareProtectionv+0x72>
- 268:	00 00       	nop
+ 306:	65 e5       	ldi	r22, 0x55	; 85
+ 308:	75 e5       	ldi	r23, 0x55	; 85
+ 30a:	80 e2       	ldi	r24, 0x20	; 32
+ 30c:	0e 94 06 01 	call	0x20c	; 0x20c <_Z9writeDatahj>
+ 310:	86 e6       	ldi	r24, 0x66	; 102
+ 312:	9e e0       	ldi	r25, 0x0E	; 14
+ 314:	01 97       	sbiw	r24, 0x01	; 1
+ 316:	f1 f7       	brne	.-4      	; 0x314 <_Z25disableSoftwareProtectionv+0x72>
+ 318:	00 00       	nop
 	_delay_ms(1);
 	writeData(0, 0);
- 26a:	60 e0       	ldi	r22, 0x00	; 0
- 26c:	70 e0       	ldi	r23, 0x00	; 0
- 26e:	80 e0       	ldi	r24, 0x00	; 0
- 270:	0e 94 ae 00 	call	0x15c	; 0x15c <_Z9writeDatahj>
- 274:	86 e6       	ldi	r24, 0x66	; 102
- 276:	9e e0       	ldi	r25, 0x0E	; 14
- 278:	01 97       	sbiw	r24, 0x01	; 1
- 27a:	f1 f7       	brne	.-4      	; 0x278 <_Z25disableSoftwareProtectionv+0x86>
- 27c:	00 00       	nop
- 27e:	08 95       	ret
+ 31a:	60 e0       	ldi	r22, 0x00	; 0
+ 31c:	70 e0       	ldi	r23, 0x00	; 0
+ 31e:	80 e0       	ldi	r24, 0x00	; 0
+ 320:	0e 94 06 01 	call	0x20c	; 0x20c <_Z9writeDatahj>
+ 324:	86 e6       	ldi	r24, 0x66	; 102
+ 326:	9e e0       	ldi	r25, 0x0E	; 14
+ 328:	01 97       	sbiw	r24, 0x01	; 1
+ 32a:	f1 f7       	brne	.-4      	; 0x328 <_Z25disableSoftwareProtectionv+0x86>
+ 32c:	00 00       	nop
+ 32e:	08 95       	ret
 
-00000280 <_Z10USART_initv>:
+00000330 <_Z10USART_initv>:
 
 #include "FIRMWARE.h"
 
 //* Initialize USART */
 void USART_init(void){
 	UBRRH = (uint8_t)(BAUD_SCALLER>>8);
- 280:	10 bc       	out	0x20, r1	; 32
+ 330:	10 bc       	out	0x20, r1	; 32
 	UBRRL = (uint8_t)(BAUD_SCALLER);
- 282:	87 e1       	ldi	r24, 0x17	; 23
- 284:	89 b9       	out	0x09, r24	; 9
+ 332:	87 e1       	ldi	r24, 0x17	; 23
+ 334:	89 b9       	out	0x09, r24	; 9
 	UCSRB = (1<<RXEN)|(1<<TXEN);
- 286:	88 e1       	ldi	r24, 0x18	; 24
- 288:	8a b9       	out	0x0a, r24	; 10
+ 336:	88 e1       	ldi	r24, 0x18	; 24
+ 338:	8a b9       	out	0x0a, r24	; 10
 	UCSRC = (1<<UCSZ0)|(1<<UCSZ1)|(1<<URSEL);
- 28a:	86 e8       	ldi	r24, 0x86	; 134
- 28c:	80 bd       	out	0x20, r24	; 32
- 28e:	08 95       	ret
+ 33a:	86 e8       	ldi	r24, 0x86	; 134
+ 33c:	80 bd       	out	0x20, r24	; 32
+ 33e:	08 95       	ret
 
-00000290 <_Z13USART_receivev>:
+00000340 <_Z13USART_receivev>:
 }
 
 unsigned char USART_receive(void){
 	while(!(UCSRA & (1<<RXC)));
- 290:	5f 9b       	sbis	0x0b, 7	; 11
- 292:	fe cf       	rjmp	.-4      	; 0x290 <_Z13USART_receivev>
+ 340:	5f 9b       	sbis	0x0b, 7	; 11
+ 342:	fe cf       	rjmp	.-4      	; 0x340 <_Z13USART_receivev>
 	return UDR;
- 294:	8c b1       	in	r24, 0x0c	; 12
+ 344:	8c b1       	in	r24, 0x0c	; 12
 }
- 296:	08 95       	ret
+ 346:	08 95       	ret
 
-00000298 <_Z10USART_sendh>:
+00000348 <_Z10USART_sendh>:
 
 void USART_send( unsigned char data){
 	while(!(UCSRA & (1<<UDRE)));
- 298:	5d 9b       	sbis	0x0b, 5	; 11
- 29a:	fe cf       	rjmp	.-4      	; 0x298 <_Z10USART_sendh>
+ 348:	5d 9b       	sbis	0x0b, 5	; 11
+ 34a:	fe cf       	rjmp	.-4      	; 0x348 <_Z10USART_sendh>
 	UDR = data;
- 29c:	8c b9       	out	0x0c, r24	; 12
- 29e:	08 95       	ret
+ 34c:	8c b9       	out	0x0c, r24	; 12
+ 34e:	08 95       	ret
 
-000002a0 <_Z11USART_printPc>:
+00000350 <_Z11USART_printPc>:
 	USART_print(snum);
 	
 	return (uint8_t)a;
 }
 
 void USART_print(char * str){
- 2a0:	cf 93       	push	r28
- 2a2:	df 93       	push	r29
- 2a4:	ec 01       	movw	r28, r24
+ 350:	cf 93       	push	r28
+ 352:	df 93       	push	r29
+ 354:	ec 01       	movw	r28, r24
 	while(*str != 0){
- 2a6:	88 81       	ld	r24, Y
- 2a8:	88 23       	and	r24, r24
- 2aa:	31 f0       	breq	.+12     	; 0x2b8 <_Z11USART_printPc+0x18>
- 2ac:	21 96       	adiw	r28, 0x01	; 1
+ 356:	88 81       	ld	r24, Y
+ 358:	88 23       	and	r24, r24
+ 35a:	31 f0       	breq	.+12     	; 0x368 <_Z11USART_printPc+0x18>
+ 35c:	21 96       	adiw	r28, 0x01	; 1
 		USART_send(*str);
- 2ae:	0e 94 4c 01 	call	0x298	; 0x298 <_Z10USART_sendh>
+ 35e:	0e 94 a4 01 	call	0x348	; 0x348 <_Z10USART_sendh>
 	
 	return (uint8_t)a;
 }
 
 void USART_print(char * str){
 	while(*str != 0){
- 2b2:	89 91       	ld	r24, Y+
- 2b4:	81 11       	cpse	r24, r1
- 2b6:	fb cf       	rjmp	.-10     	; 0x2ae <_Z11USART_printPc+0xe>
+ 362:	89 91       	ld	r24, Y+
+ 364:	81 11       	cpse	r24, r1
+ 366:	fb cf       	rjmp	.-10     	; 0x35e <_Z11USART_printPc+0xe>
 		USART_send(*str);
 		str++;
 	}	
- 2b8:	df 91       	pop	r29
- 2ba:	cf 91       	pop	r28
- 2bc:	08 95       	ret
+ 368:	df 91       	pop	r29
+ 36a:	cf 91       	pop	r28
+ 36c:	08 95       	ret
 
-000002be <__itoa_ncheck>:
- 2be:	bb 27       	eor	r27, r27
- 2c0:	4a 30       	cpi	r20, 0x0A	; 10
- 2c2:	31 f4       	brne	.+12     	; 0x2d0 <__itoa_ncheck+0x12>
- 2c4:	99 23       	and	r25, r25
- 2c6:	22 f4       	brpl	.+8      	; 0x2d0 <__itoa_ncheck+0x12>
- 2c8:	bd e2       	ldi	r27, 0x2D	; 45
- 2ca:	90 95       	com	r25
- 2cc:	81 95       	neg	r24
- 2ce:	9f 4f       	sbci	r25, 0xFF	; 255
- 2d0:	0c 94 6b 01 	jmp	0x2d6	; 0x2d6 <__utoa_common>
+0000036e <__itoa_ncheck>:
+ 36e:	bb 27       	eor	r27, r27
+ 370:	4a 30       	cpi	r20, 0x0A	; 10
+ 372:	31 f4       	brne	.+12     	; 0x380 <__itoa_ncheck+0x12>
+ 374:	99 23       	and	r25, r25
+ 376:	22 f4       	brpl	.+8      	; 0x380 <__itoa_ncheck+0x12>
+ 378:	bd e2       	ldi	r27, 0x2D	; 45
+ 37a:	90 95       	com	r25
+ 37c:	81 95       	neg	r24
+ 37e:	9f 4f       	sbci	r25, 0xFF	; 255
+ 380:	0c 94 c3 01 	jmp	0x386	; 0x386 <__utoa_common>
 
-000002d4 <__utoa_ncheck>:
- 2d4:	bb 27       	eor	r27, r27
+00000384 <__utoa_ncheck>:
+ 384:	bb 27       	eor	r27, r27
 
-000002d6 <__utoa_common>:
- 2d6:	fb 01       	movw	r30, r22
- 2d8:	55 27       	eor	r21, r21
- 2da:	aa 27       	eor	r26, r26
- 2dc:	88 0f       	add	r24, r24
- 2de:	99 1f       	adc	r25, r25
- 2e0:	aa 1f       	adc	r26, r26
- 2e2:	a4 17       	cp	r26, r20
- 2e4:	10 f0       	brcs	.+4      	; 0x2ea <__utoa_common+0x14>
- 2e6:	a4 1b       	sub	r26, r20
- 2e8:	83 95       	inc	r24
- 2ea:	50 51       	subi	r21, 0x10	; 16
- 2ec:	b9 f7       	brne	.-18     	; 0x2dc <__utoa_common+0x6>
- 2ee:	a0 5d       	subi	r26, 0xD0	; 208
- 2f0:	aa 33       	cpi	r26, 0x3A	; 58
- 2f2:	08 f0       	brcs	.+2      	; 0x2f6 <__utoa_common+0x20>
- 2f4:	a9 5d       	subi	r26, 0xD9	; 217
- 2f6:	a1 93       	st	Z+, r26
- 2f8:	00 97       	sbiw	r24, 0x00	; 0
- 2fa:	79 f7       	brne	.-34     	; 0x2da <__utoa_common+0x4>
- 2fc:	b1 11       	cpse	r27, r1
- 2fe:	b1 93       	st	Z+, r27
- 300:	11 92       	st	Z+, r1
- 302:	cb 01       	movw	r24, r22
- 304:	0c 94 84 01 	jmp	0x308	; 0x308 <strrev>
+00000386 <__utoa_common>:
+ 386:	fb 01       	movw	r30, r22
+ 388:	55 27       	eor	r21, r21
+ 38a:	aa 27       	eor	r26, r26
+ 38c:	88 0f       	add	r24, r24
+ 38e:	99 1f       	adc	r25, r25
+ 390:	aa 1f       	adc	r26, r26
+ 392:	a4 17       	cp	r26, r20
+ 394:	10 f0       	brcs	.+4      	; 0x39a <__utoa_common+0x14>
+ 396:	a4 1b       	sub	r26, r20
+ 398:	83 95       	inc	r24
+ 39a:	50 51       	subi	r21, 0x10	; 16
+ 39c:	b9 f7       	brne	.-18     	; 0x38c <__utoa_common+0x6>
+ 39e:	a0 5d       	subi	r26, 0xD0	; 208
+ 3a0:	aa 33       	cpi	r26, 0x3A	; 58
+ 3a2:	08 f0       	brcs	.+2      	; 0x3a6 <__utoa_common+0x20>
+ 3a4:	a9 5d       	subi	r26, 0xD9	; 217
+ 3a6:	a1 93       	st	Z+, r26
+ 3a8:	00 97       	sbiw	r24, 0x00	; 0
+ 3aa:	79 f7       	brne	.-34     	; 0x38a <__utoa_common+0x4>
+ 3ac:	b1 11       	cpse	r27, r1
+ 3ae:	b1 93       	st	Z+, r27
+ 3b0:	11 92       	st	Z+, r1
+ 3b2:	cb 01       	movw	r24, r22
+ 3b4:	0c 94 dc 01 	jmp	0x3b8	; 0x3b8 <strrev>
 
-00000308 <strrev>:
- 308:	dc 01       	movw	r26, r24
- 30a:	fc 01       	movw	r30, r24
- 30c:	67 2f       	mov	r22, r23
- 30e:	71 91       	ld	r23, Z+
- 310:	77 23       	and	r23, r23
- 312:	e1 f7       	brne	.-8      	; 0x30c <strrev+0x4>
- 314:	32 97       	sbiw	r30, 0x02	; 2
- 316:	04 c0       	rjmp	.+8      	; 0x320 <strrev+0x18>
- 318:	7c 91       	ld	r23, X
- 31a:	6d 93       	st	X+, r22
- 31c:	70 83       	st	Z, r23
- 31e:	62 91       	ld	r22, -Z
- 320:	ae 17       	cp	r26, r30
- 322:	bf 07       	cpc	r27, r31
- 324:	c8 f3       	brcs	.-14     	; 0x318 <strrev+0x10>
- 326:	08 95       	ret
+000003b8 <strrev>:
+ 3b8:	dc 01       	movw	r26, r24
+ 3ba:	fc 01       	movw	r30, r24
+ 3bc:	67 2f       	mov	r22, r23
+ 3be:	71 91       	ld	r23, Z+
+ 3c0:	77 23       	and	r23, r23
+ 3c2:	e1 f7       	brne	.-8      	; 0x3bc <strrev+0x4>
+ 3c4:	32 97       	sbiw	r30, 0x02	; 2
+ 3c6:	04 c0       	rjmp	.+8      	; 0x3d0 <strrev+0x18>
+ 3c8:	7c 91       	ld	r23, X
+ 3ca:	6d 93       	st	X+, r22
+ 3cc:	70 83       	st	Z, r23
+ 3ce:	62 91       	ld	r22, -Z
+ 3d0:	ae 17       	cp	r26, r30
+ 3d2:	bf 07       	cpc	r27, r31
+ 3d4:	c8 f3       	brcs	.-14     	; 0x3c8 <strrev+0x10>
+ 3d6:	08 95       	ret
 
-00000328 <_exit>:
- 328:	f8 94       	cli
+000003d8 <_exit>:
+ 3d8:	f8 94       	cli
 
-0000032a <__stop_program>:
- 32a:	ff cf       	rjmp	.-2      	; 0x32a <__stop_program>
+000003da <__stop_program>:
+ 3da:	ff cf       	rjmp	.-2      	; 0x3da <__stop_program>

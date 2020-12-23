@@ -14,10 +14,40 @@
 
 #define BUFFSIZE 64
 
+#define i_READ 0x72		//r
+#define i_WRITE 0x77	//w
+#define i_DUMP 0x61		//a
+
 int systemBaud;
 
 char buff[BUFFSIZE];
 int buff_size;
+
+/*
+	4-Byte Packet
+	0 : Instruction
+	1 : Address High
+	2 : Address Low
+	3 : Data (if write instruction)
+*/
+void monitor(){
+	
+	char iB[4];
+	uint8_t bP = 0;
+	
+	while(1){
+		
+		*(iB + bP) = USART_receive();
+
+		if(bP == 3){
+			evaluateExpression(iB);
+			bP = 0;
+		}else{
+			bP++;
+		}
+	}
+	
+}
 
 void dumbMonitor(){
 	
@@ -34,41 +64,58 @@ void dumbMonitor(){
 void monitorLoop(){
 	
 	while(1){
-		USART_print("\n\r?:");
-		evaluateExpression(USART_receive());
-		_delay_ms(100);
+	//	USART_print("\n\r?:");
+	//	evaluateExpression(USART_receive());
+	//	_delay_ms(100);
 	}
 }
 
-
-int evaluateExpression(char i){
+void evaluateExpression(char *i){
 	
-	USART_send(i);
-	USART_print("\n\r");
+	char inst = *i;
+	uint8_t addr_l = ( (uint8_t)(*(i+2)) );
+	uint8_t addr_h = ( (uint8_t)(*(i+1)) );
+	uint16_t addr = addr_h;
+	addr = ((addr<<8) | addr_l);
+	uint8_t data = (*(i+3));
 	
-	switch(i){
-		
-		case 'a' : 
-			USART_print("\rbussy\n");
+	switch(inst){
+		case i_WRITE : 
+			writeData(data, addr);
+			USART_send('0');
 			break;
-			
-		case 'h' : 
-			USART_print("\ra : bussy\n");
-			USART_print("\rh : help\n");
+		case i_READ : 
+			USART_send(readData(addr));
 			break;
-			
-		case 'w' :
-			USART_print("\rNow in write mode:\n");
+		case i_DUMP :
+			dump();
 			break;
-			
-		case 'r' : 
-			USART_print("\rNow in read mode:\n");
-			break;
-			
 		default :
-			USART_print("\rError : Unrecognized Instruction, type 'h' for help\n");
+			USART_print("\rError\n");
 			break;
+	}
+}
+
+void dump(){
+	
+	USART_print("\rReading from EEPROM...\n");
+	
+	char snum[8];
+	
+	for(uint16_t j = 0; j < 0x100; j++){
+		
+		itoa(j, snum, 16);
+		USART_print("\r0x");
+		USART_print(snum);
+		USART_print(" : 0x");
+		
+		itoa(readData(j), snum, 16);
+		USART_print(snum);
+		USART_print("\n");
 		
 	}
+	
+	//Finished
+	USART_print("\rDone!\r\n\n");
 	
 }

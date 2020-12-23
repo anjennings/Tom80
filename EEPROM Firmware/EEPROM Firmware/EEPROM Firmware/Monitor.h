@@ -9,10 +9,14 @@
 #ifndef MONITOR_H_
 #define MONITOR_H_
 
+void monitor();
+
 void dumbMonitor();
 
 void monitorLoop();
 
-int evaluateExpression(char i);
+void evaluateExpression(char * i);
+
+void dump();
 
 #endif /* MONITOR_H_ */

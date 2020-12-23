@@ -53,6 +53,7 @@ NUM7 equ 0x37
 NUM8 equ 0x38
 NUM9 equ 0x39
 
+;Valid Instructions
 SYM_READ equ ":"
 SYM_WRITE equ "<"
 SYM_EXE equ "@"
@@ -62,24 +63,22 @@ SYM_HELP equ "?"
 ;Code Starts HERE
 ;/////////////////
 org 0000h
-BOOT:
-    ;Wait a few clocks
+RESET:
+    ;Wait several clocks, then jump directly to MAIN
     NOP
     NOP
     NOP
     NOP
-    ;Set up Stack
-    LD H, STACK_H
-    LD L, STACK_L
-    LD SP, HL
-    ;Set up UART
-    CALL UART_INIT
-    ;Disable interrupt
-    IM 1
-    DI
-    ;Boot Sequence Complete
-    JP MAIN
+    JP BOOT
+    JP BOOT
+    JP BOOT
+    JP BOOT
 
+;Not exactly a header, but it will show up in a hex dump
+HEADER:
+.db NEWLINE, "ASH (Aidan's SHell) 2020", NEWLINE, RETURN, EOF
+
+INTERRUPT:
     ;//////////////////
     ;Interrupt Routine
     ;//////////////////
@@ -88,7 +87,23 @@ BOOT:
     NOP
     RETI
 
-MAIN:
+    ;//The actual execution starts here
+BOOT:
+    ;Set up Stack
+    LD H, STACK_H
+    LD L, STACK_L
+    LD SP, HL
+
+    ;Set up UART
+    CALL UART_INIT
+
+    ;Disable interrupt
+    IM 1
+    DI
+
+    ;Boot Sequence Complete
+
+POSTBOOT:
     ;Print Boot Screen
     LD HL, BOOT_MSG
     CALL WRITE_STR
@@ -98,15 +113,14 @@ MAIN:
     CALL WRITE_STR
 
     ;Set Terminal buffer to 0 
-    LD BC, TERM_BUF
+    LD HL, TERM_BUF
     LD A, 0
-    LD (BC), A
+    LD (HL), A
 
 MAIN_LOOP:
     ;CALL GETCH
-    CALL EVALUATE_STMT
+    ;CALL EVALUATE_STMT
     JP MAIN_LOOP
-
     HALT
 
 ;//////////////////////
@@ -138,8 +152,8 @@ UART_INIT:
     IN A, UART_LCR
     OR 80h
     OUT UART_LCR, A
-    ;Divide Clock by 96 for 9600 baud (Assuming 14.7456 MHz clock)
-    LD A, 96
+    ;Divide Clock by 6 for 19200 baud (Assuming 1.7MHz clock)
+    LD A, 6
     OUT UART_DHR, A
     LD A, 0
     OUT UART_IER, A
@@ -231,36 +245,38 @@ PRINTCH:
 
 ;////////////////////////////////////////
 ;Writes a string via IO 
-;Disables Interrupts
+;Disables Interrupts while running
 ;Expects HL to be the address of a string
 ;////////////////////////////////////////
 WRITE_STR:
     DI
     PUSH AF
     PUSH HL
+
     ;Set DLAB 0
     IN A, UART_LCR
     AND 7Fh
     OUT UART_LCR, A
+
+    ;Loop over each char in string
     WRITE_START:
     LD A, (HL)
-    CP 0
+    CP 0                ;Is it EOF?
     JP Z, WRITE_CLOSE
-    ;OUT UART_DHR, A
     CALL PRINTCH
     INC HL
     JP WRITE_START
+
     WRITE_CLOSE:
     POP HL
     POP AF
-    ;EI
+    EI
     ret
 
 ;Main function to tokenize, parse, and execute user entered expressions
 ;Assume AF has return values
 EVALUATE_STMT:
     PUSH AF
-    PUSH HL
 
     ;Tokenizes and checks for invalid characters
     CALL TOKENIZE_BUFFER
@@ -299,7 +315,6 @@ EVALUATE_STMT:
 
     EVALUATE_STMT_RETURN:
 
-    POP HL
     POP AF
     RET
 
@@ -381,7 +396,7 @@ TOKENIZE_BUFFER:
         CP 0x6
         CALL C, TOKENIZE_CHAR
         ;Return to start of loop if return is FF
-        CP 0xF
+        CP 0xFF
         JP Z, TOKENIZE_BUFFER_LOOP
         ;Return original character
         LD A, B
@@ -519,7 +534,6 @@ TOKENIZE_NUMBERS:
 
 ;Expects B to be the Char value
 ;Write token symbol and value to TOKEN_BUF
-;Returns an F instead of FF because of an error with @
 TOKENIZE_CHAR:
     PUSH BC
     PUSH DE
@@ -549,7 +563,7 @@ TOKENIZE_CHAR:
     POP HL
     POP DE
     POP BC
-    LD A, 0xF
+    LD A, 0xFF
     RET
 
 ;TODO: Can this just write over the other buffers?
@@ -848,53 +862,77 @@ EXE_STATE equ 0x8301
 EXE_INC equ 0x8302
 EXE_BUF equ 0x8310
 
-;This is essentially a big case statement depending on which token appears
-;first in the parse buffer, each case has a corresponding subroutine
-;it shouldn't be hard to add extra functions later if needed
-
 EXECUTE_BUFFER:
     PUSH BC
     PUSH DE
     PUSH HL
 
-    ;Go to first token in parse buffer
-    LD HL, PARSE_BUF
-    INC HL
+    ;Set state
+    LD HL, EXE_STATE
+    LD (HL), STATE_START
 
-    ;Get token
-    LD A, (HL)
+    ;Set incrementor
+    LD HL, EXE_INC
+    LD (HL), 1
 
-    ;Check if its the end of the buffer
-    CP TOKEN_EF
-    JP Z, EXECUTE_BUFFER_RETURN_SUCCESS
+    EXECUTE_BUFFER_LOOP:
+        ;Pingas
 
-    ;Check if current token is a single literal value
-    ;This is either a read or write value
-    CP TOKEN_LT
-    CALL Z, EVAL_LITERAL
-    CP 0xFF
-    JP Z, EXECUTE_BUFFER_RETURN_SUCCESS
+        ;Get incrementor
+        LD HL, EXE_INC
+        LD A, (HL)
 
-    ;Check if current token is an @ symbol
-    CP TOKEN_EX
-    CALL Z, EVAL_EXE
-    CP 0xFF
-    JP Z, EXECUTE_BUFFER_RETURN_SUCCESS
+        ;Go to next token
+        LD HL, PARSE_BUF
+        ADD A, L
+        LD L, A
 
-    ;Check if current token is an ? symbol
-    CP TOKEN_HE
-    CALL Z, EVAL_HELP
-    CP 0xFF
-    JP Z, EXECUTE_BUFFER_RETURN_SUCCESS
-    
-    ;More actions could be added here
+        ;Get token, Save copy to B
+        LD A, (HL)
+        LD B, A
 
-    ;If parser reaches this point then there is an invalid instruction
-    LD A, 0xFF
-    JP EXECUTE_BUFFER_RETURN
+        ;Check if its the end of the buffer
+        CP TOKEN_EF
+        CALL Z, EVAL_EOF
+        CP 0xFF
+        JP Z, EXECUTE_BUFFER_RETUN_SUCCESS
 
-    EXECUTE_BUFFER_RETURN_SUCCESS:
-    LD A, 0x00
+        ;Check if current token is a single literal value
+        CP TOKEN_LT
+        CALL Z, EVAL_LITERAL
+        CP 0xFF
+        JP Z, EXECUTE_BUFFER_LOOP
+
+        ;Check if current token is an @ symbol
+        CP TOKEN_EX
+        CALL Z, EVAL_EXE
+        CP 0xFF
+        JP Z, EXECUTE_BUFFER_LOOP
+
+        ;Check if current token is an : symbol
+        CP TOKEN_RD
+        CALL Z, EVAL_READ
+        CP 0xFF
+        JP Z, EXECUTE_BUFFER_LOOP
+
+        ;Check if current token is an < symbol
+        CP TOKEN_WR
+        CALL Z, EVAL_WRITE
+        CP 0xFF
+        JP Z, EXECUTE_BUFFER_LOOP
+
+        ;Check if current token is an ? symbol
+        CP TOKEN_HE
+        CALL Z, EVAL_HELP
+        CP 0xFF
+        JP Z, EXECUTE_BUFFER_LOOP
+
+        ;If parser reaches this point there is an invalid token
+        LD A, 0xFF
+        JP EXECUTE_BUFFER_RETURN
+
+    EXECUTE_BUFFER_RETUN_SUCCESS:
+        LD A, 0x00
 
     EXECUTE_BUFFER_RETURN:
     POP HL
@@ -902,61 +940,13 @@ EXECUTE_BUFFER:
     POP BC
     RET
 
+EVAL_EOF:
+    RET
+
 EVAL_LITERAL:
     RET
 
 EVAL_EXE:
-    PUSH HL
-    PUSH DE
-    
-    ;Clear DE
-    LD D, 0
-    LD E, 0
-    
-    ;Get look at the location of the second token in the buffer
-    LD HL, PARSE_BUF
-    LD A, L
-    ADD A, 2
-    LD L, A
-
-    ;Get the token
-    LD A, (HL)
-    
-    ;Make sure its a WORD token
-    CP TOKEN_WD
-    JP NZ, EVAL_EXE_FAILURE
-    
-    ;Get the literal
-    INC HL
-    LD A, (HL)
-    
-    ;Assume 1 Byte at first
-    LD D, A
-    
-    ;Get next token
-    INC HL
-    LD A, (HL)
-    
-    LD E, A
-    
-    ;Set Up Return Address so that RET can be called
-    LD HL, EVAL_EXE_SUCCESS
-    PUSH HL
-    LD HL, DE
-    ;Jump to new, arbitrary location
-    JP (HL)
-    
-    
-    EVAL_EXE_FAILURE:
-    LD A, 0
-    JP EVAL_EXE_EXIT
-    
-    EVAL_EXE_SUCCESS:
-    LD A, 0xFF
-    
-    EVAL_EXE_EXIT:
-    POP DE
-    POP HL
     RET
 
 EVAL_READ:
@@ -966,15 +956,6 @@ EVAL_WRITE:
     RET
 
 EVAL_HELP:
-    PUSH HL
-
-    ;Just print out the help text
-    LD HL, HELP_TEXT
-    CALL WRITE_STR
-    
-    LD A, 0xFF
-
-    POP HL
     RET
 
 ;//////////////////////
@@ -997,19 +978,10 @@ TOKEN_ERROR:
 EXE_ERROR:
 .db NEWLINE, RETURN, "EXECUTION ERROR", NEWLINE, RETURN, EOF
 
-HELP_TEXT:
-.db NEWLINE, RETURN, "INSTRUCTIONS : ", NEWLINE, RETURN, "1FFF : 10 - READ 16 BYTES STARTING AT LOCATION 0x1FFF", NEWLINE, RETURN, "1FFF < 10 - WRITE 0x10 TO LOCAITON 0x1FFF", NEWLINE, RETURN, "@1FFF - BEGIN EXECUTION AT LOCATION 0x1FFF", NEWLINE, RETURN, "? - DISPLAY HELP MESSAGE", NEWLINE, RETURN, EOF
-
 PROMPT:
 .db RETURN, ">>>:", EOF
 
 org 8001h
 ;.db "A0:7F", NEWLINE
-;.db "A8F4<B7", NEWLINE
-.db "@9001", NEWLINE
-
-org 9001h
-    NOP
-    NOP
-    NOP
-    RET
+.db "A8F4<B7", NEWLINE
+;.db "@B800"

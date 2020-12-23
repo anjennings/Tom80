@@ -26,27 +26,21 @@ except:
 	print("Python Serial ERROR : Could not open file!")
 	sys.exit(1)
 
+amt = 32*1024
+if len(sys.argv) >= 3:
+	amt = int(sys.argv[2])
 
 #File size is maxed at 32k, anything past that is ignored
-fileSize = min((32*1024), min(os.path.getsize(sys.argv[1]), sys.argv[2]))
+fileSize = min((32*1024), os.path.getsize(sys.argv[1]), amt)
 
 
 for i in range(0, fileSize):
 	high = struct.pack("B", ((i >> 8) & 0xff))
 	low = struct.pack("B", (i & 0xff))
-	data = f.read(1).hex()
+	data = f.read(1)
 	
-	print(i)
 	ser.write(WRITE_INST)
-	f2.write(WRITE_INST)
-	
 	ser.write(high)
-	f2.write(high)
-	
 	ser.write(low)
-	f2.write(low)
-	
 	ser.write(data)
-	f2.write(data)
-
-	
+	rec = ser.read(1)

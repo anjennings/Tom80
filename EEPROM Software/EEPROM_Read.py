@@ -18,35 +18,35 @@ except:
 	print("Python Serial ERROR : Could not open serial port, make sure your board is plugged in.")
 	sys.exit(1)
 	
-#open file specified in the args
+#open file
+
 try:
-	f = open(sys.argv[1], "rb")
-	f2 = open("wrInput.dat", "wb")
+	f = open("rom.dat", "wb")
+	f2 = open("input.dat", "wb")
 except:
 	print("Python Serial ERROR : Could not open file!")
 	sys.exit(1)
 
-
-#File size is maxed at 32k, anything past that is ignored
-fileSize = min((32*1024), min(os.path.getsize(sys.argv[1]), sys.argv[2]))
-
+amt = 32*1024
+if len(sys.argv) >= 2:
+	amt = int(sys.argv[1])
+	
+fileSize = min(32*1024, amt)
 
 for i in range(0, fileSize):
 	high = struct.pack("B", ((i >> 8) & 0xff))
 	low = struct.pack("B", (i & 0xff))
-	data = f.read(1).hex()
 	
-	print(i)
-	ser.write(WRITE_INST)
-	f2.write(WRITE_INST)
+	#print(i)
+	ser.write(READ_INST)
 	
 	ser.write(high)
-	f2.write(high)
 	
 	ser.write(low)
-	f2.write(low)
 	
-	ser.write(data)
-	f2.write(data)
+	ser.write(low)
+	
+	f.write(ser.read(1))
 
+	#time.sleep(.1)
 	

@@ -20,18 +20,21 @@
 
 char snum[8];
 
-int nnewmain(void){
+int main(void){
 	
 	USART_init();
 	
+	//Just in case
+	disableSoftwareProtection();
+	
 	while(1){
-		dumbMonitor();
+		monitor();
 	}
 	return 0;
 }
 
 
-int main(void) {
+int oldmain(void) {
 	
 	USART_init();
 	
@@ -45,15 +48,15 @@ int main(void) {
     {
 		//Wait for user input
 		USART_receive();
-		
+		/*
 		//Write the first 16 bytes
-		//USART_print("\n\n\rWriting to EEPROM...\n\r");
-		//for(uint16_t i = 0; i < 0x800; i++){
-		//	writeData(0x5, i);
-		//}
+		USART_print("\n\n\rWriting to EEPROM...\n\r");
+		for(uint16_t i = 0; i < 0x800; i++){
+			writeData((uint8_t)i, i);
+		}
 		
-		//_delay_ms(10);
-		
+		_delay_ms(10);
+		*/
 		//Read those bytes back and print to 
 		USART_print("\n\n\n\n\rReading from EEPROM...\n");
 		

@@ -153,6 +153,12 @@
     </ToolchainSettings>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="EEPROM_2K.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="EEPROM_2K.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="FIRMWARE.h">
       <SubType>compile</SubType>
     </Compile>
