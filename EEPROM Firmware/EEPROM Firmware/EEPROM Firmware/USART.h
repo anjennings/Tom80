@@ -5,14 +5,12 @@
  *  Author: Aidan
  */ 
 
+#ifndef USART_H_
+#define USART_H_
+
 #define F_CPU 14745600UL
 #define BAUDRATE 38400
 #define BAUD_SCALLER (((F_CPU / (BAUDRATE * 16UL))) - 1)
-
-#include <util/delay.h>
-
-#ifndef USART_H_
-#define USART_H_
 
 void USART_init(void);
 

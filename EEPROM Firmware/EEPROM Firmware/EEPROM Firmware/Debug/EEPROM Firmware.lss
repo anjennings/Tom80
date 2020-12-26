@@ -450,6 +450,7 @@ void monitor(){
 000002a2 <_Z25disableSoftwareProtectionv>:
 }
 
+//Disables write protection on chips, only needs to be done once
 void disableSoftwareProtection(){
 	
 	writeData(0xaa, 0x5555);

@@ -9,7 +9,7 @@
 #ifndef EEPROM_2K_H_
 #define EEPROM_2K_H_
 
-
+/*
 ///New ones
 #define D0 PORTB1
 #define D1 PORTB0
@@ -54,6 +54,6 @@ void writeData2K(uint8_t d, uint16_t a);
 uint8_t readData2K(uint16_t a);
 void init2Kwrite();
 void init2Kread();
-
+*/
 
 #endif /* EEPROM_2K_H_ */

@@ -17,6 +17,12 @@ Discarded input sections
 
  .data          0x00000000        0x0 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.3.300/gcc/dev/atmega32a/avr5/crtatmega32a.o
  .bss           0x00000000        0x0 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.3.300/gcc/dev/atmega32a/avr5/crtatmega32a.o
+ .text          0x00000000        0x0 EEPROM_2K.o
+ .data          0x00000000        0x0 EEPROM_2K.o
+ .bss           0x00000000        0x0 EEPROM_2K.o
+ .debug_line    0x00000000        0x0 EEPROM_2K.o
+ .debug_str     0x00000000      0x145 EEPROM_2K.o
+ .comment       0x00000000       0x31 EEPROM_2K.o
  .text          0x00000000        0x0 main.o
  .data          0x00000000        0x0 main.o
  .bss           0x00000000        0x0 main.o
@@ -126,6 +132,7 @@ user_signatures  0x00850000         0x00000400         rw !x
 Linker script and memory map
 
 LOAD C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.3.300/gcc/dev/atmega32a/avr5/crtatmega32a.o
+LOAD EEPROM_2K.o
 LOAD main.o
 LOAD Monitor.o
 LOAD SRAM.o

@@ -19,6 +19,7 @@
 	Assumes that we are already in 'write mode'
 
 **/
+/*
 void flush2K(){
 	
 	//Put all control pins in a known state
@@ -186,3 +187,4 @@ void init2Kread(){
 	disableWrite();
 	disableOutput();
 }
+*/

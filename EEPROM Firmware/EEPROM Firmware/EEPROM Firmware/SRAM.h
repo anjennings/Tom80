@@ -9,7 +9,6 @@
 
 #ifndef SRAM_H_
 #define SRAM_H_
-#include <stdint-gcc.h>
 
 	#define DATA PORTA
 	#define D0 PORTA0
@@ -40,7 +39,7 @@
 	#define A13 PORTC5
 	#define A14 PORTC6
 
-	//UART is on PortD so don't write to any other pins
+	//UART is also on PortD you can not simply write to PortD as with A, B, and C
 	#define CONTROL PORTD
 	#define N_OUTPUT PORTD5
 	#define N_WRITE PORTD6

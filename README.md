@@ -7,11 +7,12 @@ Specs are:
 	-Z80 CPU @ 8 MHz (10 MHz Max)
 	-32 Kilobytes EEPROM (0x0000 - 0x7FFF)
 	-32 Kilobytes SRAM (0x8000 - 0xFFFF)
-	-16C550 UART Controller
+	-16550 UART Controller
+	-USB Serial Interface
 	
 Prototype Specs:
 
-	-Z80 CPU with 2 MHZ Clock
+	-Z80 CPU @ 2 MHz Clock
 	-2 Kilobytes EEPROM (0x0000 - 0x07FF)
 	-2 Kilobytes SRAM (0x0800 - 0x0FFF)
 	-A single 8 bit latch for I/O
