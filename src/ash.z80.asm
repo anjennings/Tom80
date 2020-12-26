@@ -9,6 +9,7 @@
 ;Finish Tokenizer
 ;Start Parser
 ;Start Execution Function
+;A lot of the JP could probably be replaced with JR (which is faster I think)
 
 STACK_H equ 0xFF
 STACK_L equ 0xFF
@@ -591,8 +592,8 @@ PARSE_BUFFER:
     LD (HL), 0
 
     ;Set state to be start
-    LD HL, PARSE_STATE
-    LD (HL), STATE_START
+    ;LD HL, PARSE_STATE
+    ;LD (HL), STATE_START
 
     ;Set size of buffer to be 0
     LD HL, PARSE_BUF
@@ -832,22 +833,6 @@ PARSE_INST:
     POP BC
     RET
 
-;STATES:
-STATE_START equ 0   ;Start State
-STATE_HELP equ 1    ;? Symbol
-STATE_EXE equ 2     ;@ Symbol
-STATE_LIEX equ 3    ;Literal following @
-STATE_LIT equ 4     ;Leftmost literal (branches)
-STATE_READ equ 5    ;Read :
-STATE_WRITE equ 6   ;Write <
-STATE_LITRD equ 7   ;Literal following :
-STATE_LITWR equ 8   ;Literal following <
-
-EXE_RAM equ 0x8300
-EXE_STATE equ 0x8301
-EXE_INC equ 0x8302
-EXE_BUF equ 0x8310
-
 ;This is essentially a big case statement depending on which token appears
 ;first in the parse buffer, each case has a corresponding subroutine
 ;it shouldn't be hard to add extra functions later if needed
@@ -864,37 +849,42 @@ EXECUTE_BUFFER:
     ;Get token
     LD A, (HL)
 
-    ;Check if its the end of the buffer
-    CP TOKEN_EF
-    JP Z, EXECUTE_BUFFER_RETURN_SUCCESS
+    EXECUTE_BUFFER_EF:
+        ;Check if its the end of the buffer (no instruction)
+        CP TOKEN_EF
+        JP Z, EXECUTE_BUFFER_RETURN_SUCCESS
 
-    ;Check if current token is a single literal value
-    ;This is either a read or write value
-    CP TOKEN_LT
-    CALL Z, EVAL_LITERAL
-    CP 0xFF
-    JP Z, EXECUTE_BUFFER_RETURN_SUCCESS
+    EXECUTE_BUFFER_WD:
+        ;Check if current token is a Word Value
+        CP TOKEN_WD
+        JP NZ, EXECUTE_BUFFER_EXE                   ;If not, jump to the next
+        CALL EVAL_LITERAL
+        CP 0                                        ;Expect a return value of 0
+        JP Z, EXECUTE_BUFFER_RETURN_SUCCESS
 
-    ;Check if current token is an @ symbol
-    CP TOKEN_EX
-    CALL Z, EVAL_EXE
-    CP 0xFF
-    JP Z, EXECUTE_BUFFER_RETURN_SUCCESS
+    EXECUTE_BUFFER_EXE:
+        ;Check if current token is an @ symbol
+        CP TOKEN_EX
+        JP NZ, EXECUTE_BUFFER_HE
+        CALL EVAL_EXE
+        CP 0
+        JP Z, EXECUTE_BUFFER_RETURN_SUCCESS
 
-    ;Check if current token is an ? symbol
-    CP TOKEN_HE
-    CALL Z, EVAL_HELP
-    CP 0xFF
-    JP Z, EXECUTE_BUFFER_RETURN_SUCCESS
+    EXECUTE_BUFFER_HE:
+        ;Check if current token is an ? symbol
+        CP TOKEN_HE
+        CALL Z, EVAL_HELP
     
     ;More actions could be added here
 
-    ;If parser reaches this point then there is an invalid instruction
-    LD A, 0xFF
-    JP EXECUTE_BUFFER_RETURN
+    EXECUTE_BUFFER_FAIL:
+        ;If parser reaches this point then there is an invalid instruction
+        LD A, 0xFF
+        JP EXECUTE_BUFFER_RETURN
 
     EXECUTE_BUFFER_RETURN_SUCCESS:
-    LD A, 0x00
+        ;I don't think this is needed because A should already be 0
+        ;LD A, 0x00
 
     EXECUTE_BUFFER_RETURN:
     POP HL
@@ -903,6 +893,55 @@ EXECUTE_BUFFER:
     RET
 
 EVAL_LITERAL:
+    PUSH HL
+    PUSH DE
+    
+    ;Get First Two Bytes
+    LD HL, PARSE_BUF
+    LD A, L
+    ADD A, 2
+    LD L, A
+    
+    ;Get the top byte
+    LD A, (HL)
+    
+    ;Store into D
+    LD D, A
+    
+    ;Get the bottom byte
+    INC HL
+    LD A, (HL)
+    
+    ;Store into E
+    LD E, A
+    
+    ;Get the instruction token
+    INC HL
+    LD A, (HL)
+    
+    ;See if A is a read instruction
+    EVAL_LITERAL_READ:
+        CP TOKEN_RD
+        JP NZ, EVAL_LITERAL_WRITE
+        CALL EVAL_READ
+        CP 0     ;Check for error
+        JP Z, EVAL_LITERAL_SUCCESS
+    
+    EVAL_LITERAL_WRITE:
+        CP TOKEN_WR
+        JP NZ, EVAL_LITERAL_FAIL
+        CALL EVAL_WRITE
+        CP 0     ;Check for error
+        JP Z, EVAL_LITERAL_SUCCESS
+        
+    ;Other instrucitons could be added here...
+    
+    EVAL_LITERAL_FAIL:
+    LD A, 0xFF
+    
+    EVAL_LITERAL_SUCCESS:
+    POP DE
+    POP HL
     RET
 
 EVAL_EXE:
@@ -948,11 +987,11 @@ EVAL_EXE:
     
     
     EVAL_EXE_FAILURE:
-    LD A, 0
+    LD A, 0xFF
     JP EVAL_EXE_EXIT
     
     EVAL_EXE_SUCCESS:
-    LD A, 0xFF
+    LD A, 0
     
     EVAL_EXE_EXIT:
     POP DE
@@ -963,6 +1002,38 @@ EVAL_READ:
     RET
 
 EVAL_WRITE:
+    ;DE is the literal value
+    ;HL should not have been modified from before
+    PUSH HL
+    PUSH DE
+    
+    ;Look now for the final Literal
+    INC HL
+    LD A, (HL)
+    
+    ;Check that next token is a word, even though we only use the lower byte
+    CP TOKEN_WD
+    JP NZ, EVAL_WRITE_FAIL
+    
+    ;Get value to write
+    INC HL
+    INC HL
+    LD A, (HL)
+    
+    ;Write the value
+    LD HL, DE
+    LD (HL), A
+    
+    ;SUCCESS!
+    LD A, 0
+    JP EVAL_WRITE_RETURN
+    
+    EVAL_WRITE_FAIL:
+    LD A, 0xFF
+        
+    EVAL_WRITE_RETURN:
+    POP DE
+    POP HL
     RET
 
 EVAL_HELP:
@@ -971,8 +1042,6 @@ EVAL_HELP:
     ;Just print out the help text
     LD HL, HELP_TEXT
     CALL WRITE_STR
-    
-    LD A, 0xFF
 
     POP HL
     RET
@@ -983,7 +1052,7 @@ EVAL_HELP:
 
 BOOT_MSG:
 .db NEWLINE, RETURN, "ASH v0.03", NEWLINE, RETURN, "(C) 2020 by Aidan Jennings"
-.db NEWLINE, RETURN, "ZILOG Z80 32k EEPROM, 32k SRAM", NEWLINE, RETURN, "TEXT ONLY", EOF
+.db NEWLINE, RETURN, "ZILOG Z80 32k EEPROM, 32k SRAM", NEWLINE, RETURN, "TEXT ONLY", NEWLINE, RETURN, EOF
 
 READY_MSG:
 .db NEWLINE, RETURN, "BOOT PROCESS COMPLETE!", NEWLINE, RETURN, EOF
@@ -1005,8 +1074,8 @@ PROMPT:
 
 org 8001h
 ;.db "A0:7F", NEWLINE
-;.db "A8F4<B7", NEWLINE
-.db "@9001", NEWLINE
+.db "9001<AF", NEWLINE
+;.db "@9001", NEWLINE
 
 org 9001h
     NOP
