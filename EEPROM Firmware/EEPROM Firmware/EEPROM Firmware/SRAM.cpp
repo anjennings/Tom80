@@ -183,19 +183,72 @@ void init32Kread(){
 //Disables write protection on chips, only needs to be done once
 void disableSoftwareProtection(){
 	
-	writeData(0xaa, 0x5555);
-	_delay_ms(1);
-	writeData(0x55, 0x2aaa);
-	_delay_ms(1);
-	writeData(0x80, 0x5555);
-	_delay_ms(1);
-	writeData(0xAA, 0x5555);
-	_delay_ms(1);
-	writeData(0x55, 0x2aaa);
-	_delay_ms(1);
-	writeData(0x20, 0x5555);
-	_delay_ms(1);
-	writeData(0, 0);
+	setControl();
+	//flush disables all controls
+	
+	//Step 1
+	flush();
+	setAddresss(0x5555);
+	setData(0xAA);
+	enableEEPROM();
+	enableWrite();
 	_delay_ms(1);
 	
+	//Step 2
+	flush();
+	setAddresss(0x2AAA);
+	setData(0x55);
+	enableEEPROM();
+	enableWrite();
+	_delay_ms(1);
+	
+	//Step 3
+	flush();
+	setAddresss(0x5555);
+	setData(0x80);
+	enableEEPROM();
+	enableWrite();
+	_delay_ms(1);
+	
+	//Step 4
+	flush();
+	setAddresss(0x5555);
+	setData(0xAA);
+	enableEEPROM();
+	enableWrite();
+	_delay_ms(1);
+	
+	//Step 5
+	flush();
+	setAddresss(0x2AAA);
+	setData(0x55);
+	enableEEPROM();
+	enableWrite();
+	_delay_ms(1);
+	
+	//Step 6
+	flush();
+	setAddresss(0x5555);
+	setData(0x20);
+	enableEEPROM();
+	enableWrite();
+	
+	//Twc
+	_delay_ms(10);
+	
+	/*
+	writeData(0xaa, 0x5555);
+	//_delay_ms(1);
+	writeData(0x55, 0x2aaa);
+	//_delay_ms(1);
+	writeData(0x80, 0x5555);
+	//_delay_ms(1);
+	writeData(0xAA, 0x5555);
+	//_delay_ms(1);
+	writeData(0x55, 0x2aaa);
+	//_delay_ms(1);
+	writeData(0x20, 0x5555);
+	//_delay_ms(1);
+	//_delay_ms(1);
+	*/
 }

@@ -48,19 +48,24 @@ int oldmain(void) {
     {
 		//Wait for user input
 		USART_receive();
-		/*
+		
+		//Just in case
+		disableSoftwareProtection();
+		
+		_delay_ms(2);
+		
 		//Write the first 16 bytes
 		USART_print("\n\n\rWriting to EEPROM...\n\r");
 		for(uint16_t i = 0; i < 0x800; i++){
-			writeData((uint8_t)i, i);
+			writeData(0, i);
 		}
 		
 		_delay_ms(10);
-		*/
+		
 		//Read those bytes back and print to 
 		USART_print("\n\n\n\n\rReading from EEPROM...\n");
 		
-		for(uint16_t j = 0; j < 0x600; j++){
+		for(uint16_t j = 0; j < 0x800; j++){
 			
 			itoa(j, snum, 16);
 			USART_print("\r0x");

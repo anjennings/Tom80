@@ -3,29 +3,29 @@ EEPROM Firmware.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .text         000003dc  00000000  00000000  00000074  2**1
+  0 .text         00000438  00000000  00000000  00000074  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  1 .data         00000036  00800060  000003dc  00000450  2**0
+  1 .data         00000036  00800060  00000438  000004ac  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  2 .comment      00000030  00000000  00000000  00000486  2**0
+  2 .comment      00000030  00000000  00000000  000004e2  2**0
                   CONTENTS, READONLY
-  3 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  000004b8  2**2
+  3 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  00000514  2**2
                   CONTENTS, READONLY
-  4 .debug_aranges 00000140  00000000  00000000  000004f4  2**0
+  4 .debug_aranges 00000140  00000000  00000000  00000550  2**0
                   CONTENTS, READONLY, DEBUGGING
-  5 .debug_info   00001890  00000000  00000000  00000634  2**0
+  5 .debug_info   00001aaf  00000000  00000000  00000690  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_abbrev 00000c0c  00000000  00000000  00001ec4  2**0
+  6 .debug_abbrev 00000c4d  00000000  00000000  0000213f  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_line   00000a15  00000000  00000000  00002ad0  2**0
+  7 .debug_line   00000b78  00000000  00000000  00002d8c  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_frame  00000284  00000000  00000000  000034e8  2**2
+  8 .debug_frame  00000294  00000000  00000000  00003904  2**2
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_str    000006f7  00000000  00000000  0000376c  2**0
+  9 .debug_str    000006f7  00000000  00000000  00003b98  2**0
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_loc    000009e8  00000000  00000000  00003e63  2**0
+ 10 .debug_loc    00000b0c  00000000  00000000  0000428f  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_ranges 00000100  00000000  00000000  0000484b  2**0
+ 11 .debug_ranges 00000100  00000000  00000000  00004d9b  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -65,8 +65,8 @@ Disassembly of section .text:
   60:	10 e0       	ldi	r17, 0x00	; 0
   62:	a0 e6       	ldi	r26, 0x60	; 96
   64:	b0 e0       	ldi	r27, 0x00	; 0
-  66:	ec ed       	ldi	r30, 0xDC	; 220
-  68:	f3 e0       	ldi	r31, 0x03	; 3
+  66:	e8 e3       	ldi	r30, 0x38	; 56
+  68:	f4 e0       	ldi	r31, 0x04	; 4
   6a:	02 c0       	rjmp	.+4      	; 0x70 <__do_copy_data+0x10>
   6c:	05 90       	lpm	r0, Z+
   6e:	0d 92       	st	X+, r0
@@ -88,7 +88,7 @@ Disassembly of section .text:
   82:	b2 07       	cpc	r27, r18
   84:	e1 f7       	brne	.-8      	; 0x7e <.do_clear_bss_loop>
   86:	0e 94 49 00 	call	0x92	; 0x92 <main>
-  8a:	0c 94 ec 01 	jmp	0x3d8	; 0x3d8 <_exit>
+  8a:	0c 94 1a 02 	jmp	0x434	; 0x434 <_exit>
 
 0000008e <__bad_interrupt>:
   8e:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
@@ -100,7 +100,7 @@ char snum[8];
 int main(void){
 	
 	USART_init();
-  92:	0e 94 98 01 	call	0x330	; 0x330 <_Z10USART_initv>
+  92:	0e 94 c6 01 	call	0x38c	; 0x38c <_Z10USART_initv>
 	
 	//Just in case
 	disableSoftwareProtection();
@@ -134,7 +134,7 @@ void dump(){
 	USART_print("\rReading from EEPROM...\n");
   b8:	80 e6       	ldi	r24, 0x60	; 96
   ba:	90 e0       	ldi	r25, 0x00	; 0
-  bc:	0e 94 a8 01 	call	0x350	; 0x350 <_Z11USART_printPc>
+  bc:	0e 94 d6 01 	call	0x3ac	; 0x3ac <_Z11USART_printPc>
 	
 	char snum[8];
 	
@@ -152,21 +152,21 @@ void dump(){
   c8:	6f 5f       	subi	r22, 0xFF	; 255
   ca:	7f 4f       	sbci	r23, 0xFF	; 255
   cc:	c8 01       	movw	r24, r16
-  ce:	0e 94 b7 01 	call	0x36e	; 0x36e <__itoa_ncheck>
+  ce:	0e 94 e5 01 	call	0x3ca	; 0x3ca <__itoa_ncheck>
 		
 		itoa(j, snum, 16);
 		USART_print("\r0x");
   d2:	89 e7       	ldi	r24, 0x79	; 121
   d4:	90 e0       	ldi	r25, 0x00	; 0
-  d6:	0e 94 a8 01 	call	0x350	; 0x350 <_Z11USART_printPc>
+  d6:	0e 94 d6 01 	call	0x3ac	; 0x3ac <_Z11USART_printPc>
 		USART_print(snum);
   da:	ce 01       	movw	r24, r28
   dc:	01 96       	adiw	r24, 0x01	; 1
-  de:	0e 94 a8 01 	call	0x350	; 0x350 <_Z11USART_printPc>
+  de:	0e 94 d6 01 	call	0x3ac	; 0x3ac <_Z11USART_printPc>
 		USART_print(" : 0x");
   e2:	8d e7       	ldi	r24, 0x7D	; 125
   e4:	90 e0       	ldi	r25, 0x00	; 0
-  e6:	0e 94 a8 01 	call	0x350	; 0x350 <_Z11USART_printPc>
+  e6:	0e 94 d6 01 	call	0x3ac	; 0x3ac <_Z11USART_printPc>
 		
 		itoa(readData(j), snum, 16);
   ea:	c8 01       	movw	r24, r16
@@ -176,15 +176,15 @@ void dump(){
   f4:	6f 5f       	subi	r22, 0xFF	; 255
   f6:	7f 4f       	sbci	r23, 0xFF	; 255
   f8:	90 e0       	ldi	r25, 0x00	; 0
-  fa:	0e 94 b7 01 	call	0x36e	; 0x36e <__itoa_ncheck>
+  fa:	0e 94 e5 01 	call	0x3ca	; 0x3ca <__itoa_ncheck>
 		USART_print(snum);
   fe:	ce 01       	movw	r24, r28
  100:	01 96       	adiw	r24, 0x01	; 1
- 102:	0e 94 a8 01 	call	0x350	; 0x350 <_Z11USART_printPc>
+ 102:	0e 94 d6 01 	call	0x3ac	; 0x3ac <_Z11USART_printPc>
 		USART_print("\n");
  106:	8b e8       	ldi	r24, 0x8B	; 139
  108:	90 e0       	ldi	r25, 0x00	; 0
- 10a:	0e 94 a8 01 	call	0x350	; 0x350 <_Z11USART_printPc>
+ 10a:	0e 94 d6 01 	call	0x3ac	; 0x3ac <_Z11USART_printPc>
 	
 	USART_print("\rReading from EEPROM...\n");
 	
@@ -205,7 +205,7 @@ void dump(){
 	USART_print("\rDone!\r\n\n");
  11a:	83 e8       	ldi	r24, 0x83	; 131
  11c:	90 e0       	ldi	r25, 0x00	; 0
- 11e:	0e 94 a8 01 	call	0x350	; 0x350 <_Z11USART_printPc>
+ 11e:	0e 94 d6 01 	call	0x3ac	; 0x3ac <_Z11USART_printPc>
 	
  122:	28 96       	adiw	r28, 0x08	; 8
  124:	0f b6       	in	r0, 0x3f	; 63
@@ -256,14 +256,14 @@ void evaluateExpression(char *i){
  158:	0e 94 06 01 	call	0x20c	; 0x20c <_Z9writeDatahj>
 			USART_send('0');
  15c:	80 e3       	ldi	r24, 0x30	; 48
- 15e:	0e 94 a4 01 	call	0x348	; 0x348 <_Z10USART_sendh>
+ 15e:	0e 94 d2 01 	call	0x3a4	; 0x3a4 <_Z10USART_sendh>
 			break;
  162:	08 95       	ret
 		case i_READ : 
 			USART_send(readData(addr));
  164:	cb 01       	movw	r24, r22
  166:	0e 94 2f 01 	call	0x25e	; 0x25e <_Z8readDataj>
- 16a:	0e 94 a4 01 	call	0x348	; 0x348 <_Z10USART_sendh>
+ 16a:	0e 94 d2 01 	call	0x3a4	; 0x3a4 <_Z10USART_sendh>
 			break;
  16e:	08 95       	ret
 		case i_DUMP :
@@ -275,7 +275,7 @@ void evaluateExpression(char *i){
 			USART_print("\rError\n");
  176:	8d e8       	ldi	r24, 0x8D	; 141
  178:	90 e0       	ldi	r25, 0x00	; 0
- 17a:	0e 94 a8 01 	call	0x350	; 0x350 <_Z11USART_printPc>
+ 17a:	0e 94 d6 01 	call	0x3ac	; 0x3ac <_Z11USART_printPc>
  17e:	08 95       	ret
 
 00000180 <_Z7monitorv>:
@@ -299,7 +299,7 @@ void monitor(){
 	while(1){
 		
 		*(iB + bP) = USART_receive();
- 18e:	0e 94 a0 01 	call	0x340	; 0x340 <_Z13USART_receivev>
+ 18e:	0e 94 ce 01 	call	0x39c	; 0x39c <_Z13USART_receivev>
  192:	e1 e0       	ldi	r30, 0x01	; 1
  194:	f0 e0       	ldi	r31, 0x00	; 0
  196:	ec 0f       	add	r30, r28
@@ -452,226 +452,361 @@ void monitor(){
 
 //Disables write protection on chips, only needs to be done once
 void disableSoftwareProtection(){
+ 2a2:	1f 93       	push	r17
+ 2a4:	cf 93       	push	r28
+ 2a6:	df 93       	push	r29
 	
-	writeData(0xaa, 0x5555);
- 2a2:	65 e5       	ldi	r22, 0x55	; 85
- 2a4:	75 e5       	ldi	r23, 0x55	; 85
- 2a6:	8a ea       	ldi	r24, 0xAA	; 170
- 2a8:	0e 94 06 01 	call	0x20c	; 0x20c <_Z9writeDatahj>
+	setControl();
+ 2a8:	0e 94 f4 00 	call	0x1e8	; 0x1e8 <_Z10setControlv>
+	//flush disables all controls
+	
+	//Step 1
+	flush();
+ 2ac:	0e 94 e6 00 	call	0x1cc	; 0x1cc <_Z5flushv>
+	setAddresss(0x5555);
+ 2b0:	85 e5       	ldi	r24, 0x55	; 85
+ 2b2:	95 e5       	ldi	r25, 0x55	; 85
+ 2b4:	0e 94 00 01 	call	0x200	; 0x200 <_Z11setAddresssj>
+	ADDR_L = (uint8_t)(a & 0xff);
+}
+
+//Set Port A to be a data value
+void setData(uint8_t d){
+	DDRA = 0xff;
+ 2b8:	cf ef       	ldi	r28, 0xFF	; 255
+ 2ba:	ca bb       	out	0x1a, r28	; 26
+	DATA = d;
+ 2bc:	1a ea       	ldi	r17, 0xAA	; 170
+ 2be:	1b bb       	out	0x1b, r17	; 27
+	
+	//Step 1
+	flush();
+	setAddresss(0x5555);
+	setData(0xAA);
+	enableEEPROM();
+ 2c0:	0e 94 da 00 	call	0x1b4	; 0x1b4 <_Z12enableEEPROMv>
+	enableWrite();
+ 2c4:	0e 94 de 00 	call	0x1bc	; 0x1bc <_Z11enableWritev>
 	#else
 		//round up by default
 		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
 	#endif
 
 	__builtin_avr_delay_cycles(__ticks_dc);
- 2ac:	86 e6       	ldi	r24, 0x66	; 102
- 2ae:	9e e0       	ldi	r25, 0x0E	; 14
- 2b0:	01 97       	sbiw	r24, 0x01	; 1
- 2b2:	f1 f7       	brne	.-4      	; 0x2b0 <_Z25disableSoftwareProtectionv+0xe>
- 2b4:	00 00       	nop
+ 2c8:	86 e6       	ldi	r24, 0x66	; 102
+ 2ca:	9e e0       	ldi	r25, 0x0E	; 14
+ 2cc:	01 97       	sbiw	r24, 0x01	; 1
+ 2ce:	f1 f7       	brne	.-4      	; 0x2cc <_Z25disableSoftwareProtectionv+0x2a>
+ 2d0:	00 00       	nop
 	_delay_ms(1);
-	writeData(0x55, 0x2aaa);
- 2b6:	6a ea       	ldi	r22, 0xAA	; 170
- 2b8:	7a e2       	ldi	r23, 0x2A	; 42
- 2ba:	85 e5       	ldi	r24, 0x55	; 85
- 2bc:	0e 94 06 01 	call	0x20c	; 0x20c <_Z9writeDatahj>
- 2c0:	86 e6       	ldi	r24, 0x66	; 102
- 2c2:	9e e0       	ldi	r25, 0x0E	; 14
- 2c4:	01 97       	sbiw	r24, 0x01	; 1
- 2c6:	f1 f7       	brne	.-4      	; 0x2c4 <_Z25disableSoftwareProtectionv+0x22>
- 2c8:	00 00       	nop
+	
+	//Step 2
+	flush();
+ 2d2:	0e 94 e6 00 	call	0x1cc	; 0x1cc <_Z5flushv>
+	setAddresss(0x2AAA);
+ 2d6:	8a ea       	ldi	r24, 0xAA	; 170
+ 2d8:	9a e2       	ldi	r25, 0x2A	; 42
+ 2da:	0e 94 00 01 	call	0x200	; 0x200 <_Z11setAddresssj>
+	ADDR_L = (uint8_t)(a & 0xff);
+}
+
+//Set Port A to be a data value
+void setData(uint8_t d){
+	DDRA = 0xff;
+ 2de:	ca bb       	out	0x1a, r28	; 26
+	DATA = d;
+ 2e0:	d5 e5       	ldi	r29, 0x55	; 85
+ 2e2:	db bb       	out	0x1b, r29	; 27
+	
+	//Step 2
+	flush();
+	setAddresss(0x2AAA);
+	setData(0x55);
+	enableEEPROM();
+ 2e4:	0e 94 da 00 	call	0x1b4	; 0x1b4 <_Z12enableEEPROMv>
+	enableWrite();
+ 2e8:	0e 94 de 00 	call	0x1bc	; 0x1bc <_Z11enableWritev>
+ 2ec:	86 e6       	ldi	r24, 0x66	; 102
+ 2ee:	9e e0       	ldi	r25, 0x0E	; 14
+ 2f0:	01 97       	sbiw	r24, 0x01	; 1
+ 2f2:	f1 f7       	brne	.-4      	; 0x2f0 <_Z25disableSoftwareProtectionv+0x4e>
+ 2f4:	00 00       	nop
 	_delay_ms(1);
-	writeData(0x80, 0x5555);
- 2ca:	65 e5       	ldi	r22, 0x55	; 85
- 2cc:	75 e5       	ldi	r23, 0x55	; 85
- 2ce:	80 e8       	ldi	r24, 0x80	; 128
- 2d0:	0e 94 06 01 	call	0x20c	; 0x20c <_Z9writeDatahj>
- 2d4:	86 e6       	ldi	r24, 0x66	; 102
- 2d6:	9e e0       	ldi	r25, 0x0E	; 14
- 2d8:	01 97       	sbiw	r24, 0x01	; 1
- 2da:	f1 f7       	brne	.-4      	; 0x2d8 <_Z25disableSoftwareProtectionv+0x36>
- 2dc:	00 00       	nop
-	_delay_ms(1);
-	writeData(0xAA, 0x5555);
- 2de:	65 e5       	ldi	r22, 0x55	; 85
- 2e0:	75 e5       	ldi	r23, 0x55	; 85
- 2e2:	8a ea       	ldi	r24, 0xAA	; 170
- 2e4:	0e 94 06 01 	call	0x20c	; 0x20c <_Z9writeDatahj>
- 2e8:	86 e6       	ldi	r24, 0x66	; 102
- 2ea:	9e e0       	ldi	r25, 0x0E	; 14
- 2ec:	01 97       	sbiw	r24, 0x01	; 1
- 2ee:	f1 f7       	brne	.-4      	; 0x2ec <_Z25disableSoftwareProtectionv+0x4a>
- 2f0:	00 00       	nop
-	_delay_ms(1);
-	writeData(0x55, 0x2aaa);
- 2f2:	6a ea       	ldi	r22, 0xAA	; 170
- 2f4:	7a e2       	ldi	r23, 0x2A	; 42
- 2f6:	85 e5       	ldi	r24, 0x55	; 85
- 2f8:	0e 94 06 01 	call	0x20c	; 0x20c <_Z9writeDatahj>
- 2fc:	86 e6       	ldi	r24, 0x66	; 102
- 2fe:	9e e0       	ldi	r25, 0x0E	; 14
- 300:	01 97       	sbiw	r24, 0x01	; 1
- 302:	f1 f7       	brne	.-4      	; 0x300 <_Z25disableSoftwareProtectionv+0x5e>
- 304:	00 00       	nop
-	_delay_ms(1);
-	writeData(0x20, 0x5555);
- 306:	65 e5       	ldi	r22, 0x55	; 85
- 308:	75 e5       	ldi	r23, 0x55	; 85
- 30a:	80 e2       	ldi	r24, 0x20	; 32
- 30c:	0e 94 06 01 	call	0x20c	; 0x20c <_Z9writeDatahj>
+	
+	//Step 3
+	flush();
+ 2f6:	0e 94 e6 00 	call	0x1cc	; 0x1cc <_Z5flushv>
+	setAddresss(0x5555);
+ 2fa:	85 e5       	ldi	r24, 0x55	; 85
+ 2fc:	95 e5       	ldi	r25, 0x55	; 85
+ 2fe:	0e 94 00 01 	call	0x200	; 0x200 <_Z11setAddresssj>
+	ADDR_L = (uint8_t)(a & 0xff);
+}
+
+//Set Port A to be a data value
+void setData(uint8_t d){
+	DDRA = 0xff;
+ 302:	ca bb       	out	0x1a, r28	; 26
+	DATA = d;
+ 304:	80 e8       	ldi	r24, 0x80	; 128
+ 306:	8b bb       	out	0x1b, r24	; 27
+	
+	//Step 3
+	flush();
+	setAddresss(0x5555);
+	setData(0x80);
+	enableEEPROM();
+ 308:	0e 94 da 00 	call	0x1b4	; 0x1b4 <_Z12enableEEPROMv>
+	enableWrite();
+ 30c:	0e 94 de 00 	call	0x1bc	; 0x1bc <_Z11enableWritev>
  310:	86 e6       	ldi	r24, 0x66	; 102
  312:	9e e0       	ldi	r25, 0x0E	; 14
  314:	01 97       	sbiw	r24, 0x01	; 1
  316:	f1 f7       	brne	.-4      	; 0x314 <_Z25disableSoftwareProtectionv+0x72>
  318:	00 00       	nop
 	_delay_ms(1);
-	writeData(0, 0);
- 31a:	60 e0       	ldi	r22, 0x00	; 0
- 31c:	70 e0       	ldi	r23, 0x00	; 0
- 31e:	80 e0       	ldi	r24, 0x00	; 0
- 320:	0e 94 06 01 	call	0x20c	; 0x20c <_Z9writeDatahj>
- 324:	86 e6       	ldi	r24, 0x66	; 102
- 326:	9e e0       	ldi	r25, 0x0E	; 14
- 328:	01 97       	sbiw	r24, 0x01	; 1
- 32a:	f1 f7       	brne	.-4      	; 0x328 <_Z25disableSoftwareProtectionv+0x86>
- 32c:	00 00       	nop
- 32e:	08 95       	ret
+	
+	//Step 4
+	flush();
+ 31a:	0e 94 e6 00 	call	0x1cc	; 0x1cc <_Z5flushv>
+	setAddresss(0x5555);
+ 31e:	85 e5       	ldi	r24, 0x55	; 85
+ 320:	95 e5       	ldi	r25, 0x55	; 85
+ 322:	0e 94 00 01 	call	0x200	; 0x200 <_Z11setAddresssj>
+	ADDR_L = (uint8_t)(a & 0xff);
+}
 
-00000330 <_Z10USART_initv>:
+//Set Port A to be a data value
+void setData(uint8_t d){
+	DDRA = 0xff;
+ 326:	ca bb       	out	0x1a, r28	; 26
+	DATA = d;
+ 328:	1b bb       	out	0x1b, r17	; 27
+	
+	//Step 4
+	flush();
+	setAddresss(0x5555);
+	setData(0xAA);
+	enableEEPROM();
+ 32a:	0e 94 da 00 	call	0x1b4	; 0x1b4 <_Z12enableEEPROMv>
+	enableWrite();
+ 32e:	0e 94 de 00 	call	0x1bc	; 0x1bc <_Z11enableWritev>
+ 332:	86 e6       	ldi	r24, 0x66	; 102
+ 334:	9e e0       	ldi	r25, 0x0E	; 14
+ 336:	01 97       	sbiw	r24, 0x01	; 1
+ 338:	f1 f7       	brne	.-4      	; 0x336 <_Z25disableSoftwareProtectionv+0x94>
+ 33a:	00 00       	nop
+	_delay_ms(1);
+	
+	//Step 5
+	flush();
+ 33c:	0e 94 e6 00 	call	0x1cc	; 0x1cc <_Z5flushv>
+	setAddresss(0x2AAA);
+ 340:	8a ea       	ldi	r24, 0xAA	; 170
+ 342:	9a e2       	ldi	r25, 0x2A	; 42
+ 344:	0e 94 00 01 	call	0x200	; 0x200 <_Z11setAddresssj>
+	ADDR_L = (uint8_t)(a & 0xff);
+}
+
+//Set Port A to be a data value
+void setData(uint8_t d){
+	DDRA = 0xff;
+ 348:	ca bb       	out	0x1a, r28	; 26
+	DATA = d;
+ 34a:	db bb       	out	0x1b, r29	; 27
+	
+	//Step 5
+	flush();
+	setAddresss(0x2AAA);
+	setData(0x55);
+	enableEEPROM();
+ 34c:	0e 94 da 00 	call	0x1b4	; 0x1b4 <_Z12enableEEPROMv>
+	enableWrite();
+ 350:	0e 94 de 00 	call	0x1bc	; 0x1bc <_Z11enableWritev>
+ 354:	86 e6       	ldi	r24, 0x66	; 102
+ 356:	9e e0       	ldi	r25, 0x0E	; 14
+ 358:	01 97       	sbiw	r24, 0x01	; 1
+ 35a:	f1 f7       	brne	.-4      	; 0x358 <_Z25disableSoftwareProtectionv+0xb6>
+ 35c:	00 00       	nop
+	_delay_ms(1);
+	
+	//Step 6
+	flush();
+ 35e:	0e 94 e6 00 	call	0x1cc	; 0x1cc <_Z5flushv>
+	setAddresss(0x5555);
+ 362:	85 e5       	ldi	r24, 0x55	; 85
+ 364:	95 e5       	ldi	r25, 0x55	; 85
+ 366:	0e 94 00 01 	call	0x200	; 0x200 <_Z11setAddresssj>
+	ADDR_L = (uint8_t)(a & 0xff);
+}
+
+//Set Port A to be a data value
+void setData(uint8_t d){
+	DDRA = 0xff;
+ 36a:	ca bb       	out	0x1a, r28	; 26
+	DATA = d;
+ 36c:	80 e2       	ldi	r24, 0x20	; 32
+ 36e:	8b bb       	out	0x1b, r24	; 27
+	
+	//Step 6
+	flush();
+	setAddresss(0x5555);
+	setData(0x20);
+	enableEEPROM();
+ 370:	0e 94 da 00 	call	0x1b4	; 0x1b4 <_Z12enableEEPROMv>
+	enableWrite();
+ 374:	0e 94 de 00 	call	0x1bc	; 0x1bc <_Z11enableWritev>
+ 378:	8f ef       	ldi	r24, 0xFF	; 255
+ 37a:	9f e8       	ldi	r25, 0x8F	; 143
+ 37c:	01 97       	sbiw	r24, 0x01	; 1
+ 37e:	f1 f7       	brne	.-4      	; 0x37c <_Z25disableSoftwareProtectionv+0xda>
+ 380:	00 c0       	rjmp	.+0      	; 0x382 <_Z25disableSoftwareProtectionv+0xe0>
+ 382:	00 00       	nop
+	//_delay_ms(1);
+	writeData(0x20, 0x5555);
+	//_delay_ms(1);
+	//_delay_ms(1);
+	*/
+ 384:	df 91       	pop	r29
+ 386:	cf 91       	pop	r28
+ 388:	1f 91       	pop	r17
+ 38a:	08 95       	ret
+
+0000038c <_Z10USART_initv>:
 
 #include "FIRMWARE.h"
 
 //* Initialize USART */
 void USART_init(void){
 	UBRRH = (uint8_t)(BAUD_SCALLER>>8);
- 330:	10 bc       	out	0x20, r1	; 32
+ 38c:	10 bc       	out	0x20, r1	; 32
 	UBRRL = (uint8_t)(BAUD_SCALLER);
- 332:	87 e1       	ldi	r24, 0x17	; 23
- 334:	89 b9       	out	0x09, r24	; 9
+ 38e:	87 e1       	ldi	r24, 0x17	; 23
+ 390:	89 b9       	out	0x09, r24	; 9
 	UCSRB = (1<<RXEN)|(1<<TXEN);
- 336:	88 e1       	ldi	r24, 0x18	; 24
- 338:	8a b9       	out	0x0a, r24	; 10
+ 392:	88 e1       	ldi	r24, 0x18	; 24
+ 394:	8a b9       	out	0x0a, r24	; 10
 	UCSRC = (1<<UCSZ0)|(1<<UCSZ1)|(1<<URSEL);
- 33a:	86 e8       	ldi	r24, 0x86	; 134
- 33c:	80 bd       	out	0x20, r24	; 32
- 33e:	08 95       	ret
+ 396:	86 e8       	ldi	r24, 0x86	; 134
+ 398:	80 bd       	out	0x20, r24	; 32
+ 39a:	08 95       	ret
 
-00000340 <_Z13USART_receivev>:
+0000039c <_Z13USART_receivev>:
 }
 
 unsigned char USART_receive(void){
 	while(!(UCSRA & (1<<RXC)));
- 340:	5f 9b       	sbis	0x0b, 7	; 11
- 342:	fe cf       	rjmp	.-4      	; 0x340 <_Z13USART_receivev>
+ 39c:	5f 9b       	sbis	0x0b, 7	; 11
+ 39e:	fe cf       	rjmp	.-4      	; 0x39c <_Z13USART_receivev>
 	return UDR;
- 344:	8c b1       	in	r24, 0x0c	; 12
+ 3a0:	8c b1       	in	r24, 0x0c	; 12
 }
- 346:	08 95       	ret
+ 3a2:	08 95       	ret
 
-00000348 <_Z10USART_sendh>:
+000003a4 <_Z10USART_sendh>:
 
 void USART_send( unsigned char data){
 	while(!(UCSRA & (1<<UDRE)));
- 348:	5d 9b       	sbis	0x0b, 5	; 11
- 34a:	fe cf       	rjmp	.-4      	; 0x348 <_Z10USART_sendh>
+ 3a4:	5d 9b       	sbis	0x0b, 5	; 11
+ 3a6:	fe cf       	rjmp	.-4      	; 0x3a4 <_Z10USART_sendh>
 	UDR = data;
- 34c:	8c b9       	out	0x0c, r24	; 12
- 34e:	08 95       	ret
+ 3a8:	8c b9       	out	0x0c, r24	; 12
+ 3aa:	08 95       	ret
 
-00000350 <_Z11USART_printPc>:
+000003ac <_Z11USART_printPc>:
 	USART_print(snum);
 	
 	return (uint8_t)a;
 }
 
 void USART_print(char * str){
- 350:	cf 93       	push	r28
- 352:	df 93       	push	r29
- 354:	ec 01       	movw	r28, r24
+ 3ac:	cf 93       	push	r28
+ 3ae:	df 93       	push	r29
+ 3b0:	ec 01       	movw	r28, r24
 	while(*str != 0){
- 356:	88 81       	ld	r24, Y
- 358:	88 23       	and	r24, r24
- 35a:	31 f0       	breq	.+12     	; 0x368 <_Z11USART_printPc+0x18>
- 35c:	21 96       	adiw	r28, 0x01	; 1
+ 3b2:	88 81       	ld	r24, Y
+ 3b4:	88 23       	and	r24, r24
+ 3b6:	31 f0       	breq	.+12     	; 0x3c4 <_Z11USART_printPc+0x18>
+ 3b8:	21 96       	adiw	r28, 0x01	; 1
 		USART_send(*str);
- 35e:	0e 94 a4 01 	call	0x348	; 0x348 <_Z10USART_sendh>
+ 3ba:	0e 94 d2 01 	call	0x3a4	; 0x3a4 <_Z10USART_sendh>
 	
 	return (uint8_t)a;
 }
 
 void USART_print(char * str){
 	while(*str != 0){
- 362:	89 91       	ld	r24, Y+
- 364:	81 11       	cpse	r24, r1
- 366:	fb cf       	rjmp	.-10     	; 0x35e <_Z11USART_printPc+0xe>
+ 3be:	89 91       	ld	r24, Y+
+ 3c0:	81 11       	cpse	r24, r1
+ 3c2:	fb cf       	rjmp	.-10     	; 0x3ba <_Z11USART_printPc+0xe>
 		USART_send(*str);
 		str++;
 	}	
- 368:	df 91       	pop	r29
- 36a:	cf 91       	pop	r28
- 36c:	08 95       	ret
+ 3c4:	df 91       	pop	r29
+ 3c6:	cf 91       	pop	r28
+ 3c8:	08 95       	ret
 
-0000036e <__itoa_ncheck>:
- 36e:	bb 27       	eor	r27, r27
- 370:	4a 30       	cpi	r20, 0x0A	; 10
- 372:	31 f4       	brne	.+12     	; 0x380 <__itoa_ncheck+0x12>
- 374:	99 23       	and	r25, r25
- 376:	22 f4       	brpl	.+8      	; 0x380 <__itoa_ncheck+0x12>
- 378:	bd e2       	ldi	r27, 0x2D	; 45
- 37a:	90 95       	com	r25
- 37c:	81 95       	neg	r24
- 37e:	9f 4f       	sbci	r25, 0xFF	; 255
- 380:	0c 94 c3 01 	jmp	0x386	; 0x386 <__utoa_common>
+000003ca <__itoa_ncheck>:
+ 3ca:	bb 27       	eor	r27, r27
+ 3cc:	4a 30       	cpi	r20, 0x0A	; 10
+ 3ce:	31 f4       	brne	.+12     	; 0x3dc <__itoa_ncheck+0x12>
+ 3d0:	99 23       	and	r25, r25
+ 3d2:	22 f4       	brpl	.+8      	; 0x3dc <__itoa_ncheck+0x12>
+ 3d4:	bd e2       	ldi	r27, 0x2D	; 45
+ 3d6:	90 95       	com	r25
+ 3d8:	81 95       	neg	r24
+ 3da:	9f 4f       	sbci	r25, 0xFF	; 255
+ 3dc:	0c 94 f1 01 	jmp	0x3e2	; 0x3e2 <__utoa_common>
 
-00000384 <__utoa_ncheck>:
- 384:	bb 27       	eor	r27, r27
+000003e0 <__utoa_ncheck>:
+ 3e0:	bb 27       	eor	r27, r27
 
-00000386 <__utoa_common>:
- 386:	fb 01       	movw	r30, r22
- 388:	55 27       	eor	r21, r21
- 38a:	aa 27       	eor	r26, r26
- 38c:	88 0f       	add	r24, r24
- 38e:	99 1f       	adc	r25, r25
- 390:	aa 1f       	adc	r26, r26
- 392:	a4 17       	cp	r26, r20
- 394:	10 f0       	brcs	.+4      	; 0x39a <__utoa_common+0x14>
- 396:	a4 1b       	sub	r26, r20
- 398:	83 95       	inc	r24
- 39a:	50 51       	subi	r21, 0x10	; 16
- 39c:	b9 f7       	brne	.-18     	; 0x38c <__utoa_common+0x6>
- 39e:	a0 5d       	subi	r26, 0xD0	; 208
- 3a0:	aa 33       	cpi	r26, 0x3A	; 58
- 3a2:	08 f0       	brcs	.+2      	; 0x3a6 <__utoa_common+0x20>
- 3a4:	a9 5d       	subi	r26, 0xD9	; 217
- 3a6:	a1 93       	st	Z+, r26
- 3a8:	00 97       	sbiw	r24, 0x00	; 0
- 3aa:	79 f7       	brne	.-34     	; 0x38a <__utoa_common+0x4>
- 3ac:	b1 11       	cpse	r27, r1
- 3ae:	b1 93       	st	Z+, r27
- 3b0:	11 92       	st	Z+, r1
- 3b2:	cb 01       	movw	r24, r22
- 3b4:	0c 94 dc 01 	jmp	0x3b8	; 0x3b8 <strrev>
+000003e2 <__utoa_common>:
+ 3e2:	fb 01       	movw	r30, r22
+ 3e4:	55 27       	eor	r21, r21
+ 3e6:	aa 27       	eor	r26, r26
+ 3e8:	88 0f       	add	r24, r24
+ 3ea:	99 1f       	adc	r25, r25
+ 3ec:	aa 1f       	adc	r26, r26
+ 3ee:	a4 17       	cp	r26, r20
+ 3f0:	10 f0       	brcs	.+4      	; 0x3f6 <__utoa_common+0x14>
+ 3f2:	a4 1b       	sub	r26, r20
+ 3f4:	83 95       	inc	r24
+ 3f6:	50 51       	subi	r21, 0x10	; 16
+ 3f8:	b9 f7       	brne	.-18     	; 0x3e8 <__utoa_common+0x6>
+ 3fa:	a0 5d       	subi	r26, 0xD0	; 208
+ 3fc:	aa 33       	cpi	r26, 0x3A	; 58
+ 3fe:	08 f0       	brcs	.+2      	; 0x402 <__LOCK_REGION_LENGTH__+0x2>
+ 400:	a9 5d       	subi	r26, 0xD9	; 217
+ 402:	a1 93       	st	Z+, r26
+ 404:	00 97       	sbiw	r24, 0x00	; 0
+ 406:	79 f7       	brne	.-34     	; 0x3e6 <__utoa_common+0x4>
+ 408:	b1 11       	cpse	r27, r1
+ 40a:	b1 93       	st	Z+, r27
+ 40c:	11 92       	st	Z+, r1
+ 40e:	cb 01       	movw	r24, r22
+ 410:	0c 94 0a 02 	jmp	0x414	; 0x414 <strrev>
 
-000003b8 <strrev>:
- 3b8:	dc 01       	movw	r26, r24
- 3ba:	fc 01       	movw	r30, r24
- 3bc:	67 2f       	mov	r22, r23
- 3be:	71 91       	ld	r23, Z+
- 3c0:	77 23       	and	r23, r23
- 3c2:	e1 f7       	brne	.-8      	; 0x3bc <strrev+0x4>
- 3c4:	32 97       	sbiw	r30, 0x02	; 2
- 3c6:	04 c0       	rjmp	.+8      	; 0x3d0 <strrev+0x18>
- 3c8:	7c 91       	ld	r23, X
- 3ca:	6d 93       	st	X+, r22
- 3cc:	70 83       	st	Z, r23
- 3ce:	62 91       	ld	r22, -Z
- 3d0:	ae 17       	cp	r26, r30
- 3d2:	bf 07       	cpc	r27, r31
- 3d4:	c8 f3       	brcs	.-14     	; 0x3c8 <strrev+0x10>
- 3d6:	08 95       	ret
+00000414 <strrev>:
+ 414:	dc 01       	movw	r26, r24
+ 416:	fc 01       	movw	r30, r24
+ 418:	67 2f       	mov	r22, r23
+ 41a:	71 91       	ld	r23, Z+
+ 41c:	77 23       	and	r23, r23
+ 41e:	e1 f7       	brne	.-8      	; 0x418 <strrev+0x4>
+ 420:	32 97       	sbiw	r30, 0x02	; 2
+ 422:	04 c0       	rjmp	.+8      	; 0x42c <strrev+0x18>
+ 424:	7c 91       	ld	r23, X
+ 426:	6d 93       	st	X+, r22
+ 428:	70 83       	st	Z, r23
+ 42a:	62 91       	ld	r22, -Z
+ 42c:	ae 17       	cp	r26, r30
+ 42e:	bf 07       	cpc	r27, r31
+ 430:	c8 f3       	brcs	.-14     	; 0x424 <strrev+0x10>
+ 432:	08 95       	ret
 
-000003d8 <_exit>:
- 3d8:	f8 94       	cli
+00000434 <_exit>:
+ 434:	f8 94       	cli
 
-000003da <__stop_program>:
- 3da:	ff cf       	rjmp	.-2      	; 0x3da <__stop_program>
+00000436 <__stop_program>:
+ 436:	ff cf       	rjmp	.-2      	; 0x436 <__stop_program>

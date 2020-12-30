@@ -42,6 +42,7 @@ UART_SCR equ        0x7 ;Arbitrary data can be stored here
 NEWLINE equ 0xA
 RETURN equ 0xD
 EOF equ 0x0
+SPACE equ 0x20
 
 NUM0 equ 0x30
 NUM1 equ 0x31
@@ -76,7 +77,7 @@ BOOT:
     ;Set up UART
     CALL UART_INIT
     ;Disable interrupt
-    IM 1
+    ;IM 1
     DI
     ;Boot Sequence Complete
     JP MAIN
@@ -98,15 +99,23 @@ MAIN:
     LD HL, READY_MSG
     CALL WRITE_STR
 
+    LD HL, PROMPT
+    CALL WRITE_STR
+
+    CALL TOGGLE_OUT1
+
+    JP MAIN
+
     ;Set Terminal buffer to 0 
-    LD BC, TERM_BUF
-    LD A, 0
-    LD (BC), A
+    ;LD BC, TERM_BUF
+    ;LD A, 0
+    ;LD (BC), A
 
 MAIN_LOOP:
     ;CALL GETCH
-    CALL EVALUATE_STMT
-    JP MAIN_LOOP
+    ;CALL EVALUATE_STMT
+    ;JP MAIN_LOOP
+    JP MAIN
 
     HALT
 
@@ -121,29 +130,35 @@ UART_INIT:
     PUSH AF
     ;Set DLAB=0, just in case
     IN A, UART_LCR
-    AND 7Fh
+    AND 0x7F
     OUT UART_LCR, A
     ;Disable All Interrupts
-    LD A, 0 
-    OUT UART_IER, A
-    ;FIFO Enable
-    LD A, 1
+    ;LD A, 0 
+    ;OUT UART_IER, A
+    ;FIFO Disable, Reset Fifos
+    LD A, 0x6
     OUT UART_IFR, A
     ;Line Control
-    LD A, 03h         ;8 Bit word, 1 stop, no parity
+    LD A, 0x3         ;8 Bit word, 1 stop, no parity
     OUT UART_LCR, A
     ;Set OUT pins Low (as an indicator)
-    LD A, 0Ch      
+    LD A, 0xC      
     OUT UART_MCR, A
+    ;Clear Line Status Reg Errors (Page 21)
+    IN A, UART_LSR
     ;Set DLAB=1
     IN A, UART_LCR
-    OR 80h
+    OR 0x80
     OUT UART_LCR, A
     ;Divide Clock by 96 for 9600 baud (Assuming 14.7456 MHz clock)
     LD A, 96
     OUT UART_DHR, A
     LD A, 0
     OUT UART_IER, A
+    ;Set DLAB=0 again, as we shouldn't need to change it later
+    IN A, UART_LCR
+    AND 0x7F
+    OUT UART_LCR, A
     ;Return
     POP AF
     RET
@@ -214,19 +229,38 @@ WRITE_BUFFER:
     POP AF
     RET
 
+;Toggle Out Pin 1
+TOGGLE_OUT1:
+    PUSH AF
+    ;Set OUT pins Low (as an indicator)
+    IN A, UART_MCR
+    XOR 0x4 
+    OUT UART_MCR, A
+    POP AF
+    RET
+
 ;/////////////////////////////////////////
 ;Assumes that A is the charactar to write
 ;/////////////////////////////////////////
 PRINTCH:
     PUSH AF
+    
     ;Set DLAB 0
     IN A, UART_LCR
     AND 7Fh
     OUT UART_LCR, A
-    ;TODO: read transmit register status? Page 22
+    
+    PRINTCH_LOOP:
+    ;Read transmit register status in line status register (LSR) See page 22
+    ;Wait if not empty
+    IN A, UART_LSR
+    AND 0x60
+    CP 0x60
+    JP NZ, PRINTCH_LOOP
+
     ;Write Char to UART
-    OUT UART_DHR, A
     POP AF
+    OUT UART_DHR, A
     RET
 
 
@@ -236,26 +270,19 @@ PRINTCH:
 ;Expects HL to be the address of a string
 ;////////////////////////////////////////
 WRITE_STR:
-    DI
     PUSH AF
     PUSH HL
-    ;Set DLAB 0
-    IN A, UART_LCR
-    AND 7Fh
-    OUT UART_LCR, A
     WRITE_START:
     LD A, (HL)
     CP 0
     JP Z, WRITE_CLOSE
-    ;OUT UART_DHR, A
     CALL PRINTCH
     INC HL
     JP WRITE_START
     WRITE_CLOSE:
     POP HL
     POP AF
-    ;EI
-    ret
+    RET
 
 ;Main function to tokenize, parse, and execute user entered expressions
 ;Assume AF has return values
@@ -999,6 +1026,84 @@ EVAL_EXE:
     RET
 
 EVAL_READ:
+    ;DE is the literal value
+    ;HL should not have been modified from before
+    PUSH HL
+    PUSH DE
+    PUSH BC
+    
+    ;get next token
+    INC HL
+    LD A, (HL)
+    
+    ;check that it is a word
+    CP TOKEN_WD
+    JP NZ, EVAL_READ_FAIL
+    
+    ;Get the 8 bit value
+    INC HL
+    INC HL
+    LD A, (HL)
+    
+    ;Put the target address in HL
+    LD HL, DE
+    
+    ;Use B to count when a newline is needed
+    LD B, 0
+    
+    ;Loop over each value at the location
+    EVAL_READ_LOOP:
+        ;Save the pointer, and the incrementor
+        PUSH AF
+        PUSH HL
+        
+        ;Is a newline needed?
+        LD A, B
+        AND 0x0F
+        CP 0
+        JP NZ, EVAL_READ_LOOP_L1
+        LD A, NEWLINE
+        CALL PRINTCH
+        LD A, RETURN
+        CALL PRINTCH
+        
+        EVAL_READ_LOOP_L1:
+        ;Convert the hex to ascii
+        LD A, (HL)
+        CALL HTOA
+        
+        ;Print the first char
+        LD A, H
+        CALL PRINTCH
+        
+        ;Print the second char
+        LD A, L
+        CALL PRINTCH
+        
+        ;Print a space
+        LD A, SPACE
+        CALL PRINTCH
+        
+        ;Get the pointer and the incrementor back
+        POP HL
+        POP AF
+        
+        ;Decrement counter and return if A is not 0
+        INC B
+        DEC A
+        CP 0
+        JP NZ, EVAL_READ_LOOP
+        
+        ;A is already 0, just jump to end
+        JP EVAL_READ_EXIT
+    
+    EVAL_READ_FAIL:
+    LD A, 0xFF
+    
+    EVAL_READ_EXIT:
+    POP BC
+    POP DE
+    POP HL
     RET
 
 EVAL_WRITE:
@@ -1046,13 +1151,74 @@ EVAL_HELP:
     POP HL
     RET
 
+;HEX to ASCII
+;Convert hex value to 2 ascii characters
+;Expects A to be the hex value
+;Returns 2 chars in HL
+HTOA:
+
+    PUSH AF
+    PUSH BC
+    
+    ;High Nibble First, save into H
+    
+    ;Copy A into B
+    LD B, A
+    
+    HTOA_HIGH:
+    ;Rotate right
+    RR A
+    RR A
+    RR A
+    RR A
+    
+    ;Clear high bits
+    AND 0x0F
+    
+    ;Is this A-F?
+    HTOA_HEX_1:
+    CP 0xA
+    JP C, HTOA_INT_1
+    ADD A, 0x40
+    LD H, A
+    JP HTOA_LOW
+    
+    ;Is this 0-9?
+    HTOA_INT_1:
+    ADD A, 0x30
+    LD H, A
+    
+    ;Next do the low nibble, save into E
+    HTOA_LOW:
+    ;Copy B back into A
+    LD A, B
+    AND 0x0F
+    
+    ;Is this A-F?
+    HTOA_HEX_2:
+    CP 0xA
+    JP C, HTOA_INT_2
+    ADD A, 0x40
+    LD L, A
+    JP HTOA_EXIT
+    
+    ;Is this A-F?
+    HTOA_INT_2:
+    ADD A, 0x30
+    LD L, A
+    
+    HTOA_EXIT:
+    POP BC
+    POP AF
+    RET
+
 ;//////////////////////
 ;/////////DATA/////////
 ;//////////////////////
 
 BOOT_MSG:
-.db NEWLINE, RETURN, "ASH v0.03", NEWLINE, RETURN, "(C) 2020 by Aidan Jennings"
-.db NEWLINE, RETURN, "ZILOG Z80 32k EEPROM, 32k SRAM", NEWLINE, RETURN, "TEXT ONLY", NEWLINE, RETURN, EOF
+.db RETURN, "ASH v0.04", NEWLINE, RETURN, "(C) 2020 by Aidan Jennings", NEWLINE
+.db RETURN, "ZILOG Z80 32k EEPROM, 32k SRAM", NEWLINE, RETURN, "TEXT ONLY", NEWLINE, NEWLINE, EOF
 
 READY_MSG:
 .db NEWLINE, RETURN, "BOOT PROCESS COMPLETE!", NEWLINE, RETURN, EOF
@@ -1072,13 +1238,13 @@ HELP_TEXT:
 PROMPT:
 .db RETURN, ">>>:", EOF
 
-org 8001h
+;org 8001h
 ;.db "A0:7F", NEWLINE
-.db "9001<AF", NEWLINE
+;.db "9001<AF", NEWLINE
 ;.db "@9001", NEWLINE
 
-org 9001h
-    NOP
-    NOP
-    NOP
-    RET
+;org 9001h
+;    NOP
+;    NOP
+;    NOP
+;    RET
