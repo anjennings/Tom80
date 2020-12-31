@@ -6,10 +6,8 @@
 ;TODO:
 ;Change most DE to HL
 ;Change eror to check for non-zero values
-;Finish Tokenizer
-;Start Parser
-;Start Execution Function
-;A lot of the JP could probably be replaced with JR (which is faster I think)
+;Write doesn't seem to write correctly
+;Read doesn't read correctly at non-0 values
 
 STACK_H equ 0xFF
 STACK_L equ 0xFF
@@ -18,6 +16,10 @@ STACK_L equ 0xFF
 TERM_BUF equ 0x8000
 ;Maximum size of the buffer
 TERM_BUF_MAX  equ 256
+
+;Baud Rate Divisor (115200)
+BAUD_DIV_HIGH equ 0
+BAUD_DIV_LOW equ 8
 
 ;////////////////
 ;UART Registers
@@ -41,8 +43,9 @@ UART_SCR equ        0x7 ;Arbitrary data can be stored here
 
 NEWLINE equ 0xA
 RETURN equ 0xD
-EOF equ 0x0
+EOT equ 0x3
 SPACE equ 0x20
+NULL equ 0x0
 
 NUM0 equ 0x30
 NUM1 equ 0x31
@@ -54,6 +57,34 @@ NUM6 equ 0x36
 NUM7 equ 0x37
 NUM8 equ 0x38
 NUM9 equ 0x39
+
+LETTER_W equ 0x57
+LETTER_S equ 0x53
+LETTER_A equ 0x41
+LETTER_D equ 0x44
+
+ASCII_ESC equ 0x1B
+ASCII_LBR equ "["
+ASCII_SEMI equ ";"
+ASCII_TER equ "m"
+
+COLOR_FG_BLACK equ "30"
+COLOR_FG_RED equ "31"
+COLOR_FG_GREEN equ "32"
+COLOR_FG_YELLOW equ "33"
+COLOR_FG_BLUE equ "34"
+COLOR_FG_PURPLE equ "35"
+COLOR_FG_CYAN equ "36"
+COLOR_FG_WHITE equ "37"
+
+COLOR_BG_BLACK equ "40"
+COLOR_BG_RED equ "41"
+COLOR_BG_GREEN equ "42"
+COLOR_BG_YELLOW equ "43"
+COLOR_BG_BLUE equ "44"
+COLOR_BG_PURPLE equ "45"
+COLOR_BG_CYAN equ "46"
+COLOR_BG_WHITE equ "47"
 
 SYM_READ equ ":"
 SYM_WRITE equ "<"
@@ -77,7 +108,6 @@ BOOT:
     ;Set up UART
     CALL UART_INIT
     ;Disable interrupt
-    ;IM 1
     DI
     ;Boot Sequence Complete
     JP MAIN
@@ -91,6 +121,11 @@ BOOT:
     RETI
 
 MAIN:
+
+    ;Reset Colors
+    LD HL, COLOR_NORMAL
+    CALL WRITE_STR
+
     ;Print Boot Screen
     LD HL, BOOT_MSG
     CALL WRITE_STR
@@ -99,100 +134,157 @@ MAIN:
     LD HL, READY_MSG
     CALL WRITE_STR
 
+MAIN_LOOP:
+    CALL MONITOR
+    JP MAIN_LOOP
+
+MONITOR:
+    PUSH AF
+    PUSH HL
+    
+    ;Clear Terminal Buffer
+    LD HL, TERM_BUF
+    LD A, 0
+    LD (HL), A
+    
+    ;Print Prompt
     LD HL, PROMPT
     CALL WRITE_STR
-
-    CALL TOGGLE_OUT1
-
-    JP MAIN
-
-    ;Set Terminal buffer to 0 
-    ;LD BC, TERM_BUF
-    ;LD A, 0
-    ;LD (BC), A
-
-MAIN_LOOP:
-    ;CALL GETCH
-    ;CALL EVALUATE_STMT
-    ;JP MAIN_LOOP
-    JP MAIN
-
-    HALT
+    
+    ;Get the user input and evaluate
+    CALL GETSTR
+    CALL EVALUATE_STMT
+    
+    POP HL
+    POP AF
+    RET
 
 ;//////////////////////
 ;//////Functions///////
 ;//////////////////////
 
 ;//////////////////////////////////////
-;Set up UART
+;UART Functions
 ;//////////////////////////////////////
 UART_INIT:
     PUSH AF
-    ;Set DLAB=0, just in case
+    CALL UART_CLEAR_DLAB
+    CALL UART_DISABLE_FIFO
+    CALL UART_SET_LINE_CONTROL
+    CALL UART_TOGGLE_OUT1
+    CALL UART_TOGGLE_OUT2
+    CALL UART_CLEAR_LSR
+    CALL UART_SET_DLAB
+    CALL UART_SET_BAUD
+    CALL UART_CLEAR_DLAB
+    POP AF
+    RET
+
+UART_CLEAR_DLAB:
+    PUSH AF
     IN A, UART_LCR
     AND 0x7F
     OUT UART_LCR, A
-    ;Disable All Interrupts
-    ;LD A, 0 
-    ;OUT UART_IER, A
-    ;FIFO Disable, Reset Fifos
-    LD A, 0x6
-    OUT UART_IFR, A
-    ;Line Control
-    LD A, 0x3         ;8 Bit word, 1 stop, no parity
-    OUT UART_LCR, A
-    ;Set OUT pins Low (as an indicator)
-    LD A, 0xC      
-    OUT UART_MCR, A
-    ;Clear Line Status Reg Errors (Page 21)
-    IN A, UART_LSR
-    ;Set DLAB=1
+    POP AF
+    RET
+
+UART_SET_DLAB:
+    PUSH AF
     IN A, UART_LCR
     OR 0x80
     OUT UART_LCR, A
-    ;Divide Clock by 96 for 9600 baud (Assuming 14.7456 MHz clock)
-    LD A, 96
-    OUT UART_DHR, A
-    LD A, 0
-    OUT UART_IER, A
-    ;Set DLAB=0 again, as we shouldn't need to change it later
-    IN A, UART_LCR
-    AND 0x7F
+    POP AF
+    RET
+    
+UART_SET_LINE_CONTROL:
+    PUSH AF
+    LD A, 0x3         ;8 Bit word, 1 stop, no parity
     OUT UART_LCR, A
-    ;Return
     POP AF
     RET
 
+UART_DISABLE_FIFO:
+    PUSH AF
+    LD A, 0x6
+    OUT UART_IFR, A
+    POP AF
+    RET
+
+UART_SET_BAUD:
+    PUSH AF
+    
+    ;115200
+    LD A, BAUD_DIV_LOW
+    OUT UART_DHR, A
+    LD A, BAUD_DIV_HIGH
+    OUT UART_IER, A
+    
+    POP AF
+    RET
+
+UART_CLEAR_LSR:
+    PUSH AF
+    ;Clear Line Status Reg Errors (Page 21)
+    IN A, UART_LSR
+    POP AF
+    RET
+
+UART_TOGGLE_OUT1:
+    PUSH AF
+    IN A, UART_MCR
+    XOR 0x4 
+    OUT UART_MCR, A
+    POP AF
+    RET
+    
+UART_TOGGLE_OUT2:
+    PUSH AF
+    IN A, UART_MCR
+    XOR 0x8 
+    OUT UART_MCR, A
+    POP AF
+    RET
 
 ;//////////////////////////////////////
 ;Get a character from the FIFO, add to write buffer and echo to screen
+;Value is returned in A
 ;//////////////////////////////////////
 GETCH:
-    PUSH AF
     PUSH BC
-    ;Set DLAB 0
-    IN A, UART_LCR
-    AND 7Fh
-    OUT UART_LCR, A
+    
+    CALL UART_CLEAR_DLAB
+    
     GETCH_LOOP:
-    ;Read Line Status Reg
-    IN A, UART_LSR
-    ;Only care about bit 0
-    AND 1
-    ;If bit 0 is a 1 then FIFO has new data
-    CP 1
-    ;Jump to end if bit 0 was a 0
-    JP NZ, GETCH_END
+        ;Read Line Status Reg
+        IN A, UART_LSR
+        
+        ;If only bit 1 is set then FIFO has new data
+        AND 0x1F
+        CP 1
+        JP NZ, GETCH_LOOP
+        
     ;Get next char from data holding register
     IN A, UART_DHR
     CALL WRITE_BUFFER
-    JP GETCH_LOOP
+    CALL UART_TOGGLE_OUT2
 
     GETCH_END:
     POP BC
-    POP AF
     RET
 
+;//////////////////////////////////////
+;Get a line of text from the FIFO, until a return or newline is recieved
+;//////////////////////////////////////
+GETSTR:
+    PUSH AF
+
+    GETSTR_LOOP:
+        CALL GETCH
+        CP RETURN
+        JP NZ, GETSTR_LOOP
+        
+    POP AF
+    RET
 
 ;///////////////////////////////////////
 ;Write a charactar to the terminal buffer, and echo to screen
@@ -229,34 +321,21 @@ WRITE_BUFFER:
     POP AF
     RET
 
-;Toggle Out Pin 1
-TOGGLE_OUT1:
-    PUSH AF
-    ;Set OUT pins Low (as an indicator)
-    IN A, UART_MCR
-    XOR 0x4 
-    OUT UART_MCR, A
-    POP AF
-    RET
-
 ;/////////////////////////////////////////
 ;Assumes that A is the charactar to write
 ;/////////////////////////////////////////
 PRINTCH:
     PUSH AF
     
-    ;Set DLAB 0
-    IN A, UART_LCR
-    AND 7Fh
-    OUT UART_LCR, A
+    CALL UART_CLEAR_DLAB
     
     PRINTCH_LOOP:
-    ;Read transmit register status in line status register (LSR) See page 22
-    ;Wait if not empty
-    IN A, UART_LSR
-    AND 0x60
-    CP 0x60
-    JP NZ, PRINTCH_LOOP
+        ;Read transmit register status in line status register (LSR) See page 22
+        ;Wait if not empty
+        IN A, UART_LSR
+        AND 0x60
+        CP 0x60
+        JP NZ, PRINTCH_LOOP
 
     ;Write Char to UART
     POP AF
@@ -266,20 +345,22 @@ PRINTCH:
 
 ;////////////////////////////////////////
 ;Writes a string via IO 
-;Disables Interrupts
 ;Expects HL to be the address of a string
 ;////////////////////////////////////////
 WRITE_STR:
     PUSH AF
     PUSH HL
+    
     WRITE_START:
-    LD A, (HL)
-    CP 0
-    JP Z, WRITE_CLOSE
-    CALL PRINTCH
-    INC HL
-    JP WRITE_START
+        LD A, (HL)
+        CP EOT
+        JP Z, WRITE_CLOSE
+        CALL PRINTCH
+        INC HL
+        JP WRITE_START
+        
     WRITE_CLOSE:
+    CALL UART_TOGGLE_OUT1
     POP HL
     POP AF
     RET
@@ -310,19 +391,39 @@ EVALUATE_STMT:
 
     EVALUATE_STMT_TOKEN_FAIL:
         ;Print invalid token string
+        LD HL, COLOR_ERR
+        CALL WRITE_STR
+        
         LD HL, TOKEN_ERROR
         CALL WRITE_STR
+        
+        LD HL, COLOR_NORMAL
+        CALL WRITE_STR
+        
         JP EVALUATE_STMT_RETURN
 
     EVALUATE_STMT_SYNTAX_FAIL:
         ;Print syntax error string
+        LD HL, COLOR_ERR
+        CALL WRITE_STR
+        
         LD HL, SYNTAX_ERROR
         CALL WRITE_STR
+        
+        LD HL, COLOR_NORMAL
+        CALL WRITE_STR
+        
         JP EVALUATE_STMT_RETURN
         
     EVALUATE_STMT_EXE_FAIL:
         ;Print error string
+        LD HL, COLOR_ERR
+        CALL WRITE_STR
+        
         LD HL, EXE_ERROR
+        CALL WRITE_STR
+        
+        LD HL, COLOR_NORMAL
         CALL WRITE_STR
 
     EVALUATE_STMT_RETURN:
@@ -338,7 +439,7 @@ EVALUATE_STMT:
 ;0xFF - Bad
 ;////////////////////////////////////////////////////////////////
 ;Buffer for tokens, first byte is size of buffer
-TOKEN_BUF equ 0x8110
+TOKEN_BUF equ 0x8100
 ;Token Symbols in token buffer
 TOKEN_EF equ 0   ;End of buffer size 1
 TOKEN_LT equ 1   ;ABCDEF0123456789 size 2
@@ -384,7 +485,7 @@ TOKENIZE_BUFFER:
         ;Check if return
         ;/////////////////////
         LD C, TOKEN_EF
-        CP NEWLINE
+        CP RETURN
         CALL Z, TOKENIZE_INSTR
         ;Return to start of loop if return is FF
         CP 0xFF
@@ -509,7 +610,6 @@ TOKENIZE_INSTR:
     POP BC
     LD A, 0xFF
     RET
-
 
 ;Expects B to hold next char value
 ;Write token symbol and value (if needed) to TOKEN_BUF
@@ -693,7 +793,6 @@ PARSE_BUFFER:
     POP DE
     POP BC
     RET
-
 
 ;HL should be location of next token
 ;A should be the token
@@ -901,6 +1000,8 @@ EXECUTE_BUFFER:
         ;Check if current token is an ? symbol
         CP TOKEN_HE
         CALL Z, EVAL_HELP
+        CP 0
+        JP Z, EXECUTE_BUFFER_RETURN_SUCCESS
     
     ;More actions could be added here
 
@@ -1089,6 +1190,7 @@ EVAL_READ:
         POP AF
         
         ;Decrement counter and return if A is not 0
+        INC HL
         INC B
         DEC A
         CP 0
@@ -1147,6 +1249,7 @@ EVAL_HELP:
     ;Just print out the help text
     LD HL, HELP_TEXT
     CALL WRITE_STR
+    LD A, 0
 
     POP HL
     RET
@@ -1179,7 +1282,7 @@ HTOA:
     HTOA_HEX_1:
     CP 0xA
     JP C, HTOA_INT_1
-    ADD A, 0x40
+    ADD A, 0x37
     LD H, A
     JP HTOA_LOW
     
@@ -1198,11 +1301,11 @@ HTOA:
     HTOA_HEX_2:
     CP 0xA
     JP C, HTOA_INT_2
-    ADD A, 0x40
+    ADD A, 0x37
     LD L, A
     JP HTOA_EXIT
     
-    ;Is this A-F?
+    ;Is this 0-9?
     HTOA_INT_2:
     ADD A, 0x30
     LD L, A
@@ -1217,34 +1320,49 @@ HTOA:
 ;//////////////////////
 
 BOOT_MSG:
-.db RETURN, "ASH v0.04", NEWLINE, RETURN, "(C) 2020 by Aidan Jennings", NEWLINE
-.db RETURN, "ZILOG Z80 32k EEPROM, 32k SRAM", NEWLINE, RETURN, "TEXT ONLY", NEWLINE, NEWLINE, EOF
+.db NEWLINE, RETURN, "ASH v0.2", NEWLINE, RETURN, "(C) 2020 by Aidan Jennings"
+.db NEWLINE, RETURN, "ZILOG Z80 32k EEPROM, 32k SRAM",  NEWLINE, RETURN,  "TEXT ONLY", EOT
 
 READY_MSG:
-.db NEWLINE, RETURN, "BOOT PROCESS COMPLETE!", NEWLINE, RETURN, EOF
+.db NEWLINE, NEWLINE, RETURN, "BOOT PROCESS COMPLETE!", NEWLINE, EOT
 
 SYNTAX_ERROR:
-.db NEWLINE, RETURN, "SYNTAX ERROR", NEWLINE, RETURN, EOF
+.db NEWLINE, RETURN, "SYNTAX ERROR", NEWLINE, EOT
 
 TOKEN_ERROR:
-.db NEWLINE, RETURN, "INVALID TOKEN", NEWLINE, RETURN, EOF
+.db NEWLINE, RETURN, "INVALID TOKEN", NEWLINE, EOT
 
 EXE_ERROR:
-.db NEWLINE, RETURN, "EXECUTION ERROR", NEWLINE, RETURN, EOF
+.db NEWLINE, RETURN, "EXECUTION ERROR", NEWLINE, EOT
 
 HELP_TEXT:
-.db NEWLINE, RETURN, "INSTRUCTIONS : ", NEWLINE, RETURN, "1FFF : 10 - READ 16 BYTES STARTING AT LOCATION 0x1FFF", NEWLINE, RETURN, "1FFF < 10 - WRITE 0x10 TO LOCAITON 0x1FFF", NEWLINE, RETURN, "@1FFF - BEGIN EXECUTION AT LOCATION 0x1FFF", NEWLINE, RETURN, "? - DISPLAY HELP MESSAGE", NEWLINE, RETURN, EOF
+.db NEWLINE, RETURN, "INSTRUCTIONS : ", NEWLINE, RETURN, "1FFF : 10 - READ 16 BYTES STARTING AT LOCATION 0x1FFF", NEWLINE, RETURN, "1FFF < 10 - WRITE 0x10 TO LOCAITON 0x1FFF", NEWLINE, RETURN, "@1FFF - BEGIN EXECUTION AT LOCATION 0x1FFF", NEWLINE, RETURN, "? - DISPLAY HELP MESSAGE", NEWLINE, EOT
 
 PROMPT:
-.db RETURN, ">>>:", EOF
+.db NEWLINE, RETURN, ">>>:", EOT
 
-;org 8001h
-;.db "A0:7F", NEWLINE
-;.db "9001<AF", NEWLINE
-;.db "@9001", NEWLINE
 
-;org 9001h
-;    NOP
-;    NOP
-;    NOP
-;    RET
+;////////////////////////////////////////////////////////
+;Text Color Change
+;////////////////////////////////////////////////////////
+COLOR_NORMAL:
+.db ASCII_ESC, ASCII_LBR, COLOR_FG_WHITE, ASCII_SEMI, COLOR_BG_BLACK, ASCII_TER, EOT
+
+COLOR_INVERT:
+.db ASCII_ESC, ASCII_LBR, COLOR_FG_BLACK, ASCII_SEMI, COLOR_BG_WHITE, ASCII_TER, EOT
+
+COLOR_WARN:
+.db ASCII_ESC, ASCII_LBR, COLOR_FG_YELLOW, ASCII_SEMI, COLOR_BG_BLACK, ASCII_TER, EOT
+
+COLOR_ERR:
+.db ASCII_ESC, ASCII_LBR, COLOR_FG_RED, ASCII_SEMI, COLOR_BG_BLACK, ASCII_TER, EOT
+
+CLEAR_DISPLAY:
+.db ASCII_ESC, ASCII_LBR, "2J", ASCII_TER, EOT
+
+;////////////////////////////////////////////////////////
+;Start of Game at 2k
+;////////////////////////////////////////////////////////
+.org 0x800
+
+
