@@ -2358,6 +2358,3 @@ BUFFER: DS   64                         ;INPUT BUFFER
 BUFEND: DS   1                          ;BUFFER ENDS
 STKLMT: DS   1                          ;TOP LIMIT FOR STACKB
 
-                ORG 02000H
-
-

@@ -321,7 +321,6 @@ WRITE_BUFFER:
     RET
 
 ;/////////////////////////////////////////
-;Print Character
 ;Assumes that A is the charactar to write
 ;/////////////////////////////////////////
 PRINTCH:
@@ -344,7 +343,7 @@ PRINTCH:
 
 
 ;////////////////////////////////////////
-;Write String
+;Writes a string via IO
 ;Expects HL to be the address of a string
 ;////////////////////////////////////////
 WRITE_STR:
@@ -435,8 +434,8 @@ EVALUATE_STMT:
 ;////////////////////////////////////////////////////////////////
 ;There are 5 types of symbols - LITERAL, @, :, <, ?
 ;Returns status in register A
-;0x00 - Success
-;0xFF - Fail
+;0x00 - Good
+;0xFF - Bad
 ;////////////////////////////////////////////////////////////////
 ;Buffer for tokens, first byte is size of buffer
 TOKEN_BUF equ 0x8100
@@ -718,6 +717,10 @@ PARSE_BUFFER:
     LD HL, PARSE_LIT_H
     LD (HL), 0
 
+    ;Set state to be start
+    ;LD HL, PARSE_STATE
+    ;LD (HL), STATE_START
+
     ;Set size of buffer to be 0
     LD HL, PARSE_BUF
     LD (HL), 0
@@ -961,11 +964,9 @@ PARSE_INST:
     POP BC
     RET
 
-;/////////////////////////
-;Execute buffer
-;This is just a case statement depending on the first token in the parse buffer
-;Each case has a corresponding subroutine
-;/////////////////////////
+;This is essentially a big case statement depending on which token appears
+;first in the parse buffer, each case has a corresponding subroutine
+;it shouldn't be hard to add extra functions later if needed
 
 EXECUTE_BUFFER:
     PUSH BC
@@ -1326,42 +1327,11 @@ HTOA:
     RET
 
 ;//////////////////////
-;String Comparison
-;Expects HL and DE to be pointers to two strings
-;Returns 0 in A if strings match
-;//////////////////////
-STRCMP:
-        PUSH HL
-        PUSH DE
-    
-    STRCMP_LOOP:
-        LD A, (HL)          ;Get first char into A
-        EX DE, HL           ;Swap HL and DE
-        LD B, (HL)          ;Get second char into B
-        CP B                ;Compare A and B
-        JP NZ, STRCMP_FAIL  ;If they don't match then jump to fail
-        
-        CP CHAR_EOT         ;Check if End of Text
-        JP NZ, STRCMP_LOOP  ;Jump back to start if not
-        
-        LD A, 0             ;If end of text, return 0
-        JP STRCMP_END
-        
-    STRCMP_FAIL:
-        LD A, 0xFF          ;Return -1 if failure
-        JP STRCMP_END
-        
-    STRCMP_END:
-        POP DE
-        POP HL
-        RET
-
-;//////////////////////
 ;/////////DATA/////////
 ;//////////////////////
 
 BOOT_MSG:
-db CHAR_NEWLINE, CHAR_RETURN, "ASH v0.3", CHAR_NEWLINE, CHAR_RETURN, "(C) 2020 by Aidan Jennings"
+db CHAR_NEWLINE, CHAR_RETURN, "ASH v0.2", CHAR_NEWLINE, CHAR_RETURN, "(C) 2020 by Aidan Jennings"
 db CHAR_NEWLINE, CHAR_RETURN, "ZILOG Z80 32k EEPROM, 32k SRAM",  CHAR_NEWLINE, CHAR_RETURN,  "TEXT ONLY", CHAR_EOT
 
 READY_MSG:
@@ -1397,3 +1367,4 @@ db ASCII_ESC, ASCII_LBR, ASCII_FG, COLOR_RED, ASCII_SEMI, ASCII_BG, COLOR_BLACK,
 
 CLEAR_DISPLAY:
 db ASCII_ESC, ASCII_LBR, "2J", CHAR_EOT
+

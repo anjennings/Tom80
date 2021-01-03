@@ -13,3 +13,6 @@ Serial Software/ser.bin
 Serial Software/test.bas
 src/TinyBasic/tinyBasic.z80.bin
 EEPROM Software/rom.dat
+EEPROM Software/ASH.z80.bin
+EEPROM Software/Tom80.z80.bin
+src/Tom80/Tom80.z80.bin
