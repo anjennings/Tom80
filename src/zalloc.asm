@@ -2,11 +2,12 @@
 ;Memory allocation program
 
 ;TODO
+;Address returned by alloc should not point to the header
 
 ;Things to know
 ;All blocks are byte aligned by 2
 
-;Block Anatomy
+;Block Anatomy:
 ;2 Byte Header - a/f bit, 15 bit size
 ;Payload (max 32k, although it will never be that large)
 ;2 Byte Footer - size only
@@ -25,6 +26,8 @@ ALLOC_START_PT EQU 0x8F18
 ;Locations used by trim
 TRIM_START_PTR EQU 0x8F30
 TRIM_REQ_AMNT EQU 0x8F32
+TRIM_START_AMT EQU 0x8F34
+TRIM_NEW_PTR EQU 0x8F36
 
 ;Locations used by merge
 MERGE_START_PTR EQU 0x8F30
@@ -103,7 +106,7 @@ heapInit:
 ;       if HL is NULL then failure
 ;//////////////////////////////////////
 alloc:
-        PUSH HL
+        PUSH BC
         PUSH DE
         
     alloc_size_check:
@@ -272,7 +275,7 @@ alloc:
         
     alloc_end:
         POP DE
-        POP HL
+        POP BC
         RET
         
 
@@ -302,38 +305,49 @@ trim:
         PUSH BC
         PUSH DE
         
+    ;TODO: check if HL is divisible by 2?
+        
     trim_save_ptr:
         ;Save Pointer to first block
-        LD A, H
+        LD A, D
         LD (TRIM_START_PTR), A
-        LD A, L
+        LD A, E
         LD (TRIM_START_PTR+1), A
         
-    trim_save_size:
+    trim_save_req_size:
         ;Save requested size
         LD A, H
         LD (TRIM_REQ_AMNT), A
         LD A, L
         LD (TRIM_REQ_AMNT+1), A
         
+    trim_save_old_size:
+        ;Save original size of block
+        LD A, (DE)
+        LD (TRIM_START_AMT), A
+        INC DE
+        LD A, (DE)
+        LD (TRIM_START_AMT+1), A
+        DEC DE
+        
     trim_check_free:
         ;Check that first block is empty
-        LD A, (HL)
+        LD A, (DE)
         AND 0x80
         CP 0x80
         JP Z, trim_fail
         
     trim_check_size:
         ;Get the header in BC
-        LD A, (HL)
+        LD A, (DE)
         LD B, A
-        INC HL
-        LD A, (HL)
+        INC DE
+        LD A, (DE)
         LD C, A
-        DEC HL
+        DEC DE
         
-        ;Save the pointer in DE
-        LD DE, HL
+        ;Save the pointer in HL
+        LD HL, DE
         
         ;Get the requested amount in HL
         LD A, (TRIM_REQ_AMNT)
@@ -355,7 +369,104 @@ trim:
         JP C, trim_fail      ;Request > Block, fail
                                     ;Block => Request, its good
     trim_use_current:
+    
+    trim_head_old:
+        ;Change current block header
+        LD A, (TRIM_START_PTR)
+        LD D, A
+        LD A, (TRIM_START_PTR+1)
+        LD E, A
         
+        LD A, (TRIM_REQ_AMNT)
+        LD (DE), A
+        INC DE
+        LD A, (TRIM_REQ_AMNT+1)
+        LD (DE), A
+        DEC DE
+        
+    trim_foot_old:
+        ;Go to new footer
+        LD A, (TRIM_REQ_AMNT)
+        LD H, A
+        LD A, (TRIM_REQ_AMNT+1)
+        LD L, A
+        
+        
+        ADD HL, DE
+        DEC HL
+        DEC HL
+        
+        ;Change current block footer
+        LD A, (TRIM_REQ_AMNT)
+        LD (HL), A
+        INC HL
+        LD A, (TRIM_REQ_AMNT+1)
+        LD (HL), A
+        DEC HL
+        
+        ;Save pointer to new block in BC
+        LD BC, HL
+        INC BC
+        INC BC
+        
+        
+        ;Now calculate the size of the remaining block
+    
+    trim_new_size:    
+        ;Put og size into HL
+        LD A, (TRIM_START_AMT)
+        LD H, A
+        LD A, (TRIM_START_AMT+1)
+        LD L, A
+        
+        ;Put requested size into DE
+        LD A, (TRIM_REQ_AMNT)
+        LD D, A
+        LD A, (TRIM_REQ_AMNT+1)
+        LD E, A
+        
+        ;Subtract DE from HL, HL = (HL + (NOT(DE)+1))
+        LD A, D
+        XOR 0xFF
+        LD D, A
+        LD A, E
+        XOR 0xFF
+        LD E, A
+        INC DE
+        ADD HL, DE
+        
+        ;Save new size in DE
+        LD DE, HL
+      
+    trim_head_new:  
+        ;Now put the new size into the new header pointed to by BC
+        LD A, H
+        LD (BC), A
+        INC BC
+        LD A, L
+        LD (BC), A
+        DEC BC
+        
+    trim_foot_new:
+        ;go to the footer of the new block (now pointed to by HL)
+        ADD HL, BC
+        DEC HL
+        DEC HL
+        LD A, D
+        LD (HL), A
+        INC HL
+        LD A, E
+        LD (HL), A
+        
+        ;Now the blocks should be split
+    trim_success:
+        LD A, (TRIM_START_PTR)
+        LD H, A
+        LD A, (TRIM_START_PTR+1)
+        LD L, A
+        
+        LD A, 0
+        JP trim_exit
         
     trim_fail:
         LD A, 0xFF
