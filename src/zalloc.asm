@@ -37,7 +37,7 @@ MERGE_REQ_AMNT EQU 0x8F32
 ;///////////////////////////////////////////////
 ;Completely arbitrary, first 4k is used for other kernel stuff
 HEAPSTART EQU 0x9000
-HEAPSIZE EQU 0x1000 ;4k because why not? Ideally this can change with no effect on code
+HEAPSIZE EQU 0x1000 ;4k, Ideally this can change with no effect on code
 ;///////////////////////////////////////////////
 
 org 0x0000
@@ -45,6 +45,9 @@ MAIN:
         CALL heapInit
         
         LD HL, 4
+        CALL alloc
+        
+        LD HL, 9
         CALL alloc
 
 
@@ -203,7 +206,7 @@ alloc:
         ;Trim the current block to the requested size
         CALL trim
         CP 0
-        JP Z, alloc_end
+        JP Z, alloc_success
         JP alloc_fail
         
     alloc_find_merge:
@@ -224,7 +227,7 @@ alloc:
         ;Call merge and attempt to create a block of the requested size
         CALL merge
         CP 0
-        JP Z, alloc_end
+        JP Z, alloc_success
         ;If unsuccessful, go to next block
     
     alloc_find_next:
@@ -242,6 +245,7 @@ alloc:
         INC DE
         LD A, (DE)
         LD L, A
+        DEC DE
         
         ;Get size of current block
         LD A, H
@@ -268,10 +272,18 @@ alloc:
         
         JP alloc_find_loop
     ;Loop ends here  
-        
+    alloc_success:
+        ;Set set the alloc bit
+        LD A, (HL)
+        OR 0x80
+        LD (HL), A
+        ;Point the user to the payload, not the header
+        INC HL
+        INC HL
+        JP alloc_end
+    
     alloc_fail:
         LD HL, 0
-        JP alloc_end
         
     alloc_end:
         POP DE
