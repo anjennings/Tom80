@@ -1,11 +1,10 @@
 
 ;Memory allocation program
 
-;TODO
-;Address returned by alloc should not point to the header
-
 ;Things to know
 ;All blocks are byte aligned by 2
+;Since the size values are only 15 bits, 16 bit subtraction can be done manually
+;   via 2's compliment with the 16th bit being used as the sign
 
 ;Block Anatomy:
 ;2 Byte Header - a/f bit, 15 bit size
@@ -38,6 +37,7 @@ MERGE_REQ_AMNT EQU 0x8F32
 ;Completely arbitrary, first 4k is used for other kernel stuff
 HEAPSTART EQU 0x9000
 HEAPSIZE EQU 0x1000 ;4k, Ideally this can change with no effect on code
+HEAPEND EQU (HEAPSTART + HEAPSIZE)
 ;///////////////////////////////////////////////
 
 org 0x0000
@@ -46,9 +46,15 @@ MAIN:
         
         LD HL, 4
         CALL alloc
+        LD DE, HL
         
         LD HL, 9
         CALL alloc
+
+        CALL free
+        
+        LD HL, DE
+        CALL free
 
 
 ;///////////////////////////////////////////////
@@ -293,13 +299,49 @@ alloc:
 
 ;//////////////////////////////////////
 ;Free
-;Free up a used block
+;Free up an allocated block
+;Will attempt to merge with any proceeding blocks
 ;Expects:
 ;   -HL to be a pointer to an allocated block
 ;Returns:
 ;   -0 if successful
 ;//////////////////////////////////////
 free:
+        PUSH BC
+        PUSH DE
+    free_start:
+        ;Pointer is to start of payload, not header
+        DEC HL
+        DEC HL
+        
+        ;Check that pointer is 2 byte aligned
+        LD A, L
+        AND 1
+        CP 1
+        JP Z, free_fail
+        
+        ;Clear alloc bit
+        LD A, (HL)
+        AND 0x7F
+        LD (HL), A
+        
+        ;Put pointer into DE
+        EX DE, HL
+        
+        ;If size is 0, merge will always be successful
+        LD HL, 0
+        
+        CALL merge
+        CP 0
+        JP Z, free_exit
+        
+    free_fail:
+        LD A, 0xFF
+        JP free_exit
+        
+    free_exit:
+        POP DE
+        POP BC
         RET
         
 
@@ -505,17 +547,20 @@ merge:
         
     merge_save_ptr:
         ;Save Pointer to first block
-        LD A, H
-        LD (TRIM_START_PTR), A
-        LD A, L
-        LD (TRIM_START_PTR+1), A
+        LD A, D
+        LD (MERGE_START_PTR), A
+        LD A, E
+        LD (MERGE_START_PTR+1), A
         
     merge_save_size:
         ;Save requested size
         LD A, H
-        LD (TRIM_REQ_AMNT), A
+        LD (MERGE_REQ_AMNT), A
         LD A, L
-        LD (TRIM_REQ_AMNT+1), A
+        LD (MERGE_REQ_AMNT+1), A
+        
+        ;I made a mistake
+        EX DE, HL
         
     merge_check_first:
         ;Check that first block is empty
@@ -535,23 +580,149 @@ merge:
         ;Go to next block (now pointed to by HL) 
         ADD HL, DE
         
+    ;Loop begins here
     merge_loop_start:
-        ;Check that this block is empty
+    
+    merge_loop_bounds:
+        ;Check that this block is not outside the heap
+        ;HL - HEAPEND should be less than 0
+        PUSH HL
+        PUSH DE
+        
+        ;Get end of heap address in BC
+        LD BC, HEAPEND
+        ;Negate and + 1
+        LD A, B
+        XOR 0xFF
+        LD B, A
+        LD A, C
+        XOR 0xFF
+        LD C, A
+        INC BC
+        
+        ;Current Block Pointer - End of Heap
+        ADD HL, BC
+        
+        ;Check if negative
+        LD A, H
+        AND 0x80
+        CP 0
+        JP Z, merge_loop_end
+    
+        POP DE
+        POP HL
+    
+    merge_loop_status:
+        ;Check that this new block is empty
         LD A, (HL)
         AND 0x80
         CP 0x80
         JP Z, merge_loop_end
         
+        ;Get size of the block in DE
+        LD A, (HL)
+        LD D, A
+        INC HL
+        LD A, (HL)
+        LD E, A
+        DEC HL
         
+        ;Get pointer to first block in BC
+        LD A, (MERGE_START_PTR)
+        LD B, A
+        LD A, (MERGE_START_PTR+1)
+        LD C, A
+        
+        ;Get the size of the old header in HL
+        LD A, (BC)
+        LD H, A
+        INC BC
+        LD A, (BC)
+        LD L, A
+        DEC BC
+        
+        ;Sum the old and new block sizes and store into DE
+        ADD HL, DE
+        LD DE, HL
+        
+        ;Update Header
+        LD A, H
+        LD (BC), A
+        INC BC
+        LD A, L
+        LD (BC), A
+        DEC BC
+        
+        ;Get pointer to footer (into HL)
+        ADD HL, BC
+        DEC HL
+        DEC HL
+        
+        ;Update footer
+        LD A, D
+        LD (HL), A
+        INC HL
+        LD A, E
+        LD (HL), A
+        INC HL
+        
+        ;HL should now point to the next, unchecked block
+        JP merge_loop_start
+        
+    ;Loop ends here   
     merge_loop_end:
         ;see if new block is large enough
+        
+        ;Get original block pointer in DE
+        LD A, (MERGE_START_PTR)
+        LD D, A
+        LD A, (MERGE_START_PTR+1)
+        LD E, A
+        
+        ;Get the header of the first block in BC
+        LD A, (DE)
+        LD B, A
+        INC DE
+        LD A, (DE)
+        LD C, A
+        DEC DE
+        
+        ;Get the requested size in HL
+        LD A, (MERGE_REQ_AMNT)
+        LD H, A
+        LD A, (MERGE_REQ_AMNT+1)
+        LD L, A
+        
+        ;Subtract HL from BC,  HL = (BC + (NOT(HL)+1))
+        LD A, H
+        XOR 0xFF
+        LD H, A
+        LD A, L
+        XOR 0xFF
+        LD L, A
+        INC HL
+        ADD HL, BC
+        
+        ;See if sign bit is set
+        LD A, H
+        AND 0x80
+        CP 0x80
+        JP NZ, merge_success
     
     merge_fail:
         LD A, 0xFF
+        JP merge_exit
+        
+    merge_success:
+        ;Set return values
+        LD A, (MERGE_START_PTR)
+        LD H, A
+        LD A, (MERGE_START_PTR+1)
+        LD L, A
+        LD A, 0
   
     merge_exit:  
         POP DE
         POP BC
         RET
-        
         
