@@ -3,7 +3,7 @@
 
 ;Things to know
 ;All blocks are byte aligned by 2
-;Since the size values are only 15 bits, 16 bit subtraction can be done manually
+;Since the size values are only 15 bits, 16 bit subtraction can be done manually -> X + (NOT(Y)+1)
 ;   via 2's compliment with the 16th bit being used as the sign
 
 ;Block Anatomy:
@@ -42,21 +42,66 @@ HEAPEND EQU (HEAPSTART + HEAPSIZE)
 
 org 0x0000
 MAIN:
-        CALL heapInit
+        LD HL, 0x0000
+        LD SP, HL
         
+        CALL TEST03
+        
+        HALT
+        
+
+TEST01:
+        CALL heapInit
         LD HL, 4
         CALL alloc
         LD DE, HL
-        
         LD HL, 9
         CALL alloc
-
         CALL free
-        
         LD HL, DE
         CALL free
+        RET
 
 
+TEST02:
+        CALL heapInit
+        LD HL, 1000
+        CALL alloc
+        LD BC, HL
+        LD HL, 64
+        CALL alloc
+        LD DE, HL
+        LD HL, 300
+        CALL alloc
+        EX DE, HL
+        CALL free
+        LD HL, 10
+        CALL alloc
+        RET
+    
+TEST03:
+        CALL heapInit
+        
+        LD HL, 10
+        CALL alloc
+        PUSH HL
+        
+        LD HL, 20
+        CALL alloc
+        PUSH HL
+        
+        LD HL, 30
+        CALL alloc
+        
+        CALL free
+        
+        POP HL
+        CALL free
+        
+        POP HL
+        CALL free
+        
+        RET
 ;///////////////////////////////////////////////
 ;Functions
 ;///////////////////////////////////////////////
@@ -605,12 +650,13 @@ merge:
         
         ;Check if negative
         LD A, H
+        
+        POP DE
+        POP HL
+        
         AND 0x80
         CP 0
         JP Z, merge_loop_end
-    
-        POP DE
-        POP HL
     
     merge_loop_status:
         ;Check that this new block is empty
@@ -725,4 +771,5 @@ merge:
         POP DE
         POP BC
         RET
+        
         

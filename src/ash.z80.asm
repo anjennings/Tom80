@@ -6,12 +6,10 @@
 ;TODO:
 ;Change most DE to HL
 ;Change eror to check for non-zero values
-;Write doesn't seem to write correctly
-;Read doesn't read correctly at non-0 values
 ;conway's game of life?
+;Arrow Key and Backspace Handling
 
-STACK_H equ 0xFF
-STACK_L equ 0xFF
+STACK_PTR equ 0x0000
 
 ;First byte of term buf is the size of the term buf
 TERM_BUF equ 0x8000
@@ -22,9 +20,9 @@ TERM_BUF_MAX  equ 256
 BAUD_DIV_HIGH equ 0
 BAUD_DIV_LOW equ 8
 
-;////////////////
+;///////////////////////////////
 ;UART Registers
-;////////////////
+;///////////////////////////////
 
 UART_DHR equ        0x0 ;UART Data R/W register
 UART_IER equ        0x1 ;Interrupt Enable Register
@@ -38,9 +36,9 @@ UART_SCR equ        0x7 ;Arbitrary data can be stored here
 ;According to the datasheet:
 ;8 Databits, No parity, 1 Stop
 
-;///////////
+;///////////////////////////////
 ;Charactars
-;///////////
+;///////////////////////////////
 
 CHAR_NEWLINE equ 0xA
 CHAR_RETURN equ 0xD
@@ -64,6 +62,15 @@ LETTER_S equ 0x53
 LETTER_A equ 0x41
 LETTER_D equ 0x44
 
+SYM_READ equ ":"
+SYM_WRITE equ "<"
+SYM_EXE equ "@"
+SYM_HELP equ "?"
+
+;///////////////////////////////
+;Ascii Escape Code Stuff
+;///////////////////////////////
+
 ASCII_ESC equ 0x1B
 ASCII_LBR equ "["
 ASCII_SEMI equ ";"
@@ -81,24 +88,48 @@ COLOR_PURPLE equ "5"
 COLOR_CYAN equ "6"
 COLOR_WHITE equ "7"
 
-SYM_READ equ ":"
-SYM_WRITE equ "<"
-SYM_EXE equ "@"
-SYM_HELP equ "?"
+
+;///////////////////////////////////////////////
+;Ram locations exclusive to the heap
+HEAPRAM EQU 0x8F00
+HEAP_INITIALIZED EQU 0x8F00
+LASTBLOCK_PTR EQU 0x8F02
+
+;Locations used by alloc
+ALLOC_SIZE_REQ EQU 0x8F14
+ALLOC_CUR_HEAD EQU 0x8F16
+ALLOC_START_PT EQU 0x8F18
+
+;Locations used by trim
+TRIM_START_PTR EQU 0x8F30
+TRIM_REQ_AMNT EQU 0x8F32
+TRIM_START_AMT EQU 0x8F34
+TRIM_NEW_PTR EQU 0x8F36
+
+;Locations used by merge
+MERGE_START_PTR EQU 0x8F30
+MERGE_REQ_AMNT EQU 0x8F32
+;///////////////////////////////////////////////
+
+;///////////////////////////////////////////////
+;Completely arbitrary, first 4k is used for other kernel stuff
+HEAPSTART EQU 0x9000
+HEAPSIZE EQU 0x1000 ;4k, Ideally this can change with no effect on code
+HEAPEND EQU (HEAPSTART + HEAPSIZE)
+;///////////////////////////////////////////////
+
 
 ;/////////////////
 ;Code Starts HERE
 ;/////////////////
 org 0000h
 BOOT:
-    ;Wait a few clocks
     NOP
     NOP
     NOP
     NOP
     ;Set up Stack
-    LD H, STACK_H
-    LD L, STACK_L
+    LD HL, STACK_PTR
     LD SP, HL
     ;Set up UART
     CALL UART_INIT
@@ -134,7 +165,8 @@ MAIN:
     CALL WRITE_STR
 
 MAIN_LOOP:
-    CALL MONITOR
+    ;CALL MONITOR
+    CALL GAME_MAIN
     JP MAIN_LOOP
 
 MONITOR:
@@ -211,8 +243,6 @@ UART_DISABLE_FIFO:
 
 UART_SET_BAUD:
     PUSH AF
-
-    ;115200
     LD A, BAUD_DIV_LOW
     OUT (UART_DHR), A
     LD A, BAUD_DIV_HIGH
@@ -223,7 +253,6 @@ UART_SET_BAUD:
 
 UART_CLEAR_LSR:
     PUSH AF
-    ;Clear Line Status Reg Errors (Page 21)
     IN A, (UART_LSR)
     POP AF
     RET
@@ -256,7 +285,6 @@ GETCH:
     GETCH_LOOP:
         ;Read Line Status Reg
         IN A, (UART_LSR)
-
         ;If only bit 1 is set then FIFO has new data
         AND 0x1F
         CP 1
@@ -330,8 +358,7 @@ PRINTCH:
     CALL UART_CLEAR_DLAB
 
     PRINTCH_LOOP:
-        ;Read transmit register status in line status register (LSR) See page 22
-        ;Wait if not empty
+        ;Read transmit register status in line status register
         IN A, (UART_LSR)
         AND 0x60
         CP 0x60
@@ -603,7 +630,6 @@ TOKENIZE_INSTR:
     LD L, A
     ;Put Instruction Token at the next open spot
     LD (HL), C
-    INC L   ;TODO: ???
 
     POP HL
     POP DE
@@ -680,25 +706,25 @@ TOKENIZE_CHAR:
     LD A, 0xF
     RET
 
-;TODO: Can this just write over the other buffers?
-;Buffer for Parser
-PARSE_RAM equ 0x8200
+;////////////////////////////
+;Parse over each token in the buffer
+;Really just coalesces each literal token into larger 16 bit words
+;I'm using the term 'Parse' very loosely
+;Return 0 on success
+;////////////////////////////
 ;Current and next token for parser
-PARSE_CUR equ 0x8200
-PARSE_NEXT equ 0x8201
+;PARSE_CUR equ 0x8200
+;PARSE_NEXT equ 0x8201
 ;Location of state for FSM
-PARSE_STATE equ 0x8202
+;PARSE_STATE equ 0x8202
 ;Incrementor location for parser
-PARSE_INC equ 0x8203
+PARSE_INC equ 0x8200
 ;High and low values for literals
-PARSE_LIT_H equ 0x8204
-PARSE_LIT_L equ 0x8205
+PARSE_LIT_H equ 0x8201
+PARSE_LIT_L equ 0x8202
 
 PARSE_BUF equ 0x8210
 
-;This should organize each token into a fully readable form
-;I'm using the term 'Parse' very loosely
-;Return 0x00 on success
 PARSE_BUFFER:
     PUSH BC
     PUSH DE
@@ -1397,3 +1423,690 @@ db ASCII_ESC, ASCII_LBR, ASCII_FG, COLOR_RED, ASCII_SEMI, ASCII_BG, COLOR_BLACK,
 
 CLEAR_DISPLAY:
 db ASCII_ESC, ASCII_LBR, "2J", CHAR_EOT
+
+
+
+
+;//////////////////////////////////////////
+;Memory Allocation (heap)
+;//////////////////////////////////////////
+
+
+;//////////////////////////////////////
+;Heap Init
+;Initilize the heap, should only be run once
+;//////////////////////////////////////
+heapInit:
+        PUSH DE
+        PUSH HL
+
+        ;Set Lastblock pointer to the start of the heap
+        LD HL, LASTBLOCK_PTR        
+        LD DE, HEAPSTART
+        LD A, D
+        LD (HL), A
+        INC HL
+        LD A, E
+        LD (HL), A
+        
+        ;Get set up head of the first block with the size
+        LD HL, HEAPSTART
+        LD DE, HEAPSIZE
+        LD (HL), D
+        INC HL
+        LD (HL), E
+        
+        ;Set the foot of the first block as well
+        LD HL, HEAPSTART
+        LD DE, HEAPSIZE
+        ADD HL, DE
+        DEC HL
+        LD (HL), E
+        DEC HL
+        LD (HL), D
+        
+        ;Return 0 for success
+        LD A, 0
+
+        heapInit_exit:
+        POP HL
+        POP DE
+        RET
+    
+    
+;//////////////////////////////////////
+;Alloc
+;Request a heap block of a given size
+;Expects:
+;   -HL to be a block size
+;Returns:
+;   -Pointer in HL on success
+;       if HL is NULL then failure
+;//////////////////////////////////////
+alloc:
+        PUSH BC
+        PUSH DE
+        
+    alloc_size_check:
+        ;Take size in HL and add 4 for headers and 1 for padding if needed
+        LD BC, 4
+        ADD HL, BC
+        LD A, L
+        AND 1
+        CP 1
+        JP C, alloc_save_request
+        INC HL
+        
+    alloc_save_request:
+        ;Save the requested size to ram
+        LD A, H
+        LD (ALLOC_SIZE_REQ), A
+        LD A, L
+        LD (ALLOC_SIZE_REQ+1), A
+        
+    alloc_set_start:
+        ;Set the starting point
+        LD A, (LASTBLOCK_PTR)
+        LD (ALLOC_START_PT), A
+        LD B, A
+        LD A, (LASTBLOCK_PTR+1)
+        LD (ALLOC_START_PT), A
+        LD C, A
+        
+    ;Loop starts here 
+    alloc_find_loop: 
+        ;Get the pointer to the last block in BC
+        LD A, (LASTBLOCK_PTR)
+        LD B, A
+        LD A, (LASTBLOCK_PTR+1)
+        LD C, A
+        
+        ;Get the header of the last block in DE
+        LD A, (BC)
+        LD D, A
+        INC BC
+        LD A, (BC)
+        LD E, A
+        
+        ;Save Header to ram
+        LD A, D
+        LD (ALLOC_CUR_HEAD), A
+        LD A, E
+        LD (ALLOC_CUR_HEAD+1), A
+        
+        ;Check the free bit
+        LD A, D
+        AND 0x80
+        CP 0
+        JP NZ, alloc_find_next
+        
+        ;The block is free, but is it large enough?
+        
+        ;Get the requested size back into HL
+        LD A, (ALLOC_SIZE_REQ)
+        LD H, A
+        LD A, (ALLOC_SIZE_REQ+1)
+        LD L, A
+        
+        ;Compare high byte
+        LD A, D
+        AND 0x7F
+        CP H
+        JP C, alloc_find_merge      ;H > D, try merge
+        JP NZ, alloc_find_current   ;D > H, use this block 
+        
+        ;Compare low byte since D == H
+        LD A, E
+        CP L
+        JP C, alloc_find_merge      ;L > E, try merge
+                                    ;E > L, that means current block works
+        
+        ;If merge fails, go right to alloc_find_next
+    
+    alloc_find_current:
+        ;The block pointed to by LASTBLOCK_PTR is free but is big enough
+        
+        ;Set DE to current Block
+        LD A, (LASTBLOCK_PTR)
+        LD D, A
+        LD A, (LASTBLOCK_PTR+1)
+        LD E, A
+        
+        ;Set HL to requested size
+        LD A, (ALLOC_SIZE_REQ)
+        LD H, A
+        LD A, (ALLOC_SIZE_REQ+1)
+        LD L, A
+        
+        ;Trim the current block to the requested size
+        CALL alloc_trimm
+        CP 0
+        JP Z, alloc_success
+        JP alloc_fail
+        
+    alloc_find_merge:
+        ;The block pointed to by LASTBLOCK_PTR is free but is too small, try merge
+        
+        ;Set DE to current Block
+        LD A, (LASTBLOCK_PTR)
+        LD D, A
+        LD A, (LASTBLOCK_PTR+1)
+        LD E, A
+        
+        ;Set HL to requested size
+        LD A, (ALLOC_SIZE_REQ)
+        LD H, A
+        LD A, (ALLOC_SIZE_REQ+1)
+        LD L, A
+        
+        ;Call merge and attempt to create a block of the requested size
+        CALL merge
+        CP 0
+        JP Z, alloc_success
+        ;If unsuccessful, go to next block
+    
+    alloc_find_next:
+        ;The block pointed to at LASTBLOCK_PTR is allocated or is too small, jump to next block
+        
+        ;Set DE to current Block
+        LD A, (LASTBLOCK_PTR)
+        LD D, A
+        LD A, (LASTBLOCK_PTR+1)
+        LD E, A
+        
+        ;Get header (may have been updated)
+        LD A, (DE)
+        LD H, A
+        INC DE
+        LD A, (DE)
+        LD L, A
+        DEC DE
+        
+        ;Get size of current block
+        LD A, H
+        AND 0x7F
+        LD H, A
+        
+        ;Jump to next block (now pointed to by HL)
+        ADD HL, DE
+        
+        ;Save new block for next iteration
+        LD A, H
+        LD (LASTBLOCK_PTR), A
+        LD A, L
+        LD (LASTBLOCK_PTR+1), A
+        
+        ;Check the starting point
+        LD A, (ALLOC_START_PT)
+        LD D, A
+        LD A, (Alloc_START_PT+1)
+        LD E, A
+        
+        ;Todo: compare HL and DE to see if the entire heap has been checked
+        ;Todo: alternatively, just always start at the begining of the heap
+        
+        JP alloc_find_loop
+    ;Loop ends here  
+    alloc_success:
+        ;Set set the alloc bit
+        LD A, (HL)
+        OR 0x80
+        LD (HL), A
+        ;Point the user to the payload, not the header
+        INC HL
+        INC HL
+        JP alloc_end
+    
+    alloc_fail:
+        LD HL, 0
+        
+    alloc_end:
+        POP DE
+        POP BC
+        RET
+        
+
+;//////////////////////////////////////
+;Free
+;Free up an allocated block
+;Will attempt to merge with any proceeding blocks
+;Expects:
+;   -HL to be a pointer to an allocated block
+;Returns:
+;   -0 if successful
+;//////////////////////////////////////
+free:
+        PUSH BC
+        PUSH DE
+    free_start:
+        ;Pointer is to start of payload, not header
+        DEC HL
+        DEC HL
+        
+        ;Check that pointer is 2 byte aligned
+        LD A, L
+        AND 1
+        CP 1
+        JP Z, free_fail
+        
+        ;Clear alloc bit
+        LD A, (HL)
+        AND 0x7F
+        LD (HL), A
+        
+        ;Put pointer into DE
+        EX DE, HL
+        
+        ;If size is 0, merge will always be successful
+        LD HL, 0
+        
+        CALL merge
+        CP 0
+        JP Z, free_exit
+        
+    free_fail:
+        LD A, 0xFF
+        JP free_exit
+        
+    free_exit:
+        POP DE
+        POP BC
+        RET
+        
+
+;//////////////////////////////////////
+;Trim Block
+;Given the pointer to an empty block and the desired size, trim the block to be that size
+;Expects:
+;   -HL is the desired size
+;   -DE is the pointer to the empty block
+;Returns:
+;   -0 in A if successful
+;   -HL is pointer to block of requested size
+;//////////////////////////////////////
+alloc_trimm:
+        PUSH BC
+        PUSH DE
+        
+    ;TODO: check if HL is divisible by 2?
+        
+    trim_save_ptr:
+        ;Save Pointer to first block
+        LD A, D
+        LD (TRIM_START_PTR), A
+        LD A, E
+        LD (TRIM_START_PTR+1), A
+        
+    trim_save_req_size:
+        ;Save requested size
+        LD A, H
+        LD (TRIM_REQ_AMNT), A
+        LD A, L
+        LD (TRIM_REQ_AMNT+1), A
+        
+    trim_save_old_size:
+        ;Save original size of block
+        LD A, (DE)
+        LD (TRIM_START_AMT), A
+        INC DE
+        LD A, (DE)
+        LD (TRIM_START_AMT+1), A
+        DEC DE
+        
+    trim_check_free:
+        ;Check that first block is empty
+        LD A, (DE)
+        AND 0x80
+        CP 0x80
+        JP Z, trim_fail
+        
+    trim_check_size:
+        ;Get the header in BC
+        LD A, (DE)
+        LD B, A
+        INC DE
+        LD A, (DE)
+        LD C, A
+        DEC DE
+        
+        ;Save the pointer in HL
+        LD HL, DE
+        
+        ;Get the requested amount in HL
+        LD A, (TRIM_REQ_AMNT)
+        LD H, A
+        LD A, (TRIM_REQ_AMNT+1)
+        LD L, A
+        
+        ;Now that the block size is in BC and the requested amount is in HL
+        ;Compare High bytes
+        LD A, B
+        AND 0x7F
+        CP H
+        JP C, trim_fail             ;Request > Block, fail
+        JP NZ, trim_use_current     ;Block > Request, its good
+        
+        ;Compare low byte since Request == Block
+        LD A, C
+        CP L
+        JP C, trim_fail      ;Request > Block, fail
+                                    ;Block => Request, its good
+    trim_use_current:
+    
+    trim_head_old:
+        ;Change current block header
+        LD A, (TRIM_START_PTR)
+        LD D, A
+        LD A, (TRIM_START_PTR+1)
+        LD E, A
+        
+        LD A, (TRIM_REQ_AMNT)
+        LD (DE), A
+        INC DE
+        LD A, (TRIM_REQ_AMNT+1)
+        LD (DE), A
+        DEC DE
+        
+    trim_foot_old:
+        ;Go to new footer
+        LD A, (TRIM_REQ_AMNT)
+        LD H, A
+        LD A, (TRIM_REQ_AMNT+1)
+        LD L, A
+        
+        
+        ADD HL, DE
+        DEC HL
+        DEC HL
+        
+        ;Change current block footer
+        LD A, (TRIM_REQ_AMNT)
+        LD (HL), A
+        INC HL
+        LD A, (TRIM_REQ_AMNT+1)
+        LD (HL), A
+        DEC HL
+        
+        ;Save pointer to new block in BC
+        LD BC, HL
+        INC BC
+        INC BC
+        
+        
+        ;Now calculate the size of the remaining block
+    
+    trim_new_size:    
+        ;Put og size into HL
+        LD A, (TRIM_START_AMT)
+        LD H, A
+        LD A, (TRIM_START_AMT+1)
+        LD L, A
+        
+        ;Put requested size into DE
+        LD A, (TRIM_REQ_AMNT)
+        LD D, A
+        LD A, (TRIM_REQ_AMNT+1)
+        LD E, A
+        
+        ;Subtract DE from HL, HL = (HL + (NOT(DE)+1))
+        LD A, D
+        XOR 0xFF
+        LD D, A
+        LD A, E
+        XOR 0xFF
+        LD E, A
+        INC DE
+        ADD HL, DE
+        
+        ;Save new size in DE
+        LD DE, HL
+      
+    trim_head_new:  
+        ;Now put the new size into the new header pointed to by BC
+        LD A, H
+        LD (BC), A
+        INC BC
+        LD A, L
+        LD (BC), A
+        DEC BC
+        
+    trim_foot_new:
+        ;go to the footer of the new block (now pointed to by HL)
+        ADD HL, BC
+        DEC HL
+        DEC HL
+        LD A, D
+        LD (HL), A
+        INC HL
+        LD A, E
+        LD (HL), A
+        
+        ;Now the blocks should be split
+    trim_success:
+        LD A, (TRIM_START_PTR)
+        LD H, A
+        LD A, (TRIM_START_PTR+1)
+        LD L, A
+        
+        LD A, 0
+        JP trim_exit
+        
+    trim_fail:
+        LD A, 0xFF
+        
+    trim_exit:
+        POP BC
+        POP DE
+        RET
+    
+    
+;//////////////////////////////////////
+;Merge Block
+;Given the pointer to an empty block try to merge it with surrounding empty blocks
+;Expects:
+;   -HL is the desired size
+;   -DE is the pointer to the empty block
+;Returns:
+;   -0 in A if successful
+;   -HL is pointer to block of requested size
+;//////////////////////////////////////
+merge:
+
+
+;/////////////////////////////////////////
+;Game
+;/////////////////////////////////////////
+
+org 0x700
+
+;These hard coded data values are going to need some work
+GAME_RAM EQU 0xA000
+COLOR_TEXT_TEMPLATE EQU GAME_RAM
+
+GAME_MAIN:
+    CALL heapInit
+    CALL PRINT_TITLE_SCREEN
+    RET
+
+;////////////////////
+;Check User Input
+;Similar to GETCH, check for available char, if none then return 0
+;////////////////////
+CHECK_INPUT:
+    CALL UART_CLEAR_DLAB
+
+    ;Read Line Status Reg
+    IN A, (UART_LSR)
+    ;If only bit 1 is set then FIFO has new data
+    AND 0x1F
+    CP 1
+    JP NZ, CHECK_INPUT_NULL
+
+    ;Get next char from data holding register
+    IN A, (UART_DHR)
+    CALL UART_TOGGLE_OUT2
+    JP CHECK_INPUT_END
+    
+    CHECK_INPUT_NULL:
+    LD A, 0
+
+    CHECK_INPUT_END:
+    RET
+
+PRINT_TITLE_SCREEN:
+    PUSH HL
+    
+    LD HL, CLEAR_DISPLAY
+    CALL WRITE_STR
+    
+    LD HL, GAME_TITLE_SCREEN
+    CALL WRITE_STR
+    
+    CALL PRINT_MAP
+    
+    POP HL
+    RET
+   
+PRINT_MAP:
+    PUSH HL
+    PUSH AF
+    
+    PRINT_MAP_INIT:
+        ;Load Color Text Template into RAM
+        ;NULL is used after EOT for when the loop should end
+        LD DE, COLOR_TEXT
+
+        ;Alloc 10 bytes on the heap to use, store pointer in HL
+        ;LD HL, 10
+        ;CALL alloc
+        ;LD A, H
+        ;LD (COLOR_TEXT_TEMPLATE), A
+        ;LD A, L
+        ;LD (COLOR_TEXT_TEMPLATE), A
+        LD HL, GAME_RAM
+    
+    PRINT_MAP_INIT_LOOP:
+
+        ;Copy the escape sequence into ram
+        LD A, (DE)
+        LD (HL), A
+        
+        INC DE
+        INC HL
+        
+        CP CHAR_NULL
+        JP NZ, PRINT_MAP_INIT_LOOP
+    
+        ;Load the pointer to the map and the size into memory
+        LD HL, MAP_00
+        LD B, 64    ;MAP IS 8x8
+    
+    PRINT_MAP_LOOP:
+    
+        ;Print the current map block
+        LD A, (HL)
+        CALL PRINT_BLOCK
+        
+        ;Decrement counter
+        DEC B
+        
+        ;If B is 0 then exit
+        LD A, B
+        CP 0
+        JP Z, PRINT_MAP_END
+        
+        ;If B is a multiple of 8 then print a newline
+        AND 7
+        CP 0
+        CALL Z, PRINT_NEWLINE
+        INC HL
+        
+        JP PRINT_MAP_LOOP
+        
+    
+    PRINT_MAP_END:
+    
+    LD HL, COLOR_NORMAL
+    CALL WRITE_STR
+    
+    POP AF
+    POP HL
+    RET
+
+PRINT_BLOCK:
+    PUSH AF
+    PUSH HL
+    
+    ;Go to location in RAM
+    LD HL, COLOR_TEXT_TEMPLATE
+    INC HL
+    INC HL
+    INC HL
+    
+    ;Put color value in the open spot
+    LD (HL), A
+    
+    ;Print color escape sequence
+    LD HL, COLOR_TEXT_TEMPLATE
+    CALL WRITE_STR
+    
+    LD A, " "
+    CALL PRINTCH
+
+    LD HL, COLOR_NORMAL
+    CALL WRITE_STR
+    
+    POP HL
+    POP AF
+    RET
+    
+PRINT_NEWLINE:
+    PUSH AF
+    
+    ;Don't want colors being carried over
+    ;LD HL, COLOR_NORMAL
+    ;CALL WRITE_STR
+    
+    LD A, CHAR_NEWLINE
+    CALL PRINTCH
+    LD A, CHAR_RETURN
+    CALL PRINTCH
+    POP AF
+    RET
+
+;/////////////////
+;Game Data
+;/////////////////
+GAME_TITLE_SCREEN:
+db CHAR_NEWLINE, CHAR_RETURN, "█████████████████████████████████████████████████████████"
+db CHAR_NEWLINE, CHAR_RETURN, "█                                                       █"
+db CHAR_NEWLINE, CHAR_RETURN, "█                       Adventure                       █"
+db CHAR_NEWLINE, CHAR_RETURN, "█                                                       █"
+db CHAR_NEWLINE, CHAR_RETURN, "█████████████████████████████████████████████████████████"
+db CHAR_NEWLINE, CHAR_RETURN, CHAR_EOT
+
+;Space 
+COLOR_TEXT:
+db ASCII_ESC, ASCII_LBR, ASCII_BG, " ", ASCII_TER, CHAR_EOT, CHAR_NULL
+
+;COLOR_BLACK equ "0"
+;COLOR_RED equ "1"
+;COLOR_GREEN equ "2"
+;COLOR_YELLOW equ "3"
+;COLOR_BLUE equ "4"
+;COLOR_PURPLE equ "5"
+;COLOR_CYAN equ "6"
+;COLOR_WHITE equ "7"
+
+MAP_00:
+db "22222222"
+db "62222322"
+db "66222222"
+db "46622222"
+db "44666222"
+db "44446666"
+db "44444444"
+db "44444444", CHAR_EOT
+
+MAP_00_DESC:
+db CHAR_RETURN, CHAR_NEWLINE, "You see the river begin to bend toward the east.", CHAR_EOT
