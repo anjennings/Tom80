@@ -1,0 +1,3 @@
+zcc +z80 -vn -O3 -startup=1 -clib=new main.c -o test -lm -create-app
+
+https://github.com/z88dk/z88dk/wiki/NewLib--Platform--Embedded
