@@ -29,6 +29,8 @@ void UART_TOGGLE_OUT2() __z88dk_callee;
 void PRINTCH(char c) __z88dk_callee;
 char GETCH() __z88dk_callee;
 
+void PRINTSTR(const char * s);
+
 void UART_CLEAR_LSR() __z88dk_callee{
 	__asm
     PUSH AF
@@ -185,9 +187,49 @@ char GETCH(){
 	__endasm
 }
 
+void PRINTSTR(const char * s){
+
+	__asm
+	
+	//Get Pointer in HL and DE
+	LD HL, 2
+	ADD HL, SP
+	LD E, (HL)
+	INC HL
+	LD D, (HL)
+	LD HL, DE
+	
+	PRINTSTR_LOOP:
+		LD A, (HL)
+		CP 0
+		JP Z, PRINTSTR_END
+		LD HL, 0
+		LD L, A
+		PUSH DE
+		PUSH HL
+		CALL _PRINTCH
+		POP HL
+		POP DE
+		INC DE
+		LD HL, DE
+		JP PRINTSTR_LOOP
+		
+	
+	PRINTSTR_END:
+	RET
+	
+	__endasm
+	
+}
+
 void main(){
 	
 	UART_INIT();
+	GETCH();
+	
+	PRINTSTR("\n\rASH v0.1C\n\r(C) 2020 by Aidan Jennings");
+	PRINTSTR("\n\rZILOG Z80 32k EEPROM, 32k SRAM\n\rTEXTONLY");
+	PRINTSTR("\n\n\rBOOT PROCESS COMPLETE!\n");
 	
 	while(1){
 		PRINTCH(GETCH());

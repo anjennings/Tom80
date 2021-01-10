@@ -85,7 +85,7 @@
                     jp      $00f1                           ;[0066] c3 f1 00
                     di                                      ;[0069] f3
                     ld      sp,$0000                        ;[006a] 31 00 00
-                    ld      hl,$01dd                        ;[006d] 21 dd 01
+                    ld      hl,$0209                        ;[006d] 21 09 02
                     ld      de,$8000                        ;[0070] 11 00 80
                     ld      bc,$0009                        ;[0073] 01 09 00
                     call    $00f3                           ;[0076] cd f3 00
@@ -112,7 +112,7 @@
                     ex      de,hl                           ;[00a8] eb
                     call    $00b6                           ;[00a9] cd b6 00
                     ei                                      ;[00ac] fb
-                    call    $01c8                           ;[00ad] cd c8 01
+                    call    $01ed                           ;[00ad] cd ed 01
                     push    hl                              ;[00b0] e5
                     di                                      ;[00b1] f3
                     pop     hl                              ;[00b2] e1
@@ -306,47 +306,78 @@
                     and     $60                             ;[019f] e6 60
                     cp      $60                             ;[01a1] fe 60
                     jp      nz,$019d                        ;[01a3] c2 9d 01
-                    ld      hl,$0007                        ;[01a6] 21 07 00
+                    ld      hl,$0006                        ;[01a6] 21 06 00
                     add     hl,sp                           ;[01a9] 39
-                    out     ($00),a                         ;[01aa] d3 00
-                    pop     hl                              ;[01ac] e1
-                    pop     af                              ;[01ad] f1
-                    ret                                     ;[01ae] c9
+                    ld      a,(hl)                          ;[01aa] 7e
+                    out     ($00),a                         ;[01ab] d3 00
+                    pop     hl                              ;[01ad] e1
+                    pop     af                              ;[01ae] f1
+                    ret                                     ;[01af] c9
 
-                    pop     bc                              ;[01af] c1
-                    pop     af                              ;[01b0] f1
-                    push    bc                              ;[01b1] c5
-                    ret                                     ;[01b2] c9
+                    pop     bc                              ;[01b0] c1
+                    pop     af                              ;[01b1] f1
+                    push    bc                              ;[01b2] c5
+                    ret                                     ;[01b3] c9
 
-                    push    bc                              ;[01b3] c5
                     call    $0152                           ;[01b4] cd 52 01
                     in      a,($05)                         ;[01b7] db 05
                     and     $1f                             ;[01b9] e6 1f
                     cp      $01                             ;[01bb] fe 01
                     jp      nz,$01b7                        ;[01bd] c2 b7 01
                     in      a,($00)                         ;[01c0] db 00
-                    call    $0170                           ;[01c2] cd 70 01
-                    pop     bc                              ;[01c5] c1
-                    ret                                     ;[01c6] c9
+                    ld      hl,$0000                        ;[01c2] 21 00 00
+                    ld      l,a                             ;[01c5] 6f
+                    call    $0170                           ;[01c6] cd 70 01
+                    ret                                     ;[01c9] c9
 
-                    ret                                     ;[01c7] c9
+                    ret                                     ;[01ca] c9
 
-                    call    $017c                           ;[01c8] cd 7c 01
-                    call    $01b3                           ;[01cb] cd b3 01
-                    ld      hl,$0030                        ;[01ce] 21 30 00
-                    push    hl                              ;[01d1] e5
-                    call    $0198                           ;[01d2] cd 98 01
-                    jp      $01cb                           ;[01d5] c3 cb 01
-                    call    $017a                           ;[01d8] cd 7a 01
-                    ret                                     ;[01db] c9
+                    ld      hl,$0002                        ;[01cb] 21 02 00
+                    add     hl,sp                           ;[01ce] 39
+                    ld      e,(hl)                          ;[01cf] 5e
+                    inc     hl                              ;[01d0] 23
+                    ld      d,(hl)                          ;[01d1] 56
+                    ld      d,h                             ;[01d2] 54
+                    ld      e,l                             ;[01d3] 5d
+                    ld      a,(hl)                          ;[01d4] 7e
+                    cp      $00                             ;[01d5] fe 00
+                    jp      z,$01eb                         ;[01d7] ca eb 01
+                    ld      hl,$0000                        ;[01da] 21 00 00
+                    ld      l,a                             ;[01dd] 6f
+                    push    de                              ;[01de] d5
+                    push    hl                              ;[01df] e5
+                    call    $0198                           ;[01e0] cd 98 01
+                    pop     hl                              ;[01e3] e1
+                    pop     de                              ;[01e4] d1
+                    ld      h,d                             ;[01e5] 62
+                    ld      l,e                             ;[01e6] 6b
+                    inc     hl                              ;[01e7] 23
+                    jp      $01d4                           ;[01e8] c3 d4 01
+                    ret                                     ;[01eb] c9
 
-                    nop                                     ;[01dc] 00
-                    adc     a                               ;[01dd] 8f
-                    add     b                               ;[01de] 80
-                    dec     bc                              ;[01df] 0b
-                    add     b                               ;[01e0] 80
-                    nop                                     ;[01e1] 00
-                    nop                                     ;[01e2] 00
-                    inc     b                               ;[01e3] 04
-                    add     b                               ;[01e4] 80
-                    ld      bc,$0000                        ;[01e5] 01 00 00
+                    ret                                     ;[01ec] c9
+
+                    call    $017c                           ;[01ed] cd 7c 01
+                    call    $01b4                           ;[01f0] cd b4 01
+                    ld      hl,$0203                        ;[01f3] 21 03 02
+                    push    hl                              ;[01f6] e5
+                    call    $01cb                           ;[01f7] cd cb 01
+                    pop     bc                              ;[01fa] c1
+                    jp      $01f0                           ;[01fb] c3 f0 01
+                    call    $017a                           ;[01fe] cd 7a 01
+                    ret                                     ;[0201] c9
+
+                    nop                                     ;[0202] 00
+                    ld      c,b                             ;[0203] 48
+                    ld      l,c                             ;[0204] 69
+                    ld      hl,$0d0a                        ;[0205] 21 0a 0d
+                    nop                                     ;[0208] 00
+                    adc     a                               ;[0209] 8f
+                    add     b                               ;[020a] 80
+                    dec     bc                              ;[020b] 0b
+                    add     b                               ;[020c] 80
+                    nop                                     ;[020d] 00
+                    nop                                     ;[020e] 00
+                    inc     b                               ;[020f] 04
+                    add     b                               ;[0210] 80
+                    ld      bc,$0000                        ;[0211] 01 00 00
