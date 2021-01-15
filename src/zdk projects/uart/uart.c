@@ -1,5 +1,11 @@
 #include "uart.h"
 
+//I know that there are premade library functions
+//for I/O but they don't seem to work and there is 
+//no documentation to help me troubleshoot
+
+//plus, these are faster
+
 void UART_CLEAR_LSR(){
 	__asm
     PUSH AF

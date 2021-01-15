@@ -20,7 +20,8 @@ void main(){
 	setColor(WHITE, BLACK);
 	
 	while(1){
-		monitor(&buffer);
+		//monitor(&buffer);
+		simpleLoop();
 	}
 	
 	HALT();

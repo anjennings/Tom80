@@ -155,3 +155,71 @@ void HALT(){
 	HALT
 	__endasm
 }
+
+void simpleLoop(){
+	uint8_t x = 5;
+	uint8_t y = 5;
+	uint8_t ox, oy;
+	
+	
+	while(1){
+		
+		ox = x;
+		oy = y;
+		
+		switch(getArrow()){
+			case 0:
+				putstr("NONE", 3, 1);
+				break;
+			case 1:
+				y--;
+				break;
+			case 2:
+				y++;
+				break;
+			case 3:
+				x++;
+				break;
+			case 4:
+				x--;
+				break;
+			default:
+				putstr("ERROR", 2, 1);
+				break;
+		}
+		putstr(" ", (ox%32), (oy%16));
+		putstr("A", (x%32), (y%16));
+		putstr(" ", 1, 1);
+	}
+}
+
+uint8_t getArrow(){
+	
+	if(GETCH() == '\033'){
+	
+	
+		//Ignore the '['
+		GETCH();
+		
+		switch(GETCH()) {
+			case 'A':
+				return 1;
+				break;
+			case 'B':
+				return 2;
+				break;
+			case 'C':
+				return 3;
+				break;
+			case 'D':
+				return 4;
+				break;
+			default:
+				return 0;
+				break;
+		}
+	}
+	
+	return 0;
+	
+}

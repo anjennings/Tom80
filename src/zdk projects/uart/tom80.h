@@ -29,5 +29,7 @@ void putstr(char * s, int x, int y);
 void monitor(char * buf);
 void HALT();
 void evaluateStmt(char * buf);
+uint8_t getArrow();
+void simpleLoop();
 
 #endif	//	TOM80_H_
