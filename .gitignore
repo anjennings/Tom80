@@ -18,3 +18,4 @@ EEPROM Software/Tom80.z80.bin
 src/Tom80/Tom80.z80.bin
 EEPROM Software/ASH.z80.bin
 *.bin
+*.dis

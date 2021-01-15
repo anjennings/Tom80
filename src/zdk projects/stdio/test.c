@@ -1,4 +1,23 @@
-#include "uart.h"
+#pragma printf = "%s"   // prune to required converters
+#pragma scanf  = "%s"   // prune to required converters
+
+#include <stdio.h>
+
+
+#define UART_DHR 0 		//UART Data R/W register
+#define UART_IER 1 		//Interrupt Enable Register
+#define UART_IFR 2 		//Interrupt ID Reg (READ), FIFO Control Reg (WRITE)
+#define UART_LCR 3 		//Line Control Register
+#define UART_MCR 4 		//Modem Control
+#define UART_LSR 5 		//Line Status Register
+#define UART_MSR 6 		//Modem Status (Unused)
+#define UART_SCR 7 		//Arbitrary data can be stored here
+
+#define BAUD_DIV_HIGH 0
+#define BAUD_DIV_LOW 8
+
+unsigned char buf[64];
+
 
 void UART_CLEAR_LSR(){
 	__asm
@@ -66,7 +85,7 @@ void UART_SET_DLAB(){
 
 void UART_TOGGLE_OUT1(){
 	__asm
-	PUSH AF
+    PUSH AF
     IN A, (UART_MCR)
     XOR 0x4
     OUT (UART_MCR), A
@@ -77,12 +96,18 @@ void UART_TOGGLE_OUT1(){
 
 void UART_TOGGLE_OUT2(){
 	__asm
-	PUSH AF
+    PUSH AF
     IN A, (UART_MCR)
     XOR 0x8
     OUT (UART_MCR), A
     POP AF
     RET
+	__endasm
+}
+
+void HALT(){
+	__asm
+	HALT
 	__endasm
 }
 
@@ -100,3 +125,17 @@ void UART_INIT(){
 	
 }
 
+void main(void)
+{
+	UART_INIT();
+	
+	while (1)
+	{
+		printf("Message: ");
+      
+		//fflush(stdin);
+		//scanf("%63s", buf);
+      
+		//printf("\"%s\"\n\n", buf);
+	}
+}

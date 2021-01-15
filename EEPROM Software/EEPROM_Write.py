@@ -13,6 +13,7 @@ import sys
 import os
 import time
 import struct
+from datetime import datetime
 
 READ_INST = struct.pack("B", 0x72)
 WRITE_INST = struct.pack("B", 0x77)
@@ -71,3 +72,6 @@ for i in range(0, fileSize):
 	
 	#Wait for reply
 	rec = ser.read(1)
+
+print('\nWrite success!')
+print(datetime.now().strftime("%H:%M:%S"))

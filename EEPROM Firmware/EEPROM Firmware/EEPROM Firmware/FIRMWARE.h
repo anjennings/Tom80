@@ -10,10 +10,6 @@
 #ifndef FIRMWARE_H_
 #define FIRMWARE_H_
 
-//#define F_CPU 14745600UL
-//#define BAUDRATE 19200
-//#define BAUD_SCALLER (((F_CPU / (BAUDRATE * 16UL))) - 1)
-
 #include <stdio.h>
 #include <stdint-gcc.h>
 #include <stdlib.h>

@@ -5,11 +5,6 @@
  *  Author: Aidan
  */ 
 
-//#include "USART.h"
-//#include "Monitor.h"
-//#include "SRAM.h"
-//#include <stdint-gcc.h>
-
 #include "FIRMWARE.h"
 
 #define BUFFSIZE 64
