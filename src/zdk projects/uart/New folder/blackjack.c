@@ -1,5 +1,9 @@
 #include "blackjack.h"
+#include <stdio.h>
 
+void main(){
+	blackJack();
+}
 
 void blackJack(){
 	
@@ -15,7 +19,7 @@ void blackJack(){
 	mainTable.players[1] = &p1;
 	
 	
-	PRINTSTR("\r\nWELCOME TO BLACKJACK!\r\n");
+	printf("\r\nWELCOME TO BLACKJACK!\r\n");
 	
 	blackJackInit(&mainTable);
 	
@@ -39,7 +43,7 @@ void blackJackInit(Table *t){
 	const Card Queen = {"Q", 10, 0, 0 };
 	const Card King = {"K", 10, 0, 0 };
 
-	int types[13];
+	Card types[13];
 	
 	types[0] = Ace;
 	types[1] = Two;
@@ -63,25 +67,25 @@ void blackJackInit(Table *t){
 		t->players[i]->wins = 0;
 		t->players[i]->losses = 0;
 		t->players[i]->busted = 0;
-		memcpy(t->players[i]->cards[0], Ace, sizeof(Card));
+		memcpy(&t->players[i]->cards[0], &Ace, sizeof(Card));
 
 	}
 	
 	t->players[0]->isDealer = 1;
 	
 	for(int j = 0; j < 52; j++){
-		memcpy(t->deck->cards[j], types[j%13], sizeof(Card));
+		memcpy(&t->deck->cards[j], &types[j%13], sizeof(Card));
 	}
 }
 
 void playGame(Table *t){
 	
 	for(int i = 0; i < 52; i++){
-		PRINTSTR(t->deck->cards[i].id);
-		PRINTCH(' ');
+		printf(t->deck->cards[i].id);
+		printf(" ");
 	}
 	
-	PRINTSTR("\r\n");
+	printf("\r\n");
 	
 	while(1){
 		
@@ -95,7 +99,7 @@ void playGame(Table *t){
 
 void roundStart(Table *t){
 	
-	PRINTSTR("Round Start!\r\n");
+	printf("Round Start!\r\n");
 	
 	for(int i = 0; i < 52; i++){
 		t->deck->cards[i].delt = 0;
@@ -133,7 +137,7 @@ void roundMiddle(Table *t){
 void roundEnd(Table *t){
 	
 	//TODO: Show player scores, see who won
-	PRINTSTR("Round End!\r\n");
+	printf("Round End!\r\n");
 	printPlayerStats(t);
 	
 }
@@ -147,7 +151,7 @@ void dealCard(Deck *deck, Player *p){
 		random = rand() % 52;
 	}
 	
-	memcpy(p->cards[p->numCards], deck->cards[random], sizeof(Card));
+	memcpy(&p->cards[p->numCards], &deck->cards[random], sizeof(Card));
 	deck->cards[random].delt = 1;
 	p->numCards++;
 	
@@ -158,23 +162,23 @@ void dealCard(Deck *deck, Player *p){
 
 void printPlayerStats(Table *t){
 	
-	PRINTSTR("Dealer has : \r\n");
+	printf("Dealer has : \r\n");
 	for(int i = 0; i < t->players[0]->numCards; i++){
-		PRINTSTR(t->players[0]->cards[i].id);
-		PRINTSTR(",");
+		printf(t->players[0]->cards[i].id);
+		printf(",");
 	}
-	PRINTSTR("\r\n");
+	printf("\r\n");
 	
-	PRINTSTR("You have : \r\n");
+	printf("You have : \r\n");
 	for(int j = 0; j < t->players[1]->numCards; j++){
-		PRINTCH(t->players[1]->cards[j].id);
-		PRINTSTR(",");
+		printf(t->players[1]->cards[j].id);
+		printf(",");
 	}
-	PRINTSTR("\r\n");
+	printf("\r\n");
 }
 
 void dealerTurn(Player *p, Deck *d){
-	PRINTSTR("Dealer Logic goes here\r\n");
+	printf("Dealer Logic goes here\r\n");
 }
 
 //This and playerInput can probably be one function
@@ -205,11 +209,11 @@ void playerTurn(Player *p, Deck *d){
 
 int playerInput(){
 	
-	PRINTSTR("(H)it, (S)tand, or (F)old?\r\n");
+	printf("(H)it, (S)tand, or (F)old?\r\n");
 	
 	while(1){
 		
-		switch(GETCH()){
+		switch(getc(stdin)){
 			case 'F' :
 			case 'f' :
 				return FOLD;
@@ -231,7 +235,7 @@ int playerInput(){
 				break;
 				
 			default:
-				PRINTSTR("INVALID\r\n");
+				printf("INVALID\r\n");
 				break;
 		}
 		

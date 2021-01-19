@@ -33,6 +33,7 @@ except:
 #open binary file specified in the args
 try:
 	f = open(sys.argv[1], "rb")
+	f1 = open('rec.bin', "wb")
 except:
 	print("Python Serial ERROR : Could not open file!")
 	sys.exit(1)
@@ -72,6 +73,7 @@ for i in range(0, fileSize):
 	
 	#Wait for reply
 	rec = ser.read(1)
+	f1.write(rec)
 
 print('\nWrite success!')
 print(datetime.now().strftime("%H:%M:%S"))

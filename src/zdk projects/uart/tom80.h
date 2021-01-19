@@ -5,6 +5,8 @@
 #include <string.h>
 #include "uart.h"
 
+#define printf PRINTSTR
+
 typedef enum {
 	
 	BLACK = '0',
@@ -29,7 +31,7 @@ void putstr(char * s, int x, int y);
 void monitor(char * buf);
 void HALT();
 void evaluateStmt(char * buf);
-uint8_t getArrow();
+char getArrow();
 void simpleLoop();
 
 #endif	//	TOM80_H_

@@ -1,5 +1,6 @@
 #include "uart.h"
 #include "tom80.h"
+#include "blackjack.h"
 
 char buffer[256];
 
@@ -11,7 +12,7 @@ void main(){
 	
 	setColor(WHITE, BLACK);
 	
-	PRINTSTR("ASH v0.2C\n\r(C) 2020 by Aidan Jennings\n\r");
+	PRINTSTR("ASH v0.3C\n\r(C) 2020 by Aidan Jennings\n\r");
 	PRINTSTR("ZILOG Z80 32k EEPROM, 32k SRAM\n\rTEXTONLY\n\r");
 	PRINTSTR("\nBOOT PROCESS COMPLETE!\n\r");
 	
@@ -21,7 +22,8 @@ void main(){
 	
 	while(1){
 		//monitor(&buffer);
-		simpleLoop();
+		//simpleLoop();
+		blackJack();
 	}
 	
 	HALT();

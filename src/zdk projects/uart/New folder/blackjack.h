@@ -3,9 +3,9 @@
 
 #include <stdlib.h>
 #include <string.h>
-#include "uart.h"
+//#include "uart.h"
 #include <malloc.h>
-#include "tom80.h"
+//#include "tom80.h"
 
 typedef enum {
 	FOLD = 0,
