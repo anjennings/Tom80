@@ -22,12 +22,12 @@ typedef enum {
 
 void cls();
 void setColor(ANSII_COLOR fg, ANSII_COLOR bg);
-void PRINTCH(char c);
-unsigned char GETCH();
-void PRINTSTR(const char * s);
+void putc(char c);
+unsigned char getc();
+void print(const char * s);
 void getStr(char * buf);
-void putc(char c, int x, int y);
-void putstr(char * s, int x, int y);
+void plotc(char c, int x, int y);
+void plotStr(char * s, int x, int y);
 void monitor(char * buf);
 void HALT();
 void evaluateStmt(char * buf);

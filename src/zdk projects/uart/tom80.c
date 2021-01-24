@@ -1,13 +1,11 @@
 #include "tom80.h"
 
 void cls(){
-	PRINTSTR("\033[2J");
+	print("\033[2J");
 }
 
-void PRINTCH(char c){
+void putc(char c){
 	__asm
-    //PUSH AF
-	//PUSH HL
 
 	//Clear DLAB
     IN A, (UART_LCR)
@@ -26,13 +24,14 @@ void PRINTCH(char c){
 	ADD HL, SP
 	LD A, (HL)
     OUT (UART_DHR), A
-	//POP HL
-	//POP AF
+	
+	CALL _UART_TOGGLE_OUT1
+
     RET
 	__endasm
 }
 
-unsigned char GETCH(){
+unsigned char getc(){
 	__asm
 	
 	PUSH AF
@@ -58,10 +57,10 @@ unsigned char GETCH(){
 	__endasm
 }
 
-void PRINTSTR(const char * s){
+void print(const char * s){
 	
 	for(int i = 0; s[i] != '\0'; i++){
-		PRINTCH(s[i]);
+		putc(s[i]);
 	}
 	
 }
@@ -73,39 +72,19 @@ void getStr(char * buf){
 	int run = 1;
 	
 	while(c != '\r'){
-		c = GETCH();
-		PRINTCH(c);
+		c = getc();
+		putc(c);
 		buf[size] = c;
 		size++;
 	}
 	
 	buf[size] = '\0';
 	
-	PRINTCH('\n');
-	UART_TOGGLE_OUT1();
+	print('\n');
 	
 }
 
-void evaluateStmt(char * buf){
-	
-	PRINTCH('\r');
-	
-	for(int i = 0; buf[i] != '\r'; i++){
-		PRINTCH(buf[i]);
-	}
-	
-	PRINTCH('\n');
-	PRINTCH('\r');
-}
-
-void monitor(char * buf){
-	
-	getStr(buf);
-	evaluateStmt(buf);
-	
-}
-
-void putc(char c, int x, int y){
+void plotc(char c, int x, int y){
 	
 	char tx[8];
 	char ty[8];
@@ -113,39 +92,38 @@ void putc(char c, int x, int y){
 	itoa(x, &tx, 10);
 	itoa(y, &ty, 10);
 	
-	PRINTSTR("\033[");
-	PRINTSTR(ty);
-	PRINTSTR(";");
-	PRINTSTR(tx);
-	PRINTSTR("H");
-	PRINTCH(c);
+	print("\033[");
+	print(ty);
+	print(";");
+	print(tx);
+	print("H");
+	putc(c);
 	
 }
 
-void putstr(char * s, int x, int y){
+void plotStr(char * s, int x, int y){
 	
 	for(int i = 0; s[i] != '\0'; i++){
-		putc(s[i], x+i, y);
+		plotc(s[i], x+i, y);
 	}
 	
 }
 
 void setColor(ANSII_COLOR fg, ANSII_COLOR bg){
 
-
 	//Reset everything
-	PRINTSTR("\033[");
-	PRINTSTR("0");
-	PRINTSTR("m");
+	print("\033[");
+	print("0");
+	print("m");
 	
 	//Print New Color
-	PRINTSTR("\033[");
-	PRINTSTR("3");
-	PRINTCH(fg);
-	PRINTSTR(";");
-	PRINTSTR("4");
-	PRINTCH(bg);
-	PRINTSTR("m");
+	print("\033[");
+	print("3");
+	putc(fg);
+	print(";");
+	print("4");
+	putc(bg);
+	print("m");
 
 
 }
@@ -169,7 +147,7 @@ void simpleLoop(){
 		
 		switch(getArrow()){
 			case 0:
-				putstr("NONE", 3, 1);
+				plotc("NONE", 3, 1);
 				break;
 			case 1:
 				y--;
@@ -184,24 +162,24 @@ void simpleLoop(){
 				x--;
 				break;
 			default:
-				putstr("ERROR", 2, 1);
+				plotc("ERROR", 2, 1);
 				break;
 		}
-		putstr(" ", (ox%32), (oy%16));
-		putstr("A", (x%32), (y%16));
-		putstr(" ", 1, 1);
+		plotc(" ", (ox%32), (oy%16));
+		plotc("A", (x%32), (y%16));
+		plotc(" ", 1, 1);
 	}
 }
 
-uint8_t getArrow(){
+char getArrow(){
 	
-	if(GETCH() == '\033'){
+	if(getc() == '\033'){
 	
 	
 		//Ignore the '['
-		GETCH();
+		getc();
 		
-		switch(GETCH()) {
+		switch(getc()) {
 			case 'A':
 				return 1;
 				break;

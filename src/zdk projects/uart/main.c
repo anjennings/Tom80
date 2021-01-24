@@ -1,30 +1,29 @@
 #include "uart.h"
 #include "tom80.h"
-#include "blackjack.h"
+#include "monitor.h"
+#include <malloc.h>
 
-char buffer[256];
+#pragma output CLIB_MALLOC_HEAP_SIZE = 0
 
 void main(){
 	
-	UART_INIT();	
-	GETCH();
+	UART_INIT();
+	getc();
 	cls();
 	
 	setColor(WHITE, BLACK);
 	
-	PRINTSTR("ASH v0.3C\n\r(C) 2020 by Aidan Jennings\n\r");
-	PRINTSTR("ZILOG Z80 32k EEPROM, 32k SRAM\n\rTEXTONLY\n\r");
-	PRINTSTR("\nBOOT PROCESS COMPLETE!\n\r");
+	print("ASH v0.3C\n\r(C) 2020 by Aidan Jennings\n\r");
+	print("ZILOG Z80 32k EEPROM, 32k SRAM\n\rTEXTONLY\n\r");
+	print("\nBOOT PROCESS COMPLETE!\n\n\r");
 	
-	setColor(BLACK, WHITE);
-	putstr("test test 123\r", 11, 11);
-	setColor(WHITE, BLACK);
+	unsigned char buffer[128];
+//	buffer = malloc(128*sizeof(char));
 	
 	while(1){
-		//monitor(&buffer);
+		monitor(&buffer);
 		//simpleLoop();
-		blackJack();
+		//putc(getc());
 	}
 	
-	HALT();
 }

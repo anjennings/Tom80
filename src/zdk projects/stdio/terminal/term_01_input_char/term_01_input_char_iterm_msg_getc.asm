@@ -32,7 +32,9 @@ term_01_input_char_iterm_msg_getc:
         JP NZ, GETCH_LOOP
 		
 	IN A, (0)
-
+	or a
+	RET
+	
    ; After character is retrieved do any necessary
    ; character set translation including ascii codes
    ; 10 and 13 as shown below

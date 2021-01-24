@@ -1,6 +1,5 @@
 #include "blackjack.h"
 
-
 void blackJack(){
 	
 	//just do things on the stack for now
@@ -13,7 +12,6 @@ void blackJack(){
 	mainTable.deck = &cardDeck;
 	mainTable.players[0] = &dealer;
 	mainTable.players[1] = &p1;
-	
 	
 	PRINTSTR("\r\nWELCOME TO BLACKJACK!\r\n");
 	
@@ -39,7 +37,7 @@ void blackJackInit(Table *t){
 	const Card Queen = {"Q", 10, 0, 0 };
 	const Card King = {"K", 10, 0, 0 };
 
-	int types[13];
+	Card types[13];
 	
 	types[0] = Ace;
 	types[1] = Two;
@@ -63,14 +61,14 @@ void blackJackInit(Table *t){
 		t->players[i]->wins = 0;
 		t->players[i]->losses = 0;
 		t->players[i]->busted = 0;
-		memcpy(t->players[i]->cards[0], Ace, sizeof(Card));
+		memcpy(&t->players[i]->cards[0], &Ace, sizeof(Card));
 
 	}
 	
 	t->players[0]->isDealer = 1;
 	
 	for(int j = 0; j < 52; j++){
-		memcpy(t->deck->cards[j], types[j%13], sizeof(Card));
+		memcpy(&t->deck->cards[j], &types[j%13], sizeof(Card));
 	}
 }
 
@@ -78,7 +76,7 @@ void playGame(Table *t){
 	
 	for(int i = 0; i < 52; i++){
 		PRINTSTR(t->deck->cards[i].id);
-		PRINTCH(' ');
+		PRINTSTR(" ");
 	}
 	
 	PRINTSTR("\r\n");
@@ -147,7 +145,7 @@ void dealCard(Deck *deck, Player *p){
 		random = rand() % 52;
 	}
 	
-	memcpy(p->cards[p->numCards], deck->cards[random], sizeof(Card));
+	memcpy(&p->cards[p->numCards], &deck->cards[random], sizeof(Card));
 	deck->cards[random].delt = 1;
 	p->numCards++;
 	
@@ -167,7 +165,7 @@ void printPlayerStats(Table *t){
 	
 	PRINTSTR("You have : \r\n");
 	for(int j = 0; j < t->players[1]->numCards; j++){
-		PRINTCH(t->players[1]->cards[j].id);
+		PRINTSTR(t->players[1]->cards[j].id);
 		PRINTSTR(",");
 	}
 	PRINTSTR("\r\n");
