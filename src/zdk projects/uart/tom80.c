@@ -73,6 +73,7 @@ void getStr(char * buf){
 	
 	while(c != '\r'){
 		c = getc();
+		//TODO: switch statement for special chars
 		putc(c);
 		buf[size] = c;
 		size++;

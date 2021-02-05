@@ -21,7 +21,11 @@ enum parser_token{
 #define INST_HELP '?'
 
 char tokenizeBuffer(char * buf, char * tokenBuff);
+int executeBuffer(char * tokenBuff);
 void evaluateStmt(char * buf);
+void monitor_help();
+void monitor_execute(int addr);
+void monitor_word(char * buf);
 int isLiteral(char c);
 int isHex(char c);
 int isNumerical(char c);
