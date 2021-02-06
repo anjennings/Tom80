@@ -4,6 +4,7 @@
 #include "uart.h"
 #include "tom80.h"
 #include <stdlib.h>
+#include <ctype.h>
 
 enum parser_token{
 	EOF,
@@ -30,5 +31,5 @@ int isLiteral(char c);
 int isHex(char c);
 int isNumerical(char c);
 void monitor(char * buf);
-
+void readDump(uint8_t * loc, int count);
 #endif

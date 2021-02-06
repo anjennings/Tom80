@@ -27,9 +27,9 @@ Also Includes:
 		-28 Pin ZIF Socket
 		-USB Interface
 		
-	-Simple Memory Monitor (ASH.asm)
-		-a whopping 5 commands, including read, write, execute, AND MORE!
-		-not currently finished
+	-Simple Memory Monitor
+		-a whopping 4 commands, including read, write, execute, AND MORE!
+		-available in ASM (smaller) and C (easier to understand) versions
 
 Other (Older) files:
 

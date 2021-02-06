@@ -148,7 +148,7 @@ void simpleLoop(){
 		
 		switch(getArrow()){
 			case 0:
-				plotc("NONE", 3, 1);
+				plotc('-', 3, 1);
 				break;
 			case 1:
 				y--;
@@ -163,12 +163,12 @@ void simpleLoop(){
 				x--;
 				break;
 			default:
-				plotc("ERROR", 2, 1);
+				plotc('X', 2, 1);
 				break;
 		}
-		plotc(" ", (ox%32), (oy%16));
-		plotc("A", (x%32), (y%16));
-		plotc(" ", 1, 1);
+		plotc(' ', (ox%32), (oy%16));
+		plotc('A', (x%32), (y%16));
+		plotc(' ', 1, 1);
 	}
 }
 

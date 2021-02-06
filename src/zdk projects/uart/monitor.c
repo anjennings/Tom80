@@ -4,39 +4,41 @@ char tokenizeBuffer(char * buf, char * tokenBuff){
 	
 	char c;
 	int offset = 0;
-	uint16_t litValue = 0;
+	uint16_t litValue;
 	
 	for(int i = 0; buf[i] != '\0'; i++){
 		
 		c = buf[i];
 		
 		//Special Case, handle literals
-		//TODO: Make this its own function and incorporate into the switch statement
 		if(isLiteral(c) == 1){
-			
-			//convert first literal
-			if(isHex(c)){
-				litValue = ((uint16_t)c) - 0x37;
-			}else{
-				litValue = ((uint16_t)c) - 0x30;
-			}
 			
 			tokenBuff[offset] = WORD;
 			offset++;
+			
+			litValue = 0;
+			
+			//convert first literal
+			if(isHex(c)){
+				litValue = 0xF & (((uint8_t)c) - 0x37);
+			}else{
+				litValue = 0xF & (((uint8_t)c) - 0x30);
+			}
 			
 			while(isLiteral(buf[i+1]) == 1){
 				i++;
 				c = buf[i];
 				
 				if(isHex(c)){
-					litValue = (litValue<<4) | (0xF & (((uint16_t)c) - 0x37));
+					litValue = ((litValue & 0xFFF) << 4) | (0xF & (((uint8_t)c) - 0x37));
 				}else{
-					litValue = (litValue<<4) | (0xF & (((uint16_t)c) - 0x30));
+					litValue = ((litValue & 0xFFF) << 4) | (0xF & (((uint8_t)c) - 0x30));
 				}
 			}
-			tokenBuff[offset] = (char)((litValue&0xFF00)>>8);
+			
+			tokenBuff[offset] = (uint8_t)((litValue >> 8) & 0xFF);
 			offset++;
-			tokenBuff[offset] = (char)(litValue&0xFF);
+			tokenBuff[offset] = (uint8_t)(litValue & 0xFF);
 			offset++;
 			
 		}else{
@@ -120,8 +122,6 @@ void evaluateStmt(char * buf) {
 	
 	unsigned char tokenBuff[128];
 	
-	//print("\n\r");
-	//print(buf);
 	print("\n\r");
 	
 	char tokenRet = tokenizeBuffer(buf, &tokenBuff);
@@ -154,9 +154,9 @@ void monitor_execute(int addr){
 
 void monitor_word(char * buf){
 	
-	uint16_t lit1;
-	uint8_t lit2;
-	uint8_t instruction;
+	uint16_t lit1 = 0;
+	uint8_t lit2 = 0;
+	uint8_t instruction = 0;
 	
 	//lazy, non LL(1) way of doing things
 	lit1 = buf[1];
@@ -168,12 +168,44 @@ void monitor_word(char * buf){
 	lit2 = buf[6];
 	
 	if (instruction == READ) {
-		print("\n\rREAD!\n\r");
+		readDump(lit1, lit2);
 	} else if (instruction == WRITE) {
 		print("\n\rWRITE!\n\r");
 	} else {
 		print("\n\rinvalid instruction\n\r");
 	}
+}
+
+void readDump(uint8_t * loc, int count){
+	
+	char addr[5];
+	char data[3];
+	
+	for(int i = 0; i < count; i++){
+		
+		//Print address
+		if(i%16 == 0){
+			itoa((int)(loc + i), addr, 16);
+			print("\n\r");
+			print(addr);
+			print(":  ");
+		}
+		
+		//Leading 0
+		if((uint8_t)*(loc + i) < 16){
+			print("0");
+		}
+		
+		itoa((uint8_t)*(loc + i), data, 16);
+		print(data);
+		print("  ");
+		
+	}
+	print("\n\r");
+}
+
+void writeByte(void * loc, uint8_t data){
+	*loc = data;
 }
 
 int isLiteral(char c){
@@ -189,10 +221,19 @@ int isNumerical(char c){
 	return (((int)c >= 0x30) & ((int)c <= 0x39));
 }
 
+void uppercase(char * buf){
+	
+	for(int i = 0; buf[i] != '\0'; i++){
+		buf[i] = toupper(buf[i]);
+	}
+	
+}
+
 void monitor(char * buf){
 	
 	print("[Tom80]:~$ ");
 	getStr(buf);
+	//uppercase(buf);
 	evaluateStmt(buf);
 	
 }
