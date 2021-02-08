@@ -7,23 +7,31 @@
 
 //#define int int16_t
 
-#define WIDTH 150
-#define HEIGHT 50
-#define x_MAX (double)1
-#define x_MIN (double)-2.5
-#define y_MAX (double)1
-#define y_MIN (double)-1
+#define WIDTH 75
+#define HEIGHT 20
 
-#define x_RANGE (double)(x_MAX-x_MIN)
-#define y_RANGE (double)(y_MAX-y_MIN)
+#define SCALE 100
 
-#define x_STEP (double)(x_RANGE/WIDTH)
-#define y_STEP (double)(y_RANGE/HEIGHT)
+#define x_MAX 1
+#define x_MIN -2.5
+#define y_MAX 1
+#define y_MIN -1
+
+#define x_SCALE_MAX (x_MAX * SCALE)
+#define x_SCALE_MIN (x_MIN * SCALE)
+#define y_SCALE_MAX (y_MAX * SCALE)
+#define y_SCALE_MIN (y_MIN * SCALE)
+
+#define x_RANGE (float)(x_SCALE_MAX-x_SCALE_MIN)
+#define y_RANGE (float)(y_SCALE_MAX-y_SCALE_MIN)
+
+#define x_STEP (x_RANGE/WIDTH)
+#define y_STEP (y_RANGE/HEIGHT)
 
 #define ITERATION_MAXIMUM 1000
 #define UNKNOWN_CONSTANT 4
 
-#define CHAR_ON '*'
+#define CHAR_ON '.'
 #define CHAR_OFF ' '
 
 int main();

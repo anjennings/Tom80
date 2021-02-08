@@ -26,8 +26,6 @@ void mandlebrot(){
     plot(Px, Py, color)
 	*/
 	
-	//y_MAX - (i*y_STEP) pixel coord -> function location
-	//x_MIN + (j*x_STEP) pixel coord -> function location
 	
 	
 	
@@ -44,25 +42,18 @@ void mandlebrot(){
 
 char step(int px, int py){
 	
-	double x0 = (x_MIN + (px*x_STEP));
-	double y0 = (y_MAX - (py*y_STEP));
-	double x = 0;
-	double y = 0;
-	double iteration = 0;
-	double xtemp = 0;
+	int x0 = (x_SCALE_MIN + (px*x_STEP));
+	int y0 = (y_SCALE_MAX - (py*y_STEP));
+	int x = 0;
+	int y = 0;
+	int iteration = 0;
+	int xtemp = 0;
 	
-	while(((x*x) + (y*y) <= UNKNOWN_CONSTANT) & (iteration < ITERATION_MAXIMUM)){
-		xtemp = (x*x) - (y*y) + x0;
-		y = 2*x*y + y0;
+	while((((x*x)/(SCALE*SCALE)) + ((y*y)/(SCALE*SCALE)) <= UNKNOWN_CONSTANT) & (iteration < ITERATION_MAXIMUM)){
+		xtemp = ((x*x)/(SCALE)) - ((y*y)/(SCALE)) + x0;
+		y = ((2*x*y)/(SCALE)) + y0;
 		x = xtemp;
 		iteration++;
 	}
-	return 	iteration > (ITERATION_MAXIMUM/50) ? '0' : ' ';/*iteration > (ITERATION_MAXIMUM/50) ? '█' :
-			iteration > (ITERATION_MAXIMUM/100) ? '#' : 
-			iteration > (ITERATION_MAXIMUM/150) ? '%' : 
-			iteration > (ITERATION_MAXIMUM/200) ? '&' : 
-			iteration > (ITERATION_MAXIMUM/250) ? '^' : 
-			iteration > (ITERATION_MAXIMUM/300) ? '"' : 
-			iteration > (ITERATION_MAXIMUM/350) ? '*' : '.';
-			//iteration > (ITERATION_MAXIMUM/400) ? '.' : ' ';*/
+	return 	iteration > (ITERATION_MAXIMUM/50) ? CHAR_ON : CHAR_OFF;
 }

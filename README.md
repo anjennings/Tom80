@@ -1,4 +1,4 @@
-# Z80-Computer
+# Tom80 (Tomato)
 
 Files relating to a Z80 based computer I am building
 
