@@ -1,7 +1,6 @@
 #include "uart.h"
 #include "tom80.h"
 #include "monitor.h"
-#include <malloc.h>
 
 #pragma output CLIB_MALLOC_HEAP_SIZE = 0
 
@@ -17,7 +16,7 @@ void main(){
 	print("ZILOG Z80 32k EEPROM, 32k SRAM\n\rTEXT ONLY\n\r");
 	print("\nBOOT PROCESS COMPLETE!\n\n\r");
 	
-	unsigned char buffer[128];
+	char buffer[128];
 	
 	while(1){
 		monitor(&buffer);

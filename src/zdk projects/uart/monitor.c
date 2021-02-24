@@ -13,7 +13,7 @@ char tokenizeBuffer(char * buf, char * tokenBuff){
 		//Special Case, handle literals
 		if(isLiteral(c) == 1){
 			
-			tokenBuff[offset] = WORD;
+			tokenBuff[offset] = L_WORD;
 			offset++;
 			
 			litValue = 0;
@@ -64,6 +64,11 @@ char tokenizeBuffer(char * buf, char * tokenBuff){
 					offset++;
 					break;
 					
+				case INST_MAND:
+					tokenBuff[offset] = MAND;
+					offset++;
+					break;
+					
 				case 0x20:
 					//space bar
 					break;
@@ -89,7 +94,7 @@ char tokenizeBuffer(char * buf, char * tokenBuff){
 
 int executeBuffer(char * buf) {
 	
-	//TODO, make a proper look ahead table
+	//TODO, make a proper look-ahead table
 	int offset = 0;
 	uint16_t lit1, lit2;
 	uint8_t instruction;
@@ -100,12 +105,17 @@ int executeBuffer(char * buf) {
 			return 0;
 			break;
 			
+		case MAND:
+			mandlebrot();
+			return 0;
+			break;
+			
 		case EXECUTE:
 			monitor_execute(buf[offset+2]);
 			return 0;
 			break;
 			
-		case WORD:
+		case L_WORD:
 			monitor_word(buf);
 			return 0;
 			break;
@@ -144,6 +154,7 @@ void monitor_help(){
 	print("\n\r1FFF : 10 - READ 16 BYTES STARTING AT LOCATION 0x1FFF");
 	print("\n\r1FFF < 10 - WRITE 0x10 TO LOCAITON 0x1FFF");
 	print("\n\r@1FFF - BEGIN EXECUTION AT LOCATION 0x1FFF");
+	print("\n\rM - RUN MANDLEBROT DEMO SEQUENCE");
 	print("\n\r? - DISPLAY HELP MESSAGE");
 	print("\n\n\r");
 }
@@ -176,7 +187,7 @@ void monitor_word(char * buf){
 	}
 }
 
-void readDump(uint8_t * loc, int count){
+void readDump(uint8_t *loc, int count){
 	
 	char addr[5];
 	char data[3];

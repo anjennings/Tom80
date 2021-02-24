@@ -3,6 +3,7 @@
 
 #include "uart.h"
 #include "tom80.h"
+#include "mand.h"
 #include <stdlib.h>
 #include <ctype.h>
 
@@ -11,15 +12,17 @@ enum parser_token{
 	READ,
 	WRITE,
 	EXECUTE,
-	WORD,
+	L_WORD,
 	NIBBLE,
-	HELP
+	HELP,
+	MAND
 } parser_token;
 
 #define INST_READ ':'
 #define INST_WRITE '<'
 #define INST_EXECUTE '@'
 #define INST_HELP '?'
+#define INST_MAND 'M'
 
 char tokenizeBuffer(char * buf, char * tokenBuff);
 int executeBuffer(char * tokenBuff);
@@ -31,5 +34,5 @@ int isLiteral(char c);
 int isHex(char c);
 int isNumerical(char c);
 void monitor(char * buf);
-void readDump(uint8_t * loc, int count);
+void readDump(uint8_t *loc, int count);
 #endif

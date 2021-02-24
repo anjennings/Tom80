@@ -1,1 +1,1 @@
-zcc +z80 -vn -O3 -clib=new uart.c -o main -create-app
+zcc +z80 -vn -O3 -clib=new uart.lst -o main -create-app -Wall

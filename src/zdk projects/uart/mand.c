@@ -1,16 +1,11 @@
 #include "mand.h"
-	
-int main(){
-	mandlebrot();
-	return 0;
-}
 
 void mandlebrot(){
 	for(int i = 0; i < HEIGHT; i++){
 		for(int j = 0; j < WIDTH; j++){
-			printf("%c", step(j, i));
+			putc(step(j, i));
 		}
-		printf("\n");
+		print("\n\r");
 	}
 }
 

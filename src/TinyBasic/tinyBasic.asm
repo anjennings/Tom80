@@ -66,7 +66,7 @@
 
 
 
-SerialPort	EQU	UART_DHR	;This is for your I/0
+SerialPort	EQU	00H		;This is for your I/0
 
 
 SPACE           EQU     020H            ; Space
@@ -2226,6 +2226,13 @@ SERIAL_INIT:
         CALL UART_SET_DLAB
         CALL UART_SET_BAUD
         CALL UART_CLEAR_DLAB
+
+        ;Wait for user input before printing startup screen
+        ;if not available, z flag is set
+STARTUP_WAIT:
+        CALL RX_RDY
+        JP Z, STARTUP_WAIT
+
         POP AF
         RET
 

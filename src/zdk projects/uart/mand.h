@@ -1,9 +1,9 @@
 #ifndef MAND_H_
 #define MAND_H_
 
-#include <stdio.h>
+#include "tom80.h"
 #include <stdlib.h>
-#include <stdint.h>
+//#include <stdint.h>
 
 #define WIDTH 100
 #define HEIGHT 28
@@ -33,7 +33,6 @@
 #define CHAR_ON '.'
 #define CHAR_OFF ' '
 
-int main();
 void mandlebrot();
 char step(int px, int py);
 
