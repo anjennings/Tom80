@@ -64,27 +64,20 @@ for i in range(0, fileSize):
 	high_ascii = format(high,"02X") #remove_prefix(hex(high), '0x')
 	low_ascii = format(low, "02X") #remove_prefix(hex(low), '0x')
 	data_ascii = remove_prefix(str(hex(int.from_bytes(data, "big"))), '0x')
+	data_ascii = format(int.from_bytes(data, "big"), "02X")
 	
-	print(high_ascii+low_ascii+'<'+data_ascii, flush=True)
-	#print(low_ascii.capitalize(), flush=True)
-	#print('<', flush=True)
-	#print(str(hex(int.from_bytes(data, "big"))).capitalize())
-	#print(' ', flush=True)
+	commandString = (high_ascii+low_ascii+'<'+data_ascii+'\r')
+	print(commandString + '\n', flush=True, end='')
 	
-	#Send instruction
-	#ser.write(high)
-	
-	#Send High Byte of Address
-	#ser.write(low)
-	
-	#Send Low Byte of Address
-	#ser.write('<')
-	
-	#Send Data to Write
-	#ser.write(data)
+	for ch in commandString:
+		ser.write(struct.pack("B",ord(ch)))
+		ser.flushOutput()
+		time.sleep(.001)
+		
+
 	
 	#Wait for reply
-	time.sleep(.001)
+	#time.sleep(.002)
 
 print('\nWrite success!')
 print(datetime.now().strftime("%H:%M:%S"))
