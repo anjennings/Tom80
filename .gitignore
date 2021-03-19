@@ -20,3 +20,4 @@ EEPROM Software/ASH.z80.bin
 *.bin
 *.dis
 *.exe
+*.trm

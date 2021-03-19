@@ -72,12 +72,12 @@ for i in range(0, fileSize):
 	for ch in commandString:
 		ser.write(struct.pack("B",ord(ch)))
 		ser.flushOutput()
-		time.sleep(.001)
+		time.sleep(.01)
 		
 
 	
 	#Wait for reply
-	#time.sleep(.002)
+	time.sleep(.005)
 
 print('\nWrite success!')
 print(datetime.now().strftime("%H:%M:%S"))
