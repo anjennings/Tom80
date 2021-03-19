@@ -19,3 +19,5 @@ src/Tom80/Tom80.z80.bin
 EEPROM Software/ASH.z80.bin
 *.bin
 *.dis
+EEPROM Software/tinyBasic.exe
+src/QuickLoad/qlTest.z80.bin.trm
