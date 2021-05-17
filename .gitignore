@@ -21,3 +21,4 @@ EEPROM Software/ASH.z80.bin
 *.dis
 EEPROM Software/tinyBasic.exe
 src/QuickLoad/qlTest.z80.bin.trm
+EEPROM Software/rom.dat

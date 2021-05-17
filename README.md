@@ -1,18 +1,47 @@
-# Z80-Computer
+# Tom80 - Z80 Based SBC
 
-Files relating to a Z80 based computer I am building
+Several Versions of the Tom80 exist
 
-Specs are:
+## Version 2.0
 
-	-Z80 CPU @ 8 MHz (10 MHz Max)
+Specs:
+
+	-Z80 CPU
+	-32K EEPROM (0x0000 - 0x7FFF), Can be disabled for full SRAM memory space
+	-64K SRAM (0x0000 - 0xFFFF)
+	-16550 UART Controller
+	-Counter Timer Chip (CTC) 
+	-Parallel I/O Chip (PIO)
+	-Parallax Propeller to allow for extra peripherals
+		-SD Card
+		-VGA 
+		-PS/2 Keyboard
+	-5V Power Via USB (Z80 Only)
+	-Regulated power via wall jack (Z80 and Propeller)
+	
+Video comming soon...
+
+## Version 1.0/1.1
+
+Specs:
+
+	-Z80 CPU
 	-32 Kilobytes EEPROM (0x0000 - 0x7FFF)
 	-32 Kilobytes SRAM (0x8000 - 0xFFFF)
 	-16550 UART Controller
 	-USB Serial Interface
 	
-Prototype Specs:
+	A memory monitor (ASH.asm) can be assembled and run
+	Varoious flavors of basic can also be ported
+	
+See a video about Version 1.1 here:
+https://youtu.be/3KAjZbjPqnA
+	
+## Prototype
 
-	-Z80 CPU @ 2 MHz Clock
+Specs:
+
+	-Z80 CPU
 	-2 Kilobytes EEPROM (0x0000 - 0x07FF)
 	-2 Kilobytes SRAM (0x0800 - 0x0FFF)
 	-A single 8 bit latch for I/O
@@ -20,16 +49,18 @@ Prototype Specs:
 See a video of the prototype here:
 https://www.youtube.com/watch?v=QeUG9fH5Wn8
 
+
+## Other Stuff
+
 Also Includes:
 
-	-Custom EEPROM Programmer
+	-Custom EEPROM Programmer Schematics
 		-ATMEGA32A
 		-28 Pin ZIF Socket
 		-USB Interface
 		
-	-Simple Memory Monitor (ASH.asm)
-		-a whopping 5 commands, including read, write, execute, AND MORE!
-		-not currently finished
+See a video about the programmer here:
+https://youtu.be/HartpD7Tr4I
 
 Other (Older) files:
 

@@ -1,0 +1,186 @@
+INT_HIGH            equ 0x04
+INT_LOW             equ 0x00
+INT_VECTOR_OFFSET   equ 0x40    ;64 bytes
+INT_TABLE_BASE      equ ((INT_HIGH * 0x100) | (INT_LOW))
+
+;Memory Locations
+CTC_CH0_INT_VECTOR  equ (INT_TABLE_BASE + (INT_VECTOR_OFFSET*0))
+CTC_CH1_INT_VECTOR  equ (INT_TABLE_BASE + (INT_VECTOR_OFFSET*1))
+CTC_CH2_INT_VECTOR  equ (INT_TABLE_BASE + (INT_VECTOR_OFFSET*2))
+CTC_CH3_INT_VECTOR  equ (INT_TABLE_BASE + (INT_VECTOR_OFFSET*3))
+
+;Control words sent to CTC
+CTC_INT_VECTOR_0    equ (CTC_CH0_INT_VECTOR & 0xF8)
+CTC_INT_VECTOR_1    equ ((CTC_CH1_INT_VECTOR & 0xF8) | 0x2)
+CTC_INT_VECTOR_2    equ ((CTC_CH2_INT_VECTOR & 0xF8) | 0x4)
+CTC_INT_VECTOR_3    equ ((CTC_CH3_INT_VECTOR & 0xF8) | 0x6)
+
+;IO Addresses
+CTC_BASE            equ 0x8
+CTC_CH0             equ (CTC_BASE)
+CTC_CH1             equ (1+CTC_BASE)
+CTC_CH2             equ (2+CTC_BASE)
+CTC_CH3             equ (3+CTC_BASE)
+
+;Control Word Bits
+CTC_CONTROL_BIT     equ 0x01    ;Control Word
+CTC_RESET_BIT       equ 0x02    ;Reset Channel
+CTC_TCONST_BIT      equ 0x04    ;Time constant word to follow
+CTC_TTRIG_BIT       equ 0x08    ;(Timer Mode Only) Pulse starts timer
+CTC_EDGE_BIT        equ 0x10    ;Falling Edge (1) or Rising Edge (1)
+CTC_SCALE_BIT       equ 0x20    ;16x (0) or 256x (1)
+CTC_MODE_BIT        equ 0x40    ;Timer (0) or Counter (1)
+CTC_INTR_BIT        equ 0x80    ;Enable Interrupt on this channel
+
+;Reset Channel
+CTC_RESET       equ (CTC_CONTROL_BIT | CTC_RESET_BIT)
+
+;Counter mode, 256x, interrupt enable, constant to follow
+CTC_SINGLE      equ (CTC_CONTROL_BIT | CTC_TCONST_BIT | CTC_SCALE_BIT | CTC_MODE_BIT | CTC_INTR_BIT)
+
+;Constants for multi-channel cascaded timer
+;Counter mode, no interrupt, 256x, time constant follows 
+CTC_MULTI_0      equ (CTC_CONTROL_BIT | CTC_TCONST_BIT | CTC_SCALE_BIT | CTC_MODE_BIT)
+;Counter mode, interrupt, 16x, time constant follows
+CTC_MULTI_1      equ (CTC_CONTROL_BIT | CTC_TCONST_BIT | CTC_MODE_BIT | CTC_INTR_BIT)
+
+;0 is the same as 256, the max value
+CTC_TIME_MAX      equ 0x00
+
+org 0
+        NOP
+        DI
+        CALL CTC_INIT
+        CALL CTC_INIT_SINGLE
+        CALL Z80_INT_INIT
+        CALL UART_TOGGLE_OUT2
+LOOP:
+        JP LOOP
+        HALT
+
+;Set interrupt page and enable interrupts
+Z80_INT_INIT:
+        DI
+        PUSH AF
+        LD A, (INT_HIGH)
+        LD I, A
+        IM 2
+        POP AF
+        EI
+        RET
+
+CTC_INIT_MULTI:
+        PUSH AF
+        
+        CALL CTC_INIT_CH0
+        CALL CTC_INIT_CH1
+        
+        ;Set up channel 0, Timer with no interrupt
+        LD A, 0x25          ;Control Word
+        OUT (CTC_CH0), A
+        LD A, 0xFF          ;Time Constant
+        OUT (CTC_CH0), A
+        
+        ;Set up channel 1, Counter with interrupt
+        LD A, 0xC5          ;Control Word
+        OUT (CTC_CH1), A
+        LD A, 0x2           ;Time Constant
+        OUT (CTC_CH1), A
+    
+        POP AF
+        RET
+
+;Init all channels
+CTC_INIT:
+        CALL CTC_INIT_CH0
+        CALL CTC_INIT_CH1
+        CALL CTC_INIT_CH2
+        CALL CTC_INIT_CH3
+        RET
+        
+CTC_INIT_CH0:
+        PUSH AF
+        LD A, (CTC_RESET)
+        OUT (CTC_CH0), A
+        LD A, (CTC_INT_VECTOR_0)
+        OUT (CTC_CH0), A
+        POP AF
+        RET
+        
+CTC_INIT_CH1:
+        PUSH AF
+        LD A, (CTC_RESET)
+        OUT (CTC_CH1), A
+        LD A, (CTC_INT_VECTOR_1)
+        OUT (CTC_CH0), A
+        POP AF
+        RET
+        
+CTC_INIT_CH2:
+        PUSH AF
+        LD A, (CTC_RESET)
+        OUT (CTC_CH2), A
+        LD A, (CTC_INT_VECTOR_2)
+        OUT (CTC_CH0), A
+        POP AF
+        RET
+        
+CTC_INIT_CH3:
+        PUSH AF
+        LD A, (CTC_RESET)
+        OUT (CTC_CH3), A
+        LD A, (CTC_INT_VECTOR_3)
+        OUT (CTC_CH0), A
+        POP AF
+        RET
+        
+;Set up for channel 1 to run a timer
+CTC_INIT_SINGLE:
+        PUSH AF
+        CALL CTC_INIT_CH0
+        ;Set up channel 0
+        LD A, 0xA5          ;Control Word
+        OUT (CTC_CH0), A
+        LD A, 0xFF          ;Time Constant
+        OUT (CTC_CH0), A
+        POP AF
+        RET
+
+
+UART_TOGGLE_OUT1:
+    PUSH AF
+    IN A, 0x14
+    XOR 0x4
+    OUT 0x14, A
+    POP AF
+    RET
+
+UART_TOGGLE_OUT2:
+    PUSH AF
+    IN A, 0x14
+    XOR 0x8
+    OUT 0x14, A
+    POP AF
+    RET
+
+org CTC_CH0_INT_VECTOR
+CTC_INT_HANDLE:
+        LD A, (CTC_RESET)
+        OUT (CTC_CH0), A
+        HALT
+        CALL CTC_INIT_SINGLE
+        CALL UART_TOGGLE_OUT1
+        EI
+        RETI
+        
+org CTC_CH1_INT_VECTOR
+CTC_MULTI_INT_HANDLE:
+        EX AF, AF'
+        LD A, (CTC_RESET)
+        OUT (CTC_CH1), A
+        OUT (CTC_CH0), A
+        CALL CTC_INIT_MULTI
+        CALL UART_TOGGLE_OUT1
+        EI
+        EX AF, AF'
+        RETI
