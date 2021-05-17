@@ -21,9 +21,12 @@ Specs:
 	-5V Power Via USB (Z80 Only)
 	-Regulated power via wall jack (Z80 and Propeller)
 	
+	V2 is 99% compatable with V1.X so most (if not all) code can be ported without much trouble
+	There are several (minor) known issues with V2 that will likely be fixed in a future revision
+	
 Video comming soon...
 
-## Version 1.0/1.1
+## Version 1.X
 
 Specs:
 
@@ -71,3 +74,14 @@ Other (Older) files:
 		-Script to send data via Seral
 	
 	Various Programs, mostly tests for EEPROM, SRAM, and I/O
+	
+## TODO
+
+	Tests for V2 CTC and PIO are still lacking
+	Firmware for Propeller has not been tested
+	Record known issues with each board revision
+	Schematics and manufacturing files for V2
+	Better documentation in general
+	Makefiles
+	More pictures
+	
