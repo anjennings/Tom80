@@ -29,7 +29,7 @@ void VGA() {
  while(1) {
    //Get stuff
    if (VGABuffer != 0) {
-     dprint(vga, "%c", VGABuffer 
+     dprint(vga, "%c", VGABuffer);
    }     
  }   
   

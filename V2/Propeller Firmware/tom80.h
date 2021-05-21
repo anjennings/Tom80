@@ -32,6 +32,6 @@ void clearBSTB();
 uint8_t getPIOData();
 void putPIOData(uint8_t data);
 uint8_t readPIO();
-void writePIO(uint8_t data)
+void writePIO(uint8_t data);
 
 #endif  /* TOM80_H_ */
