@@ -1,10 +1,9 @@
-main.c
-tom80.h
-tom80.c
+demo.c
 >compiler=C
 >memtype=cmm main ram compact
->optimize=-Os
+>optimize=-O0
 >-m32bit-doubles
+>-Wall
 >-fno-exceptions
 >defs::-std=c99
 >-lm

@@ -111,11 +111,9 @@ void putPIOData(uint8_t data) {
 
 // Grab data from PIO and return
 uint8_t readPIO() {
- 
   setDataIn();
   waitARDY();
   return getPIOData();
-  
 }  
 
 void writePIO(uint8_t data) {
