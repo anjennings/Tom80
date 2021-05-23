@@ -45,20 +45,22 @@ void setDataOut() {
 void initProduceIO() {
  
   // These should only need to be set once
-  DIRA |= (1 << ARDY);
-  DIRA |= (1 << BRDY);
-  DIRA &= ~(1 << ASTB);
-  DIRA &= ~(1 << BSTB);
- 
+  //DIRA |= (1 << ARDY);
+  //DIRA |= (1 << BRDY);
+  //DIRA &= ~(1 << ASTB);
+  //DIRA &= ~(1 << BSTB);
+  input(ARDY);
+  input(BRDY);
+  setASTB();
+  setBSTB();
   setDataIn();
-  
 }  
 
 // Wait until ARDY goes HIGH
 // ARDY signals that PIO has new data
 void waitARDY() {
   while (input(ARDY) == 0) {
-    printf("Waiting for ARDY...\n");
+    //printf("Waiting for ARDY...\n");
   }  
 } 
 
@@ -66,7 +68,7 @@ void waitARDY() {
 // BRDY signals that PIO can accept new data
 void waitBRDY() {
   while (input(BRDY) == 0) {
-    printf("Waiting for BRDY...\n");
+    //printf("Waiting for BRDY...\n");
   }      
 }   
 
@@ -90,8 +92,8 @@ void clearBSTB() {
 // Read data from PIO
 uint8_t getPIOData() {
   uint8_t data;
-  clearASTB();
-  data = (uint8_t)(INA & (0xFF << DATAWORD));
+  clearASTB();  
+  data = (uint8_t)(INA & 0xFF);
   setASTB();
   return data;
 }  
@@ -120,8 +122,14 @@ int main() {
   printf("Debug Startup!\n");
   initProduceIO();
   
-  printf("I got a %d \n", readPIO());
-  writePIO(0xAB);
-  printf("Sent Data\n");        
- 
+  while (1)
+    printf("I got a %d \n", readPIO());
+  //writePIO(0xAB);
+  //printf("Sent Data\n");        
+  
+  //setDataIn();
+  //waitARDY();
+  //clearASTB();
+  //printf("I got a %d \n", (uint8_t)(INA & 0xFF));
+  
 }
