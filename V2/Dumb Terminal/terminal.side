@@ -1,12 +1,11 @@
-demo.c
-PIO.h
+terminal.c
 PIO.c
+PIO.h
 >compiler=C
 >memtype=cmm main ram compact
->optimize=-O0
+>optimize=-Os
 >-m32bit-doubles
->-Wall
 >-fno-exceptions
 >defs::-std=c99
 >-lm
->BOARD::TOM80
+>BOARD::ACTIVITYBOARD
