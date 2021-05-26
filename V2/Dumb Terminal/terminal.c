@@ -2,6 +2,9 @@
 #include "vgatext.h"
 #include "PIO.h"
 
+_clkfreq = 5000000;
+_clkmode = xtal1 + pll16x;
+
 volatile char vga_o;
 
 vgatext *vga;                                 // VGA identifier

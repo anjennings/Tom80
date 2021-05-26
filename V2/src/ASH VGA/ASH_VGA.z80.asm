@@ -1,9 +1,10 @@
 ;ASH - Aidan's SHell (VGA Output Only Test)
 
-STACK_H equ 0xFF
-STACK_L equ 0xFE
-OUTPUT_SEL_H equ STACK_H
-OUTPUT_SEL_L equ STACK_L+1
+STACK           equ 0xFFF0
+OUTPUT_SEL      equ STACK+1     ;Indicates if output is via serial or VGA
+PROP_ENABLED    equ STACK+2     ;Set to 0 if Prop is detected at boot
+PROP_WRITE_FLAG equ STACK+3     
+PROP_READ_FLAG  equ STACK+4
 
 ;First byte of term buf is the size of the term buf
 TERM_BUF equ 0x8000
@@ -47,7 +48,7 @@ SYM_HELP equ "?"
 
 
 ;//////////////////////////////////////
-;PIO STUFF
+;PIO REGISTERS
 ;//////////////////////////////////////
 PIO_BASE        equ     0x0
 PIO_PORTA_DAT   equ     (PIO_BASE)
@@ -78,6 +79,9 @@ PIO_INT_DE      equ     0x07    ;Disable interrupt for all modes
 
 PIO_MASK        equ     0xFF    ;Must follow Int enable on mode 3
 
+
+OUTPUT_SERIAL   equ     'S'
+OUTPUT_VGA      equ     'V'
 
 org PIO_INT
 .db (PIO_INT_HANDLER)
@@ -123,30 +127,39 @@ BOOT:
     RETI
 
 INIT:
-    ;Set up Stack
-    LD H, STACK_H
-    LD L, STACK_L
-    LD SP, HL
+        ;Set up Stack
+        LD HL, STACK
+        LD SP, HL
+        
+        ;Set up output check
+        LD HL, OUTPUT_SEL
+        LD (HL), 0
+        
+        ;Set up UART
+        CALL UART_INIT
+        ;Set up PIO
+        CALL PIO_INIT
+        
+    INIT_DETECT_PIO:
+        CALL PIO_DETECT
+        LD HL, PROP_ENABLED
+        LD A, (HL)
+        CP 0
+        JP Z, INIT_OUTPUT_SET
+        ;If Prop is disabled, set to serial
+        LD HL, OUTPUT_SEL
+        LD (HL), OUTPUT_SERIAL
+        JP MAIN
+        
+    INIT_OUTPUT_SET:
+        CALL GETCH  ;Wait until user presses a button to do anything
     
-    ;Set up output check
-    LD H, OUTPUT_SEL_H
-    LD L, OUTPUT_SEL_L
-    LD (HL), 0
-    
-    ;Set up UART
-    CALL UART_INIT
-    ;Set up PIO
-    CALL PIO_INIT
-    ;Disable interrupt
-    DI
-    
-OUTPUT_SET:
-    LD HL, OUTPUT_MSG
-    CALL WRITE_STR
-    CALL OUTPUT_CHECK
+        LD HL, OUTPUT_MSG
+        CALL WRITE_STR
+        CALL OUTPUT_CHECK
 
 MAIN:
-    CALL GETCH  ;Wait until user presses a button to do anything
+    
     ;Print Boot Screen
     LD HL, BOOT_MSG
     CALL WRITE_STR
@@ -228,11 +241,22 @@ PIO_INIT:
         ;EI
         RET
 
+;This is run when the PIO is written to
 PIO_INT_HANDLER:
+        EX AF, AF'
+        EXX
+        
+        ;Indicate that prop is enabled
+        LD HL, PROP_ENABLED
+        LD (HL), 0
+        
+        EX AF, AF'
+        EXX
         RETI
         
 ;Send command to PIO
 ;Expects A to be command
+;Halt until interrupt response
 PIO_SEND_CMD:
         PUSH AF
         
@@ -246,28 +270,64 @@ PIO_SEND_CMD:
         ;IN A, PIO_PORTA_DAT
         POP AF
         RET
+        
+;Send command to PIO and wait for reply
+;If nothing comes through assume prop is disabled
+;Returns 0 if Prop is running
+PIO_DETECT:
+        PUSH AF
+        PUSH BC
+        PUSH HL
+        
+        ;Send data
+        LD A, 0
+        OUT PIO_PORTA_DAT, A
+        EI
+        
+        ;Set flag
+        LD HL, PROP_ENABLED
+        LD A, 0xFF
+        LD (HL), A
+        LD A, 0
+        EI
+        
+    DETECT_LOOP:
+        INC A 
+        LD B, A     ;Save A
+        LD A, (HL)  
+        CP 0        ;Check if flag has changed
+        JP Z, DETECT_END
+        LD A, B
+        CP 0        ;Check if count has rolled over
+        JP NZ, DETECT_LOOP
+        
+    DETECT_END:
+        DI
+        POP HL
+        POP BC
+        POP AF
+        RET
 
+;Get a character and set output mode based on value
 OUTPUT_CHECK:
         PUSH AF
         PUSH HL
         
-        LD H, OUTPUT_SEL_H
-        LD L, OUTPUT_SEL_L
+        LD HL, OUTPUT_SEL
 
     CHECK:
         CALL GETCH
         
     CHECK_SERIAL:
-        CP 'S'
+        CP OUTPUT_SERIAL
         JP NZ, CHECK_VIDEO
-        LD (HL), 'S'
+        LD (HL), OUTPUT_SERIAL
         JP OUTPUT_CHECK_END
         
     CHECK_VIDEO:
-        CP 'V'
-        JP NZ, CHECK_VIDEO
-        LD (HL), 'V'
-        JP OUTPUT_CHECK_END
+        CP OUTPUT_VGA
+        JP NZ, CHECK
+        LD (HL), OUTPUT_VGA
         
     OUTPUT_CHECK_END:
         POP HL
@@ -442,10 +502,9 @@ PRINTCH:
         ;Save char into B
         LD B, A
         
-        LD H, OUTPUT_SEL_H
-        LD L, OUTPUT_SEL_L
+        LD HL, OUTPUT_SEL
         LD A, (HL)
-        CP 'V'
+        CP OUTPUT_VGA
         JP Z, PRINTCH_VIDEO
         
     PRINTCH_SERIAL:
@@ -463,15 +522,16 @@ PRINTCH:
         LD A, B
         OUT (UART_DHR), A
         
-        LD H, OUTPUT_SEL_H
-        LD L, OUTPUT_SEL_L
+        LD HL, OUTPUT_SEL
         LD A, (HL)
         CP 'S'
         JP Z, PRINTCH_EXIT
         
     PRINTCH_VIDEO:
         LD A, B
-        CALL PIO_SEND_CMD
+        ;AND 0x7F
+        ;CALL PIO_SEND_CMD
+        CALL PRINTCH_VGA
         
     PRINTCH_EXIT:
         POP HL
@@ -479,6 +539,12 @@ PRINTCH:
         POP AF
         RET
 
+PRINTCH_VGA:
+    PUSH AF
+    AND 0x7F
+    CALL PIO_SEND_CMD
+    POP AF
+    RET
 
 ;////////////////////////////////////////
 ;Writes a string via IO
@@ -1472,4 +1538,3 @@ db CHAR_NEWLINE, CHAR_RETURN, "[Tom80]:~$ ", CHAR_EOT
 
 OUTPUT_MSG:
 db CHAR_NEWLINE, CHAR_RETURN, "(S)erial or (V)ideo?", CHAR_NEWLINE, CHAR_RETURN, CHAR_EOT
-
