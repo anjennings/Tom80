@@ -35,9 +35,8 @@ void initProduceIO() {
 void waitARDY() {
   printf("Waiting for ARDY...\n");
   while (input(ARDY) == 0) {
-    //printf("Waiting for ARDY...\n");
-  } 
-  printf("Done waiting\n"); 
+    //Do nothing
+  }  
 } 
 
 // Wait until BRDY goes HIGH
@@ -45,9 +44,9 @@ void waitARDY() {
 void waitBRDY() {
   printf("Waiting for BRDY...\n");
   while (input(BRDY) == 0) {
-    //printf("Waiting for BRDY...\n");
-  }   
-  printf("Done waiting\n");   
+    //Do nothing
+  }
+  //printf("Done waiting!\n");      
 }   
 
 void setASTB() {

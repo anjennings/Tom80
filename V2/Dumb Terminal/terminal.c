@@ -33,9 +33,16 @@ void VGA_Proc() {
 int main(void)                                // Main function
 {
   cog_run(VGA_Proc, 1024);
+  uint8_t data;
   
   while(1) {
-    if (vga_o == 0)
-      vga_o = readPIO();
+    data = readPIO();
+    if ((vga_o == 0) && (data < 0x80)) {
+      vga_o = data;
+    }      
+    if (data == 0x80) {
+      printf("I got an 0x80\n");
+      writePIO('m');
+    }      
   }
 }

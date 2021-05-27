@@ -1,0 +1,11 @@
+Write Test.c
+PIO.c
+PIO.h
+>compiler=C
+>memtype=cmm main ram compact
+>optimize=-O0
+>-m32bit-doubles
+>-fno-exceptions
+>defs::-std=c99
+>-lm
+>BOARD::ACTIVITYBOARD
