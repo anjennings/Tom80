@@ -8,4 +8,4 @@ PIO.h
 >-fno-exceptions
 >defs::-std=c99
 >-lm
->BOARD::ACTIVITYBOARD
+>BOARD::TOM80

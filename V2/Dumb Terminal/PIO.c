@@ -33,7 +33,7 @@ void initProduceIO() {
 // Wait until ARDY goes HIGH
 // ARDY signals that PIO has new data
 void waitARDY() {
-  printf("Waiting for ARDY...\n");
+  //printf("Waiting for ARDY...\n");
   while (input(ARDY) == 0) {
     //printf("Waiting for ARDY...\n");
   }  
@@ -42,7 +42,7 @@ void waitARDY() {
 // Wait until BRDY goes HIGH
 // BRDY signals that PIO can accept new data
 void waitBRDY() {
-  printf("Waiting for BRDY...\n");
+  //printf("Waiting for BRDY...\n");
   while (input(BRDY) == 0) {
     //printf("Waiting for BRDY...\n");
   }      

@@ -1,9 +1,9 @@
+#include "propeller.h"
 #include "simpletools.h"
 #include "vgatext.h"
 #include "PIO.h"
 
-_clkfreq = 5000000;
-_clkmode = xtal1 + pll16x;
+#define DEBUG 0
 
 volatile char vga_o;
 
@@ -21,16 +21,14 @@ void VGA_Proc() {
     }  
     d = vga_o;
     vga_o = 0;    
-    //d = (char)readPIO();
     if((d >= 32) && (d <= 126)) {
       vgatext_putchar(vga, (0x7F & d));
-      printf("I got a %c \n", (0x7F & d));
+      //printf("I got a %c \n", (0x7F & d));
     } else if (d == '\n') {
       vgatext_putchar(vga, '\n');
     }            
   }    
 }  
-
 
 int main(void)                                // Main function
 {
