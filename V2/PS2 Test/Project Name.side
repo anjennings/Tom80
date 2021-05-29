@@ -1,8 +1,6 @@
-terminal.c
-PIO.c
-PIO.h
-Disk.c
-Disk.h
+Project Name.c
+PS2.c
+PS2.h
 >compiler=C
 >memtype=cmm main ram compact
 >optimize=-Os
@@ -10,4 +8,4 @@ Disk.h
 >-fno-exceptions
 >defs::-std=c99
 >-lm
->BOARD::TOM80
+>BOARD::ACTIVITYBOARD

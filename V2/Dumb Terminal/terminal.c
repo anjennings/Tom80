@@ -2,6 +2,7 @@
 #include "simpletools.h"
 #include "vgatext.h"
 #include "PIO.h"
+#include "Disk.h"
 
 #define DEBUG 0
 
@@ -34,6 +35,7 @@ int main(void)                                // Main function
 {
   cog_run(VGA_Proc, 1024);
   uint8_t data;
+  initDisk();
   
   while(1) {
     data = readPIO();

@@ -3717,21 +3717,21 @@ CKSUMTBL: DEFB	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 
 BOOT:	    JP	0		;NOTE WE USE FAKE DESTINATIONS
 WBOOT:	    JP	0
-CONST:	    JP	0
-CONIN:	    JP	0
-CONOUT:	    JP	0
+CONST:	    JP	(CONST_)
+CONIN:	    JP	(CONIN_)
+CONOUT:	    JP	(CONOUT_)
 LIST:	    JP	(LIST_)
 PUNCH:	    JP	(PUNCH_)
 READER:	    JP	(READER_)
 HOME:	    JP	(HOME_)
 SELDSK:	    JP	0
-SETTRK:	    JP	0
-SETSEC:	    JP	0
+SETTRK:	    JP	(SETTRK_)
+SETSEC:	    JP	(SETSEC_)
 SETDMA:	    JP	(SETDMA_)
-READ:	    JP	0
+READ:	    JP	(READ_)
 WRITE:	    JP	(WRITE_)
 PRSTAT:	    JP	(PRSTAT_)
-SECTRAN:	JP	0
+SECTRAN:	JP	(SECTRAN_)
 
 ;
 ;**************************************************************
@@ -3740,14 +3740,72 @@ SECTRAN:	JP	0
 ;*
 ;**************************************************************
 ;
-PROP_SETTRK     equ     0x0     ;Placeholder
-PROP_SETSEC     equ     0x0     ;Placeholder
-PROP_READ       equ     0x0     ;Placeholder
-PROP_WRITE      equ     0x0     ;Placeholder
-SECTOR_SIZE     equ     128     
+PROP_SETTRK     equ     0x90        ;Set track in "disk"
+PROP_SETSEC     equ     0x91        ;Goto sector in "disk"
+PROP_SELDSK     equ     0x92        ;Open disk image
+PROP_PREP_READ  equ     0x93        ;Prepare to read
+PROP_READ_NEXT  equ     0x94        ;Get next byte from sector
+PROP_PREP_WRITE equ     0x94        ;Prepare to write
+PROP_WRITE_NEXT equ     0x95        ;Write next byte to sector
 
-db 0
+UART_DHR        equ     0x10 ;UART Data R/W register
+UART_IER        equ     0x11 ;Interrupt Enable Register
+UART_IFR        equ     0x12 ;Interrupt ID Reg (READ), FIFO Control Reg (WRITE)
+UART_LCR        equ     0x13 ;Line Control Register
+UART_MCR        equ     0x14 ;Modem Control
+UART_LSR        equ     0x15 ;Line Status Register
+UART_MSR        equ     0x16 ;Modem Status (Unused)
+UART_SCR        equ     0x17 ;Arbitrary data can be stored here
+
+SECTOR_SIZE     equ     128   
+DPH_ADDR        equ     0x0000      ;Disk Parameter Header
+
 DMA:    DEFW    0
+
+DISK_PARAM_BASE:
+DISK0:
+DEFW    0
+DEFW    0
+DEFW    0
+DEFW    0
+DEFW    (DIRECTORY_BUFFER)
+DEFW    (DISK_PARAM_INFO)
+DEFW    (CHECK_SUM_VECTOR0)
+DEFW    (ALLOCATION_VECTOR0)
+
+CHECK_SUM_VECTOR0:
+DEFW    0
+
+ALLOCATION_VECTOR0:
+DEFW    0
+
+; http://www.gaby.de/cpm/manuals/archive/cpm22htm/ch6.htm#Figure_6-4
+; SPT is the total number of sectors per track.
+; BSH is the data allocation block shift factor, determined by the data block allocation size.
+; BLM is the data allocation block mask (2[BSH-1]).
+; EXM is the extent mask, determined by the data block allocation size and the number of disk blocks.
+; DSM determines the total storage capacity of the disk drive.
+; DRM determines the total number of directory entries that can be stored on this drive.
+; AL0, AL1 determine reserved directory blocks.
+; CKS is the size of the directory check vector.
+; OFF is the number of reserved tracks at the beginning of the (logical) disk.
+DISK_PARAM_INFO:
+SPT: DEFW  	26	    ;sectors per track
+BSH: DEFB	3	    ;block shift factor
+BLM: DEFB	7	    ;block mask
+EXM: DEFB	0	    ;null mask
+DSM: DEFW	242  ;disk size-1
+DRM: DEFW	63	    ;directory max
+AL0: DEFB	192	    ;alloc 0
+AL1: DEFB	0	    ;alloc 1 (some sources don't have this?)
+CKS: DEFW	0	    ;check size
+OFF: DEFW	2	    ;track offset
+
+;Scratch pad for disk
+DIRECTORY_BUFFER:
+DEFW    0
+
+org DIRECTORY_BUFFER+128
 
 ;
 ;**************************************************************
@@ -3760,23 +3818,39 @@ DMA:    DEFW    0
 
 ;Set up PIO, Text Output
 BOOT_:
-        
+        ;TODO
         
 ;Reloads the command processor and (on some systems) the BDOS as well.
 WBOOT_:
+        ;TODO
         RET
 
 ;Returns its status in A; 0 if no character is ready, 0FFh if one is.       
 CONST_:
-        ;TODO
+        IN A, (UART_LSR)
+        AND 0x1F
+        CP 1
+        JP NZ, CONST_BAD
+    
+    CONST_GOOD:
+        LD A, 0xFF
+        JP CONST_EXIT
+    CONST_BAD:
+        LD A, 0
+    CONST_EXIT:
         RET
       
 ;Wait until the keyboard is ready to provide a character, and return it in A.
 CONIN_:
+        CALL SERIAL_GETC
         RET
         
 ;Write the character in C to the screen.
 CONOUT_:
+        PUSH AF
+        LD A, C
+        CALL SERIAL_PUTC
+        POP AF
         RET
     
 ;Targets a non-existant "printer"
@@ -3787,7 +3861,7 @@ LIST_:
 PUNCH_:
         RET
         
-;Targets a non-existant "tape reader", return with return character (ctlr+z)
+;Targets a non-existant "tape reader", return with return character (ctrl+z)
 READER_:
         LD A, CNTRLZ
         RET
@@ -3803,10 +3877,16 @@ HOME_:
 ;Select the disc drive in register C (0=A:, 1=B: ...). Called with E=0 or 0FFFFh    
 SELDSK_:
         PUSH AF
+        
+        LD A, 'A'
+        ADD A, C
+        LD C, A     ;Set C to be the drive letter
+        
         LD A, E
         CP 0
         CALL Z, SELDSK_NEW
         CALL NZ, SELDSK_OLD
+        
         POP AF
         RET
         
@@ -3832,13 +3912,11 @@ SETSEC_:
         
 ;The next disc operation will read its data from (or write its data to) the address given in BC.
 SETDMA_:
-        PUSH BC
         PUSH HL
         LD L, C
         LD H, B
         LD (DMA), HL
         POP HL
-        POP BC
         RET
         
 ;Read the currently set track and sector at the current DMA address. Returns A=0 for OK, 1 for unrecoverable error
@@ -3846,15 +3924,17 @@ READ_:
         PUSH AF
         PUSH BC
         LD HL, (DMA)
+        
+        ;Tell prop to get ready to read
+        LD A, PROP_PREP_READ
+        CALL PIO_SEND_CMD
         LD A, SECTOR_SIZE
         
     READ_LOOP:
         LD B, A
-        LD A, PROP_READ
+        LD A, PROP_READ_NEXT
         CALL PIO_SEND_CMD
-        ;
-        ;TODO: Get the value from PIO
-        ;
+        CALL PIO_GET_DATA
         LD (HL), A
         INC HL
         LD A, B
@@ -3873,11 +3953,15 @@ WRITE_:
         PUSH AF
         PUSH BC
         LD HL, (DMA)
+        
+        ;Tell prop to get ready to read
+        LD A, PROP_PREP_WRITE
+        CALL PIO_SEND_CMD
         LD A, SECTOR_SIZE
         
     WRITE_LOOP:
         LD B, A
-        LD A, PROP_WRITE
+        LD A, PROP_WRITE_NEXT
         CALL PIO_SEND_CMD
         LD A, (HL)
         CALL PIO_SEND_CMD
@@ -3898,8 +3982,11 @@ PRSTAT_:
         LD A, 0xFF
         RET
         
-;AKA SECTRAN
+;Translate sector numbers to take account of skewing.
+;Skewing does not apply, its just a .bin file
 SECTRAN_:
+        LD H, B
+        LD L, C
         RET
 ;
 ;**************************************************************
@@ -3907,7 +3994,6 @@ SECTRAN_:
 ;*     Helper Functions
 ;*
 ;**************************************************************
-;
 ;
 SELDSK_NEW:
         PUSH AF
@@ -3924,7 +4010,64 @@ SELDSK_OLD:
 PIO_SEND_CMD:
         ;TODO
         RET
+        
+PIO_GET_DATA:
+        ;TODO
+        RET
+        
+;Expects value in A
+PIO_PUTC:
+        PUSH AF
+        AND 0x7F
+        CALL PIO_SEND_CMD
+        POP AF
+        RET
+       
 
+SERIAL_PUTC:
+        PUSH AF
+        PUSH BC
+        LD B, A
+        
+        ;Clear DLAB
+        IN A, (UART_LCR)
+        AND 0x7F
+        OUT (UART_LCR), A
+        
+        ;Read status until ready to send
+    PRINTCH_LOOP:
+        IN A, (UART_LSR)
+        AND 0x60
+        CP 0x60
+        JP NZ, PRINTCH_LOOP
+
+        ;Write Char to UART
+        LD A, B
+        OUT (UART_DHR), A
+        
+        POP BC
+        POP AF
+        RET
+        
+SERIAL_GETC:
+        PUSH AF
+        
+        ;Clear DLAB
+        IN A, (UART_LCR)
+        AND 0x7F
+        OUT (UART_LCR), A
+        
+        GETCH_LOOP:
+            ;Read Line Status Reg
+            IN A, (UART_LSR)
+            AND 0x1F
+            CP 1
+            JP NZ, GETCH_LOOP
+    
+        ;Get next char from data holding register
+        IN A, (UART_DHR)
+        POP AF
+        RET
 
 ;*
 ;******************   E N D   O F   C P / M   *****************
