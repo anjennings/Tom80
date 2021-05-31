@@ -1,90 +1,11 @@
 ;ASH - Aidan's SHell (VGA Output Only Test)
 
-STACK           equ 0xFFF0
-OUTPUT_SEL      equ STACK+1     ;Indicates if output is via serial or VGA
-PROP_ENABLED    equ STACK+2     ;Set to 0 if Prop is detected at boot
-PROP_WRITE_FLAG equ STACK+3     
-PROP_READ_FLAG  equ STACK+4
-
-;First byte of term buf is the size of the term buf
-TERM_BUF equ 0x8000
-;Maximum size of the buffer
-TERM_BUF_MAX  equ 256
-
-;Baud Rate Divisor (115200)
-BAUD_DIV_HIGH equ 0
-BAUD_DIV_LOW equ 8
-
-;////////////////
-;UART Registers
-;////////////////
-
-UART_DHR equ        0x10 ;UART Data R/W register
-UART_IER equ        0x11 ;Interrupt Enable Register
-UART_IFR equ        0x12 ;Interrupt ID Reg (READ), FIFO Control Reg (WRITE)
-UART_LCR equ        0x13 ;Line Control Register
-UART_MCR equ        0x14 ;Modem Control
-UART_LSR equ        0x15 ;Line Status Register
-UART_MSR equ        0x16 ;Modem Status (Unused)
-UART_SCR equ        0x17 ;Arbitrary data can be stored here
-
-;According to the datasheet:
-;8 Databits, No parity, 1 Stop
-
-;///////////
-;Charactars
-;///////////
-
-CHAR_NEWLINE equ 0xA
-CHAR_RETURN equ 0xD
-CHAR_EOT equ 0x3
-CHAR_SPACE equ 0x20
-CHAR_NULL equ 0x0
-
-SYM_READ equ ":"
-SYM_WRITE equ "<"
-SYM_EXE equ "@"
-SYM_HELP equ "?"
-
-
-;//////////////////////////////////////
-;PIO REGISTERS
-;//////////////////////////////////////
-PIO_BASE        equ     0x0
-PIO_PORTA_DAT   equ     (PIO_BASE)
-PIO_PORTB_DAT   equ     (PIO_BASE+1)
-PIO_PORTA_CON   equ     (PIO_BASE+2)
-PIO_PORTB_CON   equ     (PIO_BASE+3)
-
-;Interrupt Vector
-PIO_INT_HIGH    equ     0x08
-PIO_INT_LOW     equ     0x00    ;LSB is disregarded by PIO
-PIO_INT         equ     ((PIO_INT_HIGH*256) + (PIO_INT_LOW))
-PIO_INT_VECT_A  equ     (PIO_INT_LOW & 0xFE)
-PIO_INT_VECT_B  equ     (PIO_INT_LOW & 0xFE)
-
-;Mode Control Words
-MODE_OUT       equ     0x0F    ;MODE 0
-MODE_IN        equ     0x4F    ;MODE 1
-MODE_BI        equ     0x8F    ;MODE 2
-MODE_CON       equ     0xCF    ;MODE 3
-
-;Must be sent after setting mode 3
-PIO_B_CON_IO    equ     0x00    ;Set PB0, all of port B to outputs
-
-;Interrupt Contro Words
-PIO_INT_EN_A    equ     0x87    ;Enable interrupt for mode 0-2
-PIO_INT_EN_B    equ     0x97    ;Enable interrupt for mode 3, mask follows
-PIO_INT_DE      equ     0x07    ;Disable interrupt for all modes
-
-PIO_MASK        equ     0xFF    ;Must follow Int enable on mode 3
-
-
-OUTPUT_SERIAL   equ     'S'
-OUTPUT_VGA      equ     'V'
+include "ASH.h"
+include "PIO.h"
+include "Serial.h"
 
 org PIO_INT
-.db (PIO_INT_HANDLER)
+dw PIO_INT_HANDLER
 
 ;/////////////////
 ;Code Starts HERE
@@ -208,33 +129,33 @@ PIO_INIT:
         
         ;Set Interrupt Vector on port A and B to be the same (they can be different)
         LD A, PIO_INT_VECT_A
-        OUT PIO_PORTA_CON, A
+        OUT (PIO_PORTA_CON), A
         LD A, PIO_INT_VECT_B
-        OUT PIO_PORTB_CON, A
+        OUT (PIO_PORTB_CON), A
         
         ;Set port B as manual control
         LD A, MODE_CON
-        OUT PIO_PORTB_CON, A
+        OUT (PIO_PORTB_CON), A
         LD A, PIO_B_CON_IO
-        OUT PIO_PORTB_CON, A
+        OUT (PIO_PORTB_CON), A
         
         ;Set Interrupt Enable on Port B
         LD A, PIO_INT_EN_B
-        OUT PIO_PORTB_CON, A
+        OUT (PIO_PORTB_CON), A
         LD A, PIO_MASK          ;No pins generate interrupts
-        OUT PIO_PORTB_CON, A
+        OUT (PIO_PORTB_CON), A
         
         ;Put port B in a known state
         LD A, 0xFF
-        OUT PIO_PORTB_DAT, A
+        OUT (PIO_PORTB_DAT), A
         
         ;Set port A as bi-directional
         LD A, MODE_BI
-        OUT PIO_PORTA_CON, A
+        OUT (PIO_PORTA_CON), A
         
         ;Set Interrupt Enable on Port A
         LD A, PIO_INT_EN_A
-        OUT PIO_PORTA_CON, A
+        OUT (PIO_PORTA_CON), A
         
         POP AF
         IM 2
@@ -261,7 +182,7 @@ PIO_SEND_CMD:
         PUSH AF
         
         ;Write to PIO (Check status beforehand?)
-        OUT PIO_PORTA_DAT, A
+        OUT (PIO_PORTA_DAT), A
         EI
         HALT        ;Wait for Prop to acknowledge write
         DI
@@ -281,7 +202,7 @@ PIO_DETECT:
         
         ;Send data
         LD A, 0
-        OUT PIO_PORTA_DAT, A
+        OUT (PIO_PORTA_DAT), A
         EI
         
         ;Set flag
