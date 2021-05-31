@@ -1,0 +1,1 @@
+# Propeller Software Each folder is a project designed to be run on the Prop 1 chip.  Most of these are tests and will likely be removed sometime in the future.
