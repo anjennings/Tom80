@@ -1,0 +1,1 @@
+# ROM Image Generator (RIG)## Simple utility to combine multiple binaries into one ROM imageusage: `python rig.py [--c config] file1 file2 file3 …`If launched without `--c` then user will be prompted for file offsets and generate a config file for future use
