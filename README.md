@@ -1,6 +1,6 @@
 # Tom80 - Z80 Based SBC
 
-![alt text](https://github.com/anjennings/Tom80/blob/Version-2.0/Photos/V2%20Partial.jpg?raw=true)
+![alt text](https://github.com/anjennings/Tom80/blob/master/Photos/V2%20Full.jpg?raw=true)
 
 Several Versions of the Tom80 exist
 
