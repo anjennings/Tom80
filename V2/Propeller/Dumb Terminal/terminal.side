@@ -1,0 +1,14 @@
+terminal.c
+PIO.c
+PIO.h
+Disk.c
+Disk.h
+>compiler=C
+>memtype=cmm main ram compact
+>optimize=-Os
+>-m32bit-doubles
+>-Wall
+>-fno-exceptions
+>defs::-std=c99
+>-lm
+>BOARD::TOM80

@@ -1,0 +1,146 @@
+CTC_INT_HIGH        equ 0x04
+CTC_INT_LOW         equ 0x00
+CTC_INT_VECTOR_0    equ ((CTC_INT_HIGH * 0x100) | (CTC_INT_LOW))
+CTC_INT_VECTOR_1    equ ((CTC_INT_HIGH * 0x100) | (CTC_INT_LOW))
+CTC_INT_VECTOR_2    equ ((CTC_INT_HIGH * 0x100) | (CTC_INT_LOW))
+CTC_INT_VECTOR_3    equ ((CTC_INT_HIGH * 0x100) | (CTC_INT_LOW))
+
+CH0_VECTOR_WD       equ (CTC_INT_VECTOR_0 & 0xF8) | (0x0)
+CH1_VECTOR_WD       equ (CTC_INT_VECTOR_1 & 0xF8) | (0x2)
+CH2_VECTOR_WD       equ (CTC_INT_VECTOR_2 & 0xF8) | (0x4)
+CH3_VECTOR_WD       equ (CTC_INT_VECTOR_3 & 0xF8) | (0x6)
+
+CTC_BASE            equ 0x8
+CTC_CH0             equ (CTC_BASE)
+CTC_CH1             equ (1+CTC_BASE)
+CTC_CH2             equ (2+CTC_BASE)
+CTC_CH3             equ (3+CTC_BASE)
+
+;Control Word Bits
+CTC_CONTROL_BIT     equ 0x01    ;Control Word
+CTC_RESET_BIT       equ 0x02    ;Reset Channel
+CTC_TCONST_BIT      equ 0x04    ;Time constant word to follow
+CTC_TTRIG_BIT       equ 0x08    ;(Timer Mode Only) Pulse starts timer
+CTC_EDGE_BIT        equ 0x10    ;Falling Edge (1) or Rising Edge (1)
+CTC_SCALE_BIT       equ 0x20    ;16x (0) or 256x (1)
+CTC_MODE_BIT        equ 0x40    ;Timer (0) or Counter (1)
+CTC_INTR_BIT        equ 0x80    ;Enable Interrupt on this channel
+
+;Reset Channel
+CTC_RESET       equ 0x03
+
+CTC_SINGLE      equ 0xA5
+
+org 0
+        DI
+        CALL UART_TOGGLE_OUT2
+        CALL CTC_INIT
+        CALL CTC_INIT_SINGLE
+        LD A, CTC_INT_HIGH
+        LD I, A
+        IM 2
+        EI
+LOOP:
+        HALT
+        JP LOOP
+
+CTC_INIT:
+        PUSH AF
+        
+        LD A, CTC_RESET
+        OUT (CTC_CH0), A
+        OUT (CTC_CH1), A
+        OUT (CTC_CH2), A
+        OUT (CTC_CH3), A
+        
+        ;Set Interrupt Vector
+        LD A, CH0_VECTOR_WD
+        OUT (CTC_CH0), A
+        LD A, 0x02
+        OUT (CTC_CH0), A
+        LD A, 0x04
+        OUT (CTC_CH0), A
+        LD A, 0x06
+        OUT (CTC_CH0), A
+        
+        POP AF
+        RET
+        
+
+CTC_INIT_MULTI:
+        PUSH AF
+        
+        ;Reset all channels
+        LD A, CTC_RESET
+        OUT (CTC_CH0), A
+        OUT (CTC_CH1), A
+        
+        ;Set Interrupt Vector (Indicated by D0 being 0 not following a contro word with TCONST set)
+        LD A, 0x00          ;Interrupt low byte is 0, on channel 0
+        OUT (CTC_CH0), A
+        
+        LD A, 0x02          ;Interrupt low byte is 0, on channel 1
+        OUT (CTC_CH0), A
+        
+        ;Set up channel 0
+        LD A, 0x27          ;Control Word
+        OUT (CTC_CH0), A
+        LD A, 0xFF          ;Time Constant
+        OUT (CTC_CH0), A
+        
+        ;Set up channel 1
+        LD A, 0xC7          ;Control Word
+        OUT (CTC_CH1), A
+        LD A, 0xAF          ;Time Constant
+        OUT (CTC_CH1), A
+    
+        POP AF
+        RET
+
+CTC_INIT_SINGLE:
+        PUSH AF
+        
+        ;Reset channel
+        LD A, CTC_RESET
+        OUT (CTC_CH0), A
+        
+        ;Set Interrupt Vector
+        LD A, CH0_VECTOR_WD
+        OUT (CTC_CH0), A
+        
+        ;Set up channel 0
+        LD A, CTC_SINGLE          ;Control Word
+        OUT (CTC_CH0), A
+        LD A, 0xFF          ;Time Constant
+        OUT (CTC_CH0), A
+        
+        ;Channel 0 should start to run and generate an INT when finished
+        POP AF
+        RET
+
+
+UART_TOGGLE_OUT1:
+        PUSH AF
+        IN A, 0x14
+        XOR 0x4
+        OUT 0x14, A
+        POP AF
+        RET
+
+UART_TOGGLE_OUT2:
+        PUSH AF
+        IN A, 0x14
+        XOR 0x8
+        OUT 0x14, A
+        POP AF
+        RET
+
+CTC_INT_HANDLE:
+        PUSH AF
+        CALL UART_TOGGLE_OUT1
+        POP AF
+        EI
+        RETI
+
+org CTC_INT_VECTOR_0
+dw (CTC_INT_HANDLE)

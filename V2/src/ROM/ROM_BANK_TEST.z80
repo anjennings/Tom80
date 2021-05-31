@@ -1,0 +1,24 @@
+org 0
+
+NOP
+DI
+;Load UART Register Address
+LD A, 0x14
+LD C, A
+;Turn off indicator light 1
+IN A, (C)
+XOR 0x04
+OUT (C), A
+;Disable Rom Bank
+IN A, (C)
+XOR 0x01
+OUT (C), A
+;***Nothing after this line should execute as rom has been disabled**
+;Turn other indicator light off
+IN A, (C)
+XOR 0x08
+OUT (C), A
+HALT
+
+;If successful, out 1 should be off, all other lights should be on
+;if failure, out 1 and 2 should be off and system should be halted

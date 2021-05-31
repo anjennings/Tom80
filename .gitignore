@@ -1,16 +1,9 @@
 
 EEPROM Software/rom.dat
-EEPROM Software/rom.dat
-Serial Software/pan.tb
-src/TinyBasic/tinyBasic.zdsp
-src/Tom80/Tom80.zdsp
+EEPROM Software/*.bin
 EEPROM Software/rom.dat
 EEPROM Software/test.z80.bin
 EEPROM Software/tinyBasic.z80.bin
-Serial Software/adventure.tb
-Serial Software/Kingdom.tb
-Serial Software/ser.bin
-Serial Software/test.bas
 src/TinyBasic/tinyBasic.z80.bin
 EEPROM Software/rom.dat
 EEPROM Software/ASH.z80.bin
@@ -21,3 +14,4 @@ EEPROM Software/ASH.z80.bin
 *.dis
 EEPROM Software/tinyBasic.exe
 src/QuickLoad/qlTest.z80.bin.trm
+EEPROM Software/rom.dat
