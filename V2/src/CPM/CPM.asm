@@ -1,3 +1,36 @@
+;//////////////////////////////////////
+;PIO REGISTERS
+;//////////////////////////////////////
+PIO_BASE        equ     0x0
+PIO_PORTA_DAT   equ     (PIO_BASE)
+PIO_PORTB_DAT   equ     (PIO_BASE+1)
+PIO_PORTA_CON   equ     (PIO_BASE+2)
+PIO_PORTB_CON   equ     (PIO_BASE+3)
+
+;Interrupt Vector
+PIO_INT_HIGH    equ     0xFF
+PIO_INT_LOW     equ     0x00    ;LSB is disregarded by PIO
+PIO_INT         equ     ((PIO_INT_HIGH*256) + (PIO_INT_LOW))
+PIO_INT_VECT_A  equ     (PIO_INT_LOW & 0xFE)
+PIO_INT_VECT_B  equ     (PIO_INT_LOW+2 & 0xFE)
+
+;Mode Control Words
+MODE_OUT       equ     0x0F    ;MODE 0
+MODE_IN        equ     0x4F    ;MODE 1
+MODE_BI        equ     0x8F    ;MODE 2
+MODE_CON       equ     0xCF    ;MODE 3
+
+;Must be sent after setting mode 3
+PIO_B_CON_IO    equ     0x00    ;Set PB0, all of port B to outputs
+
+;Interrupt Contro Words
+PIO_INT_EN_A    equ     0x87    ;Enable interrupt for mode 0-2
+PIO_INT_EN_B    equ     0x97    ;Enable interrupt for mode 3, mask follows
+PIO_INT_DE      equ     0x07    ;Disable interrupt for all modes
+
+PIO_MASK        equ     0xFF    ;Must follow Int enable on mode 3
+
+
 ;**************************************************************
 ;*
 ;*             C P / M   version   2 . 2
@@ -11,14 +44,14 @@
 ;   Set memory limit here. This is the amount of contigeous
 ; ram starting from 0000. CP/M will reside at the end of this space.
 ;
-MEM	EQU	62		;for a 62k system (TS802 TEST - WORKS OK).
+MEM	EQU	64		;for a 62k system (TS802 TEST - WORKS OK).
 ;
 IOBYTE	EQU	3		;i/o definition byte.
 TDRIVE	EQU	4		;current drive name and user number.
 ENTRY	EQU	5		;entry point for the cp/m bdos.
 TFCB	EQU	5CH		;default file control block.
 TBUFF	EQU	80H		;i/o buffer and command line storage.
-TBASE	EQU	100H		;transiant program storage area.
+TBASE	EQU	100H	;transiant program storage area.
 ;
 ;   Set control character equates.
 ;
@@ -41,7 +74,8 @@ DEL	EQU	7FH		;rubout
 ;
 	ORG	(MEM-7)*1024
 ;
-CBASE:	JP	COMMAND		;execute command processor (ccp).
+CBASE:	
+    JP	COMMAND		;execute command processor (ccp).
 	JP	CLEARBUF	;entry to empty input buffer before starting ccp.
 
 ;
@@ -364,7 +398,7 @@ VERIFY:	LD	DE,PATTRN1	;these are the serial number bytes.
 	LD	B,6		;6 bytes each.
 VERIFY1:LD	A,(DE)
 	CP	(HL)
-	JP	NZ,HALT		;jump to halt routine.
+	JP	NZ, HALT_SR		;jump to halt routine.
 	INC	DE
 	INC	HL
 	DEC	B
@@ -671,7 +705,7 @@ CMDADR:	DEFW	DIRECT,ERASE,TYPE,SAVE
 ;
 ;   Halt the system. Reason for this is unknown at present.
 ;
-HALT:	LD	HL,76F3H	;'DI HLT' instructions.
+HALT_SR:	LD	HL,76F3H	;'DI HLT' instructions.
 	LD	(CBASE),HL
 	LD	HL,CBASE
 	JP	(HL)
@@ -2236,7 +2270,8 @@ DIRREAD:CALL	DIRDMA		;set the directory dma address.
 ;
 ;   Routine to set the dma address to the users choice.
 ;
-DEFDMA:	LD	HL,USERDMA	;reset the default dma address and return.
+DEFDMA:	
+    LD	HL, USERDMA	;reset the default dma address and return.
 	JP	DIRDMA1
 ;
 ;   Routine to set the dma address for directory work.
@@ -2246,7 +2281,8 @@ DIRDMA:	LD	HL,DIRBUF
 ;   Set the dma address. On entry, (HL) points to
 ; word containing the desired dma address.
 ;
-DIRDMA1:LD	C,(HL)
+DIRDMA1:
+    LD	C,(HL)
 	INC	HL
 	LD	B,(HL)		;setup (BC) and go to the bios to set it.
 	JP	SETDMA
@@ -3714,24 +3750,24 @@ CKSUMTBL: DEFB	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 ;*
 ;**************************************************************
 ; (only add a jump if the function is done)
-
+BIOS:
 BOOT:	    JP	0		;NOTE WE USE FAKE DESTINATIONS
 WBOOT:	    JP	0
-CONST:	    JP	(CONST_)
-CONIN:	    JP	(CONIN_)
-CONOUT:	    JP	(CONOUT_)
-LIST:	    JP	(LIST_)
-PUNCH:	    JP	(PUNCH_)
-READER:	    JP	(READER_)
-HOME:	    JP	(HOME_)
-SELDSK:	    JP	0
-SETTRK:	    JP	(SETTRK_)
-SETSEC:	    JP	(SETSEC_)
-SETDMA:	    JP	(SETDMA_)
-READ:	    JP	(READ_)
-WRITE:	    JP	(WRITE_)
-PRSTAT:	    JP	(PRSTAT_)
-SECTRAN:	JP	(SECTRAN_)
+CONST:	    JP	CONST_
+CONIN:	    JP	CONIN_
+CONOUT:	    JP	CONOUT_
+LIST:	    JP	LIST_
+PUNCH:	    JP	PUNCH_
+READER:	    JP	READER_
+HOME:	    JP	HOME_
+SELDSK:	    JP	SELDSK_
+SETTRK:	    JP	SETTRK_
+SETSEC:	    JP	SETSEC_
+SETDMA:	    JP	SETDMA_
+READ:	    JP	READ_
+WRITE:	    JP	WRITE_
+PRSTAT:	    JP	PRSTAT_
+SECTRAN:	JP	SECTRAN_
 
 ;
 ;**************************************************************
@@ -3764,20 +3800,17 @@ DMA:    DEFW    0
 
 DISK_PARAM_BASE:
 DISK0:
-DEFW    0
-DEFW    0
-DEFW    0
-DEFW    0
-DEFW    (DIRECTORY_BUFFER)
-DEFW    (DISK_PARAM_INFO)
-DEFW    (CHECK_SUM_VECTOR0)
+DEFW    0                       ;No translation table
+DEFW    0                       ;Workspace
+DEFW    0                       ;Workspace
+DEFW    0                       ;Workspace
+DEFW    (DIRECTORY_BUFFER)      ;Shared across all disks
+DEFW    (DISK_PARAM_INFO)       ;Info about sectors, block size, etc
+DEFW    0                       ;No checksum vector as "disk" can not be removed
 DEFW    (ALLOCATION_VECTOR0)
 
-CHECK_SUM_VECTOR0:
-DEFW    0
-
 ALLOCATION_VECTOR0:
-DEFW    0
+org (ALLOCATION_VECTOR0+32)
 
 ; http://www.gaby.de/cpm/manuals/archive/cpm22htm/ch6.htm#Figure_6-4
 ; SPT is the total number of sectors per track.
@@ -3794,7 +3827,7 @@ SPT: DEFW  	26	    ;sectors per track
 BSH: DEFB	3	    ;block shift factor
 BLM: DEFB	7	    ;block mask
 EXM: DEFB	0	    ;null mask
-DSM: DEFW	242  ;disk size-1
+DSM: DEFW	242     ;disk size-1
 DRM: DEFW	63	    ;directory max
 AL0: DEFB	192	    ;alloc 0
 AL1: DEFB	0	    ;alloc 1 (some sources don't have this?)
@@ -3803,27 +3836,59 @@ OFF: DEFW	2	    ;track offset
 
 ;Scratch pad for disk
 DIRECTORY_BUFFER:
-DEFW    0
-
 org DIRECTORY_BUFFER+128
 
 ;
 ;**************************************************************
 ;*
-;*     BIOS Function Definitions
+;*      BIOS Function Definitions
 ;*      https://www.seasip.info/Cpm/bios.html#const
+;*      http://www.shaels.net/index.php/cpm80-22-documents/technical/12-disk-devices
 ;*
 ;**************************************************************
 ;
 
 ;Set up PIO, Text Output
 BOOT_:
-        ;TODO
+        ;Assume that serial is set up
+        DI
+        ;TODO: Change PIO Interrupt vector
+        ;TODO: Disable CTC
+        ;TODO: Disable EEPROM
+        ;TODO: Update Interrupt Vector
+        ;else (?)
         
+        LD A, 0
+        LD (IOBYTE), A
+        LD (TDRIVE), A
+        CALL PIO_INIT
+        
+      
+CCP_BASE    EQU 0xE400
+BDOS_BASE   EQU 0xEC06
+BIOS_BASE   EQU 0xFA00
+BDOS_SIZE   EQU (BIOS_BASE-BDOS_BASE)
+CCP_SIZE    EQU (BDOS_BASE-CCP_BASE)
+BDOS_EEPROM EQU 0x0000 ;(TODO) Location of BDOS in RAM
+CCP_EEPROM  EQU 0x0000 ;(TODO) Location of CCP in RAM
 ;Reloads the command processor and (on some systems) the BDOS as well.
+;All of CPM will fit within ROM so just copy it from there
 WBOOT_:
-        ;TODO
-        RET
+
+    WBOOT_CCP:
+        LD HL, CCP_EEPROM
+        LD DE, CCP_BASE
+        LD BC, CCP_SIZE
+        CALL LOAD_EEPROM
+
+    WBOOT_BDOS:
+        LD HL, BDOS_EEPROM
+        LD DE, BDOS_BASE
+        LD BC, BDOS_SIZE
+        CALL LOAD_EEPROM
+    
+    WBOOT_EXIT:
+        JP COMMAND
 
 ;Returns its status in A; 0 if no character is ready, 0FFh if one is.       
 CONST_:
@@ -3834,10 +3899,9 @@ CONST_:
     
     CONST_GOOD:
         LD A, 0xFF
-        JP CONST_EXIT
+        RET
     CONST_BAD:
         LD A, 0
-    CONST_EXIT:
         RET
       
 ;Wait until the keyboard is ready to provide a character, and return it in A.
@@ -3878,14 +3942,20 @@ HOME_:
 SELDSK_:
         PUSH AF
         
-        LD A, 'A'
-        ADD A, C
-        LD C, A     ;Set C to be the drive letter
+        ;Check that the "drive" exists (there is only drive A, 0)
+        LD HL, 0        ;Set error code
+        CP 0            ;For now there is only A
+        RET NZ
+        LD HL, DISK0
         
-        LD A, E
-        CP 0
-        CALL Z, SELDSK_NEW
-        CALL NZ, SELDSK_OLD
+        ;Tell Prop to target specific drive
+        LD A, PROP_SELDSK
+        CALL PIO_SEND_CMD
+        LD A, C
+        CALL PIO_SEND_CMD
+        
+        ;Return pointer to drive table
+        LD HL, (DISK0)
         
         POP AF
         RET
@@ -3995,24 +4065,28 @@ SECTRAN_:
 ;*
 ;**************************************************************
 ;
-SELDSK_NEW:
-        PUSH AF
-        ;TODO
-        POP AF
-        RET
         
-SELDSK_OLD:
-        PUSH AF
-        ;TODO
-        POP AF
-        RET
-        
+;Send command to PIO
+;Expects A to be command
+;Halt until interrupt response
 PIO_SEND_CMD:
-        ;TODO
+        PUSH AF
+        
+        OUT (PIO_PORTA_DAT), A
+        EI
+        HALT        ;Wait for Prop to acknowledge write
+        DI
+        
+        POP AF
         RET
         
+;Wait for interrupt to break out of loop
+;Read data from register
 PIO_GET_DATA:
-        ;TODO
+        EI
+        HALT
+        DI
+        IN A, (PIO_PORTA_DAT)
         RET
         
 ;Expects value in A
@@ -4069,6 +4143,77 @@ SERIAL_GETC:
         POP AF
         RET
 
+
+
+;Expects DE to be base in RAM
+;Expects HL to be base in ROM
+;Expects BC to be size of section
+LOAD_EEPROM:
+        ;TODO: Turn EEPROM on
+        
+    LOAD_BDOS_LOOP:
+        LD A, (HL)
+        LD (DE), A              ;Copy Value
+        DEC BC
+        
+        PUSH HL                 ;Save EEPROM address
+        LD HL, 0
+        
+        OR A
+        SBC HL, BC
+        ADD HL, BC              ;Compare Size to count in BC
+        POP HL
+        JP NZ, LOAD_BDOS_LOOP   ;Return if count != 0
+        
+    
+    LOAD_BDOS_EXIT:
+        ;TODO: Turn EEPROM off
+        RET
+        
+PIO_INIT:
+        PUSH AF
+        DI
+        
+        ;Set interrupt page (Different from monitor)
+        LD A, PIO_INT_HIGH
+        LD I, A
+        
+        ;Set Interrupt Vector on port A and B to be the same (they can be different)
+        LD A, PIO_INT_VECT_A
+        OUT (PIO_PORTA_CON), A
+        LD A, PIO_INT_VECT_B
+        OUT (PIO_PORTB_CON), A
+        
+        ;Set port B as manual control
+        LD A, MODE_CON
+        OUT (PIO_PORTB_CON), A
+        LD A, PIO_B_CON_IO
+        OUT (PIO_PORTB_CON), A
+        
+        ;Set Interrupt Enable on Port B
+        LD A, PIO_INT_EN_B
+        OUT (PIO_PORTB_CON), A
+        LD A, PIO_MASK          ;No pins generate interrupts
+        OUT (PIO_PORTB_CON), A
+        
+        ;Put port B in a known state
+        LD A, 0xFF
+        OUT (PIO_PORTB_DAT), A
+        
+        ;Set port A as bi-directional
+        LD A, MODE_BI
+        OUT (PIO_PORTA_CON), A
+        
+        ;Set Interrupt Enable on Port A
+        LD A, PIO_INT_EN_A
+        OUT (PIO_PORTA_CON), A
+        
+        ;Clear input register
+        IN A, (PIO_PORTA_DAT)
+        
+        POP AF
+        IM 2
+        RET
 ;*
 ;******************   E N D   O F   C P / M   *****************
 ;*
