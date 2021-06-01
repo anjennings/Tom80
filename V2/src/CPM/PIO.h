@@ -1,6 +1,8 @@
 ;//////////////////////////////////////
 ;PIO REGISTERS
 ;//////////////////////////////////////
+;This is slightly different from PIO.h found in other projects
+
 PIO_BASE        equ     0x0
 PIO_PORTA_DAT   equ     (PIO_BASE)
 PIO_PORTB_DAT   equ     (PIO_BASE+1)
@@ -8,7 +10,7 @@ PIO_PORTA_CON   equ     (PIO_BASE+2)
 PIO_PORTB_CON   equ     (PIO_BASE+3)
 
 ;Interrupt Vector
-PIO_INT_HIGH    equ     0x08
+PIO_INT_HIGH    equ     0xFF
 PIO_INT_LOW     equ     0x00    ;LSB is disregarded by PIO
 PIO_INT         equ     ((PIO_INT_HIGH*256) + (PIO_INT_LOW))
 PIO_INT_VECT_A  equ     (PIO_INT_LOW & 0xFE)

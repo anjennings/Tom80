@@ -1,36 +1,3 @@
-;//////////////////////////////////////
-;PIO REGISTERS
-;//////////////////////////////////////
-PIO_BASE        equ     0x0
-PIO_PORTA_DAT   equ     (PIO_BASE)
-PIO_PORTB_DAT   equ     (PIO_BASE+1)
-PIO_PORTA_CON   equ     (PIO_BASE+2)
-PIO_PORTB_CON   equ     (PIO_BASE+3)
-
-;Interrupt Vector
-PIO_INT_HIGH    equ     0xFF
-PIO_INT_LOW     equ     0x00    ;LSB is disregarded by PIO
-PIO_INT         equ     ((PIO_INT_HIGH*256) + (PIO_INT_LOW))
-PIO_INT_VECT_A  equ     (PIO_INT_LOW & 0xFE)
-PIO_INT_VECT_B  equ     (PIO_INT_LOW+2 & 0xFE)
-
-;Mode Control Words
-MODE_OUT       equ     0x0F    ;MODE 0
-MODE_IN        equ     0x4F    ;MODE 1
-MODE_BI        equ     0x8F    ;MODE 2
-MODE_CON       equ     0xCF    ;MODE 3
-
-;Must be sent after setting mode 3
-PIO_B_CON_IO    equ     0x00    ;Set PB0, all of port B to outputs
-
-;Interrupt Contro Words
-PIO_INT_EN_A    equ     0x87    ;Enable interrupt for mode 0-2
-PIO_INT_EN_B    equ     0x97    ;Enable interrupt for mode 3, mask follows
-PIO_INT_DE      equ     0x07    ;Disable interrupt for all modes
-
-PIO_MASK        equ     0xFF    ;Must follow Int enable on mode 3
-
-
 ;**************************************************************
 ;*
 ;*             C P / M   version   2 . 2
@@ -44,6 +11,12 @@ PIO_MASK        equ     0xFF    ;Must follow Int enable on mode 3
 ;   Set memory limit here. This is the amount of contigeous
 ; ram starting from 0000. CP/M will reside at the end of this space.
 ;
+
+include "PIO.h"
+include "Serial.h"
+include "../shared/CPM_locations.h"
+include "../shared/Prop.h"
+
 MEM	EQU	64		;for a 62k system (TS802 TEST - WORKS OK).
 ;
 IOBYTE	EQU	3		;i/o definition byte.
@@ -3776,22 +3749,6 @@ SECTRAN:	JP	SECTRAN_
 ;*
 ;**************************************************************
 ;
-PROP_SETTRK     equ     0x90        ;Set track in "disk"
-PROP_SETSEC     equ     0x91        ;Goto sector in "disk"
-PROP_SELDSK     equ     0x92        ;Open disk image
-PROP_PREP_READ  equ     0x93        ;Prepare to read
-PROP_READ_NEXT  equ     0x94        ;Get next byte from sector
-PROP_PREP_WRITE equ     0x94        ;Prepare to write
-PROP_WRITE_NEXT equ     0x95        ;Write next byte to sector
-
-UART_DHR        equ     0x10 ;UART Data R/W register
-UART_IER        equ     0x11 ;Interrupt Enable Register
-UART_IFR        equ     0x12 ;Interrupt ID Reg (READ), FIFO Control Reg (WRITE)
-UART_LCR        equ     0x13 ;Line Control Register
-UART_MCR        equ     0x14 ;Modem Control
-UART_LSR        equ     0x15 ;Line Status Register
-UART_MSR        equ     0x16 ;Modem Status (Unused)
-UART_SCR        equ     0x17 ;Arbitrary data can be stored here
 
 SECTOR_SIZE     equ     128   
 DPH_ADDR        equ     0x0000      ;Disk Parameter Header
@@ -3864,13 +3821,7 @@ BOOT_:
         CALL PIO_INIT
         
       
-CCP_BASE    EQU 0xE400
-BDOS_BASE   EQU 0xEC06
-BIOS_BASE   EQU 0xFA00
-BDOS_SIZE   EQU (BIOS_BASE-BDOS_BASE)
-CCP_SIZE    EQU (BDOS_BASE-CCP_BASE)
-BDOS_EEPROM EQU 0x0000 ;(TODO) Location of BDOS in RAM
-CCP_EEPROM  EQU 0x0000 ;(TODO) Location of CCP in RAM
+
 ;Reloads the command processor and (on some systems) the BDOS as well.
 ;All of CPM will fit within ROM so just copy it from there
 WBOOT_:
@@ -4151,7 +4102,7 @@ SERIAL_GETC:
 LOAD_EEPROM:
         ;TODO: Turn EEPROM on
         
-    LOAD_BDOS_LOOP:
+    LOAD_EEPROM_LOOP:
         LD A, (HL)
         LD (DE), A              ;Copy Value
         DEC BC
@@ -4163,10 +4114,10 @@ LOAD_EEPROM:
         SBC HL, BC
         ADD HL, BC              ;Compare Size to count in BC
         POP HL
-        JP NZ, LOAD_BDOS_LOOP   ;Return if count != 0
+        JP NZ, LOAD_EEPROM_LOOP   ;Return if count != 0
         
     
-    LOAD_BDOS_EXIT:
+    LOAD_EEPROM_EXIT:
         ;TODO: Turn EEPROM off
         RET
         
@@ -4217,4 +4168,3 @@ PIO_INIT:
 ;*
 ;******************   E N D   O F   C P / M   *****************
 ;*
-

@@ -3,6 +3,7 @@
 include "ASH.h"
 include "PIO.h"
 include "Serial.h"
+include "../shared/CPM_locations.h"
 
 org PIO_INT
 dw (PIO_INT_HANDLER_OUT)
@@ -1466,7 +1467,7 @@ HTOA:
     POP BC
     POP AF
     RET
-
+	
 ;//////////////////////
 ;/////////DATA/////////
 ;//////////////////////
@@ -1495,3 +1496,18 @@ db CHAR_NEWLINE, CHAR_RETURN, "(S)erial or (V)ideo?", CHAR_NEWLINE, CHAR_RETURN,
 
 PIO_TEST_STR:
 db " << I got this from the PIO", CHAR_NEWLINE, CHAR_NEWLINE, CHAR_RETURN, CHAR_EOT
+
+;////////////////////////////
+;/////////Tiny Basic/////////
+;////////////////////////////
+org 0x1000
+
+;Tinybasic requires no bootloader, it should run directly from ROM
+
+;////////////////////////////////
+;/////////CPM BootLoader/////////
+;////////////////////////////////
+org 0x2000
+
+;Load CPM into RAM and jump to boot routine
+	

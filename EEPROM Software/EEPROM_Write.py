@@ -75,5 +75,6 @@ for i in range(0, fileSize):
 	rec = ser.read(1)
 	f1.write(rec)
 
+print('\a')
 print('\nWrite success!')
 print(datetime.now().strftime("%H:%M:%S"))
