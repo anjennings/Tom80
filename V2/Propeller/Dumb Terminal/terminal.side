@@ -5,7 +5,7 @@ Disk.c
 Disk.h
 >compiler=C
 >memtype=cmm main ram compact
->optimize=-Os
+>optimize=-O1
 >-m32bit-doubles
 >-Wall
 >-fno-exceptions

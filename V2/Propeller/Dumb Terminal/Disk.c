@@ -192,12 +192,12 @@ int initDisk() {
   
   printf("Init Disk!\n");
   currentDrive = NULL;
-  printf("SD Mount Call\n");
+  //printf("SD Mount Call\n");
   if(sd_mount(SDDO, SDCLK, SDDI, SDCS)) {
     printf("SD Card Mount Failure!\n");
     return -1;
   }   
-  printf("SD Mount Return\n");
+  //printf("SD Mount Return\n");
   initDriveA();
   currentDrive = &DriveA;
   printf("Init Disk Complete!\n");

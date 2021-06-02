@@ -44,30 +44,30 @@ int processCommand(uint8_t data) {
           
     case 0x90 :         // Set disk track
       foo = readPIO();  // Track number follows command
-      printf("SelTrk\n");
+      // printf("SelTrk\n");
       return setTrack(currentDrive, foo);
       break;
           
     case 0x91 :         // Set disk sector
       foo = readPIO();  // Sector number follows command
-      printf("SelSect\n");
+      // printf("SelSect\n");
       return setSector(currentDrive, foo);
       break;
           
     case 0x92 :         // Select new disk
       foo = readPIO();  // Drive number follows command
-      printf("SelDsk\n");
+      // printf("SelDsk\n");
       return selectDrive(foo);
       break;
           
     case 0x93 :
-      printf("READ Prep\n");
+      // printf("READ Prep\n");
       readSector(currentDrive);
       return 0;
       break;
       
     case 0x94 :
-      printf("GetByte\n");
+      // printf("GetByte\n");
       readSectorByte(currentDrive);
       return 0;
       break;
@@ -92,7 +92,7 @@ int main(void)                                // Main function
   while(1) {
     
     data = readPIO();
-    printf("0x%x\n", data);
+    // printf("0");//x%x\n", data);
     
     if (data < 0x80) {                  // if less than 0x80 its just an ascii char
       while (vga_o != 0) {
