@@ -4,6 +4,7 @@
 SimpleDisk DriveA;
 SimpleDisk DriveB;
 
+
 /**
  *  Called after write init command recieved
  *  Transfer data from PIO into buffer and write buffer to file
@@ -89,6 +90,46 @@ void createDiskImage(SimpleDisk * Drive) {
   } 
 }  
 
+// Set new drive to be the current drive
+// integer offset corresponds to letter 0=A, 1=B, etc
+int selectDrive(uint8_t drive) {
+  
+  if (currentDrive != NULL) {
+    closeDrive(currentDrive);
+  }  
+   
+  switch (drive) {
+    
+    case 0 :
+      initDriveA();
+      currentDrive = &DriveA; 
+      return 0;
+      break;
+      
+    case 1 :
+      initDriveB();
+      currentDrive = &DriveB;
+      return 0;
+      break;
+       
+    default:
+      return -1;
+      break;
+      
+  }     
+}  
+
+// Close disk image and 
+int closeDrive(SimpleDisk * drive) {
+  if (drive == NULL) {
+    return -1; 
+  }    
+  
+  free(drive->Buffer);
+  fclose(drive->image);
+  currentDrive = NULL;
+  return 0;
+}  
 
 /**
  *  Initilize the drive for reading and writing to disk image
@@ -131,11 +172,13 @@ void initDriveB() {
 int initDisk() {
   
   printf("Init Disk!\n");
+  currentDrive = NULL;
   if(sd_mount(SDDO, SDCLK, SDDI, SDCS)) {
     printf("SD Card Mount Failure!\n");
     return -1;
   }   
-  initDriveA();  
+  initDriveA();
+  currentDrive = &DriveA;
   printf("Init Disk Complete!\n");
   return 0;
 }  

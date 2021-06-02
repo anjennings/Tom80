@@ -28,6 +28,9 @@ typedef struct SimpleDisk {
 #define diskSectors(D) (D.Sectors * D.Tracks)
 #define diskCapacity(D) (diskSectors(D) * D.SectorSize)
 
+// Global Vars
+SimpleDisk * currentDrive;
+
 // Functions
 void initDriveA();
 void initDriveB();
@@ -38,6 +41,8 @@ int setTrack(SimpleDisk * Drive, uint8_t track);
 void readSector(SimpleDisk * Drive);
 void writeSector(SimpleDisk * Drive);
 void handleWrite(SimpleDisk * Drive);
-void handleRead(SimpleDisk * Drive)
+void handleRead(SimpleDisk * Drive);
+int selectDrive(uint8_t drive);
+int closeDrive(SimpleDisk * drive);
 
 #endif // DISK_H_

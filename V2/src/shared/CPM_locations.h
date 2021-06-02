@@ -6,11 +6,11 @@ BDOS_BASE   EQU 0xEC06
 BIOS_BASE   EQU 0xFA00
 
 ;Size of each system in memory
-BDOS_SIZE   EQU (BIOS_BASE-BDOS_BASE)
 CCP_SIZE    EQU (BDOS_BASE-CCP_BASE)
+BDOS_SIZE   EQU (BIOS_BASE-BDOS_BASE)
 
 ;Locations of each system in ROM
-CCP_EEPROM  EQU 0x5000 						;Location of CCP in RAM
+CCP_EEPROM  EQU 0x3000 						;Location of CCP in RAM
 BDOS_EEPROM EQU CCP_EEPROM+CCP_SIZE 		;Location of BDOS in RAM
 
 ;Values used when loading from RAM to ROM

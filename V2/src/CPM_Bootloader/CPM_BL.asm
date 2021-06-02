@@ -5,7 +5,7 @@ ORG 0x2000
 ;Stack will be destroyed and EEPROM will be disabled shortly after boot
 CPM:
 	CALL CPM_BOOTSTRAP
-	;JP BIOS_BASE
+	JP BIOS_BASE
 	RET					;Return to monitor to check if ram has loaded correctly
 
 ;Load CPM into Memory

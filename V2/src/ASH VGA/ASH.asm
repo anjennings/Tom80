@@ -63,38 +63,39 @@ INIT:
         CALL UART_INIT
         ;Set up PIO
         CALL PIO_INIT
+		
+
         
-    INIT_DETECT_PIO:
-        CALL PIO_DETECT
-        LD HL, PROP_ENABLED
-        LD A, (HL)
-        CP 0
-        JP Z, INIT_OUTPUT_SET
-        ;If Prop is disabled, set to serial
-        LD HL, OUTPUT_SEL
-        LD (HL), OUTPUT_SERIAL
-        JP MAIN
+    ;INIT_DETECT_PIO:
+    ;    CALL PIO_DETECT
+    ;    LD HL, PROP_ENABLED
+    ;    LD A, (HL)
+    ;    CP 0
+    ;    JP Z, INIT_OUTPUT_SET
+    ;    ;If Prop is disabled, set to serial
+    ;    LD HL, OUTPUT_SEL
+    ;    LD (HL), OUTPUT_SERIAL
+    ;    JP MAIN
         
-    INIT_OUTPUT_SET:
-        CALL GETCH  ;Wait until user presses a button to do anything
+    ;INIT_OUTPUT_SET:
+    ;    CALL GETCH  ;Wait until user presses a button to do anything
     
-        LD HL, OUTPUT_MSG
-        CALL WRITE_STR
-        CALL OUTPUT_CHECK
+    ;    LD HL, OUTPUT_MSG
+    ;    CALL WRITE_STR
+    ;    CALL OUTPUT_CHECK
 
 MAIN:
     
     ;CALL GETCH
+	
+	;Do PIO Test Here
+    ;CALL PIO_TEST
     
     ;Print Boot Screen
     LD HL, BOOT_MSG
     CALL WRITE_STR
     
-    ;Do PIO Test Here
-    ;CALL PIO_TEST
-    ;CALL PRINTCH
-    ;LD HL, PIO_TEST_STR
-    ;CALL WRITE_STR
+    
     
 
 MAIN_LOOP:
@@ -486,7 +487,7 @@ PRINTCH:
         LD A, B
         ;AND 0x7F
         ;CALL PIO_SEND_CMD
-        CALL PRINTCH_VGA
+        ;CALL PRINTCH_VGA
         
     PRINTCH_EXIT:
         POP HL
