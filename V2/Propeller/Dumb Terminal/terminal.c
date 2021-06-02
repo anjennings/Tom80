@@ -61,7 +61,15 @@ int processCommand(uint8_t data) {
       break;
           
     case 0x93 :
-      //Read Sector
+      printf("READ Prep\n");
+      readSector(currentDrive);
+      return 0;
+      break;
+      
+    case 0x94 :
+      printf("GetByte\n");
+      readSectorByte(currentDrive);
+      return 0;
       break;
           
     case 0x95 :

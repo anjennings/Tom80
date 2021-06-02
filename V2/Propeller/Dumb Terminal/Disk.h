@@ -22,6 +22,7 @@ typedef struct SimpleDisk {
   uint8_t   CurrentTrack;
   FILE*     image;
   uint8_t*  Buffer;
+  uint8_t   Index;
 }SimpleDisk;  
 
 // Macros
@@ -39,10 +40,12 @@ void createDiskImage(SimpleDisk * Drive);
 int setSector(SimpleDisk * Drive, uint8_t sector);
 int setTrack(SimpleDisk * Drive, uint8_t track);
 void readSector(SimpleDisk * Drive);
+void readSectorByte(SimpleDisk * Drive);
 void writeSector(SimpleDisk * Drive);
 void handleWrite(SimpleDisk * Drive);
 void handleRead(SimpleDisk * Drive);
 int selectDrive(uint8_t drive);
 int closeDrive(SimpleDisk * drive);
+void readTransfer(SimpleDisk * Drive);
 
 #endif // DISK_H_

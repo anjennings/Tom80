@@ -9,23 +9,23 @@ SimpleDisk DriveB;
  *  Called after write init command recieved
  *  Transfer data from PIO into buffer and write buffer to file
  **/
-void handleWrite(SimpleDisk * Drive) {
+/*void handleWrite(SimpleDisk * Drive) {
   for (int i = 0; i < Drive->SectorSize; i++) {
     Drive->Buffer[i] = readPIO(); 
   } 
   writeSector(Drive);
-}
+}*/
 
 /**
  *  Called after read init command recieved
  *  Read data from file into buffer and transfer buffer to PIO
  **/
-void handleRead(SimpleDisk * Drive) {
+/*void handleRead(SimpleDisk * Drive) {
   readSector(Drive);
   for (int i = 0; i < Drive->SectorSize; i++) {
     writePIO(Drive->Buffer[i]);
   } 
-}  
+} */ 
 
 /**
  *  Write buffer back into file
@@ -51,6 +51,24 @@ void readSector(SimpleDisk * Drive) {
   
   fseek(Drive->image, offset, SEEK_SET);
   fread(Drive->Buffer, sizeof(uint8_t), Drive->SectorSize, Drive->image);
+  Drive->Index = 0;
+}  
+
+/**
+ *  Send byte at index to PIO
+ *  Assumes that readSector has already been called once
+ **/
+void readSectorByte(SimpleDisk * Drive) {
+  
+  uint8_t data;
+  if (Drive->Index >= 128) {
+    data = 0;
+  } else {   
+    data = Drive->Buffer[Drive->Index];
+  }    
+  
+  writePIO(data);
+  Drive->Index++;
 }  
 
 // Set current track on drive
@@ -142,6 +160,7 @@ void initDriveA() {
   DriveA.DriveLetter = 'A';
   DriveA.CurrentSector = 0;
   DriveA.CurrentTrack = 0;
+  DriveA.Index = 0;
   DriveA.Buffer = calloc(DriveA.SectorSize, sizeof(uint8_t));
   DriveA.image = fopen("A.img", "rb+");   //Open simply to see if the file exists
   
@@ -173,10 +192,12 @@ int initDisk() {
   
   printf("Init Disk!\n");
   currentDrive = NULL;
+  printf("SD Mount Call\n");
   if(sd_mount(SDDO, SDCLK, SDDI, SDCS)) {
     printf("SD Card Mount Failure!\n");
     return -1;
   }   
+  printf("SD Mount Return\n");
   initDriveA();
   currentDrive = &DriveA;
   printf("Init Disk Complete!\n");
