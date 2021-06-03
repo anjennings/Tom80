@@ -38,7 +38,7 @@ int processCommand(uint8_t data) {
         
     case 0x80 :         // Sanity check
       writePIO('m');    // Return an ascii char to confirm PIO/PROP functionality
-      printf("Sanity\n");
+      print("Sanity\n");
       return 0;
       break;
           
@@ -75,6 +75,9 @@ int processCommand(uint8_t data) {
     case 0x95 :
       //Write Sector
       break;
+      
+    case 0x96 :
+      //Write Sector Byte
           
     default :
       return -1;
@@ -100,7 +103,7 @@ int main(void)                                // Main function
       vga_o = data;
     } else {                            // switch statement for commands
       if(processCommand(data)) {
-        printf("Bad Command 0x%x\n", data);
+        print("Bad Command 0x%x\n", data);
       }        
     }               
   }

@@ -49,6 +49,7 @@ void readSector(SimpleDisk * Drive) {
   long int sOffset = Drive->CurrentSector * Drive->SectorSize;
   long int offset = tOffset + sOffset;
   
+  
   fseek(Drive->image, offset, SEEK_SET);
   fread(Drive->Buffer, sizeof(uint8_t), Drive->SectorSize, Drive->image);
   Drive->Index = 0;
@@ -69,6 +70,7 @@ void readSectorByte(SimpleDisk * Drive) {
   
   writePIO(data);
   Drive->Index++;
+  print("data is : %x \r", data);
 }  
 
 // Set current track on drive
@@ -190,16 +192,16 @@ void initDriveB() {
 
 int initDisk() {
   
-  printf("Init Disk!\n");
+  print("Init Disk!\n");
   currentDrive = NULL;
   //printf("SD Mount Call\n");
   if(sd_mount(SDDO, SDCLK, SDDI, SDCS)) {
-    printf("SD Card Mount Failure!\n");
+    print("SD Card Mount Failure!\n");
     return -1;
   }   
   //printf("SD Mount Return\n");
   initDriveA();
   currentDrive = &DriveA;
-  printf("Init Disk Complete!\n");
+  print("Init Disk Complete!\n");
   return 0;
 }  
