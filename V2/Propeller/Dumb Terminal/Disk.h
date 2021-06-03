@@ -42,6 +42,7 @@ int setTrack(SimpleDisk * Drive, uint8_t track);
 void readSector(SimpleDisk * Drive);
 void readSectorByte(SimpleDisk * Drive);
 void writeSector(SimpleDisk * Drive);
+void writeSectorByte(SimpleDisk * Drive, uint8_t data);
 void handleWrite(SimpleDisk * Drive);
 void handleRead(SimpleDisk * Drive);
 int selectDrive(uint8_t drive);

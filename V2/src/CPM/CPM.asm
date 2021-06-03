@@ -4026,6 +4026,11 @@ WRITE_:
         JP NZ, WRITE_LOOP
     
     WRITE_END:
+	
+		;Commit to disk
+		LD A, PROP_WRITE_FIN
+		CALL PIO_SEND_CMD
+	
         POP BC
         POP AF
         LD A, 0

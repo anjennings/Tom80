@@ -37,7 +37,8 @@ void writeSector(SimpleDisk * Drive) {
   long int offset = tOffset + sOffset;
   
   fseek(Drive->image, offset, SEEK_SET);
-  fwrite(Drive->Buffer, sizeof(uint8_t), Drive->SectorSize, Drive->image);
+  
+  print("Wrote %x bytes! \t\t", fwrite(Drive->Buffer, sizeof(uint8_t), Drive->SectorSize, Drive->image));
 }
 
 /**
@@ -70,7 +71,22 @@ void readSectorByte(SimpleDisk * Drive) {
   
   writePIO(data);
   Drive->Index++;
-  print("data is : %x \r", data);
+  // print("rdata is : %x \t\t\t\t", data);
+}  
+
+/**
+ *  Get byte from PIO, place into buffer
+ *  Assumes that readSector has already been called once
+ **/
+void writeSectorByte(SimpleDisk * Drive, uint8_t data) {
+  
+  if (Drive->Index >= 128) {
+    return;  
+  }    
+  
+  Drive->Buffer[Drive->Index] = data;
+  Drive->Index++;
+  print("wdata is : %x \t\t\t\t", data);
 }  
 
 // Set current track on drive

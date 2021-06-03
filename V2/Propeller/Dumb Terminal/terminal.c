@@ -60,24 +60,33 @@ int processCommand(uint8_t data) {
       return selectDrive(foo);
       break;
           
-    case 0x93 :
+    case 0x93 :         // Prepare to read (Load sector into buffer)
       // printf("READ Prep\n");
       readSector(currentDrive);
       return 0;
       break;
       
-    case 0x94 :
+    case 0x94 :         // Read next sequential byte from loaded sector
       // printf("GetByte\n");
       readSectorByte(currentDrive);
       return 0;
       break;
           
-    case 0x95 :
-      //Write Sector
+    case 0x95 :         // Load sector into buffer, same as for a read
+      readSector(currentDrive);
+      return 0;
       break;
       
-    case 0x96 :
-      //Write Sector Byte
+    case 0x96 :         // Write incomming byte to next location in buffer
+      foo = readPIO();
+      writeSectorByte(currentDrive, foo);
+      return 0;
+      break;
+      
+    case 0x97 :         // Commit buffer back to disk
+      writeSector(currentDrive);
+      return 0;
+      break;
           
     default :
       return -1;
@@ -95,7 +104,7 @@ int main(void)                                // Main function
   while(1) {
     
     data = readPIO();
-    // printf("0");//x%x\n", data);
+    print("cmd:0x%x \t\t", data);
     
     if (data < 0x80) {                  // if less than 0x80 its just an ascii char
       while (vga_o != 0) {
@@ -103,7 +112,7 @@ int main(void)                                // Main function
       vga_o = data;
     } else {                            // switch statement for commands
       if(processCommand(data)) {
-        print("Bad Command 0x%x\n", data);
+        print("0x%x Bad Command \t\t", data);
       }        
     }               
   }
