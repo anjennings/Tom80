@@ -1,9 +1,9 @@
 SD Card Test.c
->-fno-exceptions
->-lm
->-m32bit-doubles
->BOARD::ACTIVITYBOARD
 >compiler=C
->defs::-std=c99
 >memtype=cmm main ram compact
->optimize=-Os
+>optimize=-O0
+>-m32bit-doubles
+>-fno-exceptions
+>defs::-std=c99
+>-lm
+>BOARD::TOM80
