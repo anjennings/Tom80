@@ -21,7 +21,7 @@ MEM	EQU	64		;for a 62k system (TS802 TEST - WORKS OK).
 ;
 IOBYTE	EQU	3		;i/o definition byte.
 TDRIVE	EQU	4		;current drive name and user number.
-ENTRY	EQU	BDOS_START		;entry point for the cp/m bdos.
+ENTRY	EQU	5		;entry point for the cp/m bdos.
 TFCB	EQU	5CH		;default file control block.
 TBUFF	EQU	80H		;i/o buffer and command line storage.
 TBASE	EQU	100H	;transiant program storage area.
@@ -3729,7 +3729,7 @@ CKSUMTBL: DEFB	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 ;**************************************************************
 ; (only add a jump if the function is done)
 BIOS:
-BOOT:	    JP	BOOT_		;NOTE WE USE FAKE DESTINATIONS
+BOOT:	    JP	BOOT_
 WBOOT:	    JP	WBOOT_
 CONST:	    JP	CONST_
 CONIN:	    JP	CONIN_
@@ -3810,6 +3810,9 @@ org DIRECTORY_BUFFER+128
 ;**************************************************************
 ;
 
+BOOT_MSG:
+DEFB		CR, LF, CR, LF, 'CP/M 2.2 FOR TOM80', CR, LF, '64k RAM', CR, LF, 'BUILD 2021-06-04', CR, LF, 0, 0
+
 ;Set up PIO, Text Output
 BOOT_:
         DI
@@ -3833,7 +3836,28 @@ BOOT_:
         LD A, 0
         ;LD (IOBYTE), A
         LD (TDRIVE), A
-        CALL PIO_INIT
+        ;CALL PIO_INIT
+		
+		;Set up BDOS ENTRY
+		LD HL, ENTRY
+		LD A, 0xC3			;JUMP unconditional
+		LD (HL), A
+		INC HL
+		LD DE, BDOS_BASE
+		LD (HL), E
+		INC HL
+		LD (HL), D
+		
+		LD HL, BOOT_MSG
+		
+	BOOT_PRINT_MSG:
+		
+		LD C, (HL)
+		CALL CONOUT
+		LD A, (HL)
+		INC HL
+		CP 0
+		JP NZ, BOOT_PRINT_MSG
 		
 		;All systems should be loaded on cold boot
 		JP WBOOT_EXIT
@@ -3864,9 +3888,6 @@ WBOOT_:
 		IN A, (UART_MCR)
 		OR 0x8
 		OUT (UART_MCR), A
-	
-		LD C, 'm'
-		CALL CONOUT
 	
 		LD A, (TDRIVE)
 		LD C, A
