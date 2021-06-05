@@ -3813,6 +3813,9 @@ org DIRECTORY_BUFFER+128
 BOOT_MSG:
 DEFB		CR, LF, CR, LF, 'CP/M 2.2 FOR TOM80', CR, LF, '64k RAM', CR, LF, 'BUILD 2021-06-04', CR, LF, 0, 0
 
+WBOOT_DEBUG:
+DEFB		CR, LF, '...', CR, LF, 0, 0
+
 ;Set up PIO, Text Output
 BOOT_:
         DI
@@ -3825,29 +3828,14 @@ BOOT_:
 		LD SP, 0xFFFF
         CALL PIO_INIT
         CALL DISABLE_EEPROM
-		;Serial should remain the same for now
-        ;anything else?
 		
-		;Flip light as an indication
+		;Flip light as an indication that boot process has begun
 		IN A, (UART_MCR)
 		OR 0x4
 		OUT (UART_MCR), A
-        
-        LD A, 0
-        ;LD (IOBYTE), A
-        LD (TDRIVE), A
-        ;CALL PIO_INIT
 		
-		;Set up BDOS ENTRY
-		LD HL, ENTRY
-		LD A, 0xC3			;JUMP unconditional
-		LD (HL), A
-		INC HL
-		LD DE, BDOS_BASE
-		LD (HL), E
-		INC HL
-		LD (HL), D
 		
+		;Print a friendly message to output
 		LD HL, BOOT_MSG
 		
 	BOOT_PRINT_MSG:
@@ -3859,6 +3847,35 @@ BOOT_:
 		CP 0
 		JP NZ, BOOT_PRINT_MSG
 		
+		;Set reset vector to warm boot 
+		LD HL, 0
+		LD A, 0xC3			;JUMP unconditional
+		LD (HL), A
+		INC HL
+		LD DE, WBOOT_LOC
+		LD (HL), E
+		INC HL
+		LD (HL), D
+		
+		;Init IO Byte
+        LD A, 0
+		LD HL, IOBYTE
+		LD (HL), A
+		
+		;Init Tdrive
+		LD HL, TDRIVE
+		LD (HL), A
+		
+		;Set up BDOS ENTRY
+		LD HL, ENTRY
+		LD A, 0xC3			;JUMP unconditional
+		LD (HL), A
+		INC HL
+		LD DE, BDOS_BASE
+		LD (HL), E
+		INC HL
+		LD (HL), D
+		
 		;All systems should be loaded on cold boot
 		JP WBOOT_EXIT
         
@@ -3868,18 +3885,31 @@ BOOT_:
 ;All of CPM will fit within ROM so just copy it from there
 WBOOT_:
 
-	LD SP, 0xFFFF
+		LD SP, 0xFFFF
+		
+		;Send null bytes to Prop to clear any previous commands that were interrupted
+		LD A, 0
+		CALL PIO_SEND_CMD
+		LD A, PROP_WRITE_FIN
+		CALL PIO_SEND_CMD
+		LD A, 0
+		CALL PIO_SEND_CMD
+
+		LD HL, WBOOT_DEBUG
+		
+	WBOOT_PRINT_MSG:
+		
+		LD C, (HL)
+		CALL CONOUT
+		LD A, (HL)
+		INC HL
+		CP 0
+		JP NZ, WBOOT_PRINT_MSG
 
     WBOOT_CCP:
-        LD HL, CCP_EEPROM
-        LD DE, CCP_BASE
-        LD BC, CCP_SIZE
-        CALL LOAD_EEPROM
-
-    WBOOT_BDOS:
-        LD HL, BDOS_EEPROM
-        LD DE, BDOS_BASE
-        LD BC, BDOS_SIZE
+        LD HL, CPM_ROM_BASE
+        LD DE, CPM_BASE
+        LD BC, WBOOT_SIZE
         CALL LOAD_EEPROM
     
     WBOOT_EXIT:
@@ -3888,9 +3918,8 @@ WBOOT_:
 		IN A, (UART_MCR)
 		OR 0x8
 		OUT (UART_MCR), A
-	
-		LD A, (TDRIVE)
-		LD C, A
+		
+		LD C, 0
 	
         LD HL, COMMAND
 		JP (HL)
