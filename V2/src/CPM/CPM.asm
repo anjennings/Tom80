@@ -19,6 +19,7 @@ include "../shared/Prop.h"
 
 MEM	EQU	64		;for a 62k system (TS802 TEST - WORKS OK).
 ;
+RSTRT	EQU	0		;entry point for warm boot
 IOBYTE	EQU	3		;i/o definition byte.
 TDRIVE	EQU	4		;current drive name and user number.
 ENTRY	EQU	5		;entry point for the cp/m bdos.
@@ -3811,7 +3812,7 @@ org DIRECTORY_BUFFER+128
 ;
 
 BOOT_MSG:
-DEFB		CR, LF, CR, LF, 'CP/M 2.2 FOR TOM80', CR, LF, '64k RAM', CR, LF, 'BUILD 2021-06-04', CR, LF, 0, 0
+DEFB		CR, LF, CR, LF, 'CP/M 2.2 FOR TOM80', CR, LF, '57k RAM', CR, LF, 'BUILD 2021-06-05', CR, LF, 0, 0
 
 WBOOT_DEBUG:
 DEFB		CR, LF, '...', CR, LF, 0, 0
@@ -3847,34 +3848,13 @@ BOOT_:
 		CP 0
 		JP NZ, BOOT_PRINT_MSG
 		
-		;Set reset vector to warm boot 
-		LD HL, 0
-		LD A, 0xC3			;JUMP unconditional
-		LD (HL), A
-		INC HL
-		LD DE, WBOOT_LOC
-		LD (HL), E
-		INC HL
-		LD (HL), D
-		
 		;Init IO Byte
         LD A, 0
-		LD HL, IOBYTE
-		LD (HL), A
+		;LD HL, IOBYTE
+		;LD (HL), A
+		LD (IOBYTE), A
+		LD (TDRIVE), A
 		
-		;Init Tdrive
-		LD HL, TDRIVE
-		LD (HL), A
-		
-		;Set up BDOS ENTRY
-		LD HL, ENTRY
-		LD A, 0xC3			;JUMP unconditional
-		LD (HL), A
-		INC HL
-		LD DE, BDOS_BASE
-		LD (HL), E
-		INC HL
-		LD (HL), D
 		
 		;All systems should be loaded on cold boot
 		JP WBOOT_EXIT
@@ -3913,6 +3893,26 @@ WBOOT_:
         CALL LOAD_EEPROM
     
     WBOOT_EXIT:
+	
+		;Set reset vector to warm boot 
+		LD HL, 0
+		LD A, 0xC3			;JUMP unconditional
+		LD (HL), A
+		INC HL
+		LD DE, WBOOT_LOC
+		LD (HL), E
+		INC HL
+		LD (HL), D
+		
+		;Set up BDOS ENTRY
+		LD HL, ENTRY
+		LD A, 0xC3			;JUMP unconditional
+		LD (HL), A
+		INC HL
+		LD DE, BDOS_BASE
+		LD (HL), E
+		INC HL
+		LD (HL), D
 	
 		;Flip other light as an indicator that Boot is done
 		IN A, (UART_MCR)
@@ -3975,6 +3975,8 @@ HOME_:
 ;Select the disc drive in register C (0=A:, 1=B: ...). Called with E=0 or 0FFFFh    
 SELDSK_:
         PUSH AF
+		
+		LD A, C
         
         ;Check that the "drive" exists (there is only drive A, 0)
         LD HL, 0        ;Set error code
