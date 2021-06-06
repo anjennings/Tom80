@@ -149,8 +149,8 @@ int selectDrive(uint8_t drive) {
       break;
       
     case 1 :
-      //initDriveB();
-      //currentDrive = &DriveB;
+      initDriveB();
+      currentDrive = &DriveB;
       return 0;
       break;
        
@@ -202,26 +202,26 @@ void initDriveA() {
 // The largest potential disk CPM can support
 // Not implemented in CPM yet so do not call
 void initDriveB() {
-  DriveA.Sectors = 255;
-  DriveA.Tracks = 255;
-  DriveA.SectorSize = 128;
-  DriveA.BlockSize = 1024;
-  DriveA.DriveLetter = 'B';
-  DriveA.CurrentSector = 0;
-  DriveA.CurrentTrack = 0;
-  // TODO
+  DriveB.Sectors = 255;
+  DriveB.Tracks = 255;
+  DriveB.SectorSize = 128;
+  DriveB.BlockSize = 1024;
+  DriveB.DriveLetter = 'B';
+  DriveB.CurrentSector = 0;
+  DriveB.CurrentTrack = 0;
+  DriveB.Index = 0;
+  DriveB.Buffer = malloc(DriveA.SectorSize * sizeof(uint8_t));
+  DriveB.image = fopen("B.img", "r+");
 }  
 
 int initDisk() {
   
   print("Init Disk!\n");
   currentDrive = NULL;
-  //printf("SD Mount Call\n");
   if(sd_mount(SDDO, SDCLK, SDDI, SDCS)) {
     print("SD Card Mount Failure!\n");
     return -1;
   }   
-  //printf("SD Mount Return\n");
   initDriveA();
   currentDrive = &DriveA;
   print("Init Disk Complete!\n");
