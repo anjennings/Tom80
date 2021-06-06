@@ -3826,7 +3826,7 @@ BOOT_:
 		AND 0x3
 		OUT (UART_MCR), A
 		
-		LD SP, 0xFFFF
+		LD SP, 0
         CALL PIO_INIT
         CALL DISABLE_EEPROM
 		
@@ -3850,22 +3850,18 @@ BOOT_:
 		
 		;Init IO Byte
         LD A, 0
-		;LD HL, IOBYTE
-		;LD (HL), A
 		LD (IOBYTE), A
 		LD (TDRIVE), A
-		
 		
 		;All systems should be loaded on cold boot
 		JP WBOOT_EXIT
         
-      
-
+		
 ;Reloads the command processor and (on some systems) the BDOS as well.
 ;All of CPM will fit within ROM so just copy it from there
 WBOOT_:
 
-		LD SP, 0xFFFF
+		LD SP, 0
 		
 		;Send null bytes to Prop to clear any previous commands that were interrupted
 		LD A, 0
@@ -3874,6 +3870,11 @@ WBOOT_:
 		CALL PIO_SEND_CMD
 		LD A, 0
 		CALL PIO_SEND_CMD
+		
+		;Return to start of disk
+		LD C, 0
+		CALL SELDSK
+		CALL HOME
 
 		LD HL, WBOOT_DEBUG
 		
@@ -3919,7 +3920,9 @@ WBOOT_:
 		OR 0x8
 		OUT (UART_MCR), A
 		
-		LD C, 0
+		LD A, 0
+		LD (TDRIVE), A
+		LD C, A
 	
         LD HL, COMMAND
 		JP (HL)
