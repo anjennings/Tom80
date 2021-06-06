@@ -18,6 +18,7 @@ include "../shared/CPM_locations.h"
 include "../shared/Prop.h"
 
 MEM	EQU	64		;for a 62k system (TS802 TEST - WORKS OK).
+NUMDSK	EQU	2
 ;
 RSTRT	EQU	0		;entry point for warm boot
 IOBYTE	EQU	3		;i/o definition byte.
@@ -3775,6 +3776,19 @@ DEFW    (ALLOCATION_VECTOR0)
 ALLOCATION_VECTOR0:
 org (ALLOCATION_VECTOR0+32)
 
+DISK1:
+DEFW    0                       ;No translation table
+DEFW    0                       ;Workspace
+DEFW    0                       ;Workspace
+DEFW    0                       ;Workspace
+DEFW    (DIRECTORY_BUFFER)      ;Shared across all disks
+DEFW    (DISK_PARAM_INFO)       ;Info about sectors, block size, etc
+DEFW    0                       ;No checksum vector as "disk" can not be removed
+DEFW    (ALLOCATION_VECTOR1)
+
+ALLOCATION_VECTOR1:
+org (ALLOCATION_VECTOR1+32)
+
 ; http://www.gaby.de/cpm/manuals/archive/cpm22htm/ch6.htm#Figure_6-4
 ; SPT is the total number of sectors per track.
 ; BSH is the data allocation block shift factor, determined by the data block allocation size.
@@ -3977,15 +3991,13 @@ HOME_:
 
 ;Select the disc drive in register C (0=A:, 1=B: ...). Called with E=0 or 0FFFFh    
 SELDSK_:
-        PUSH AF
-		
-		LD A, C
         
         ;Check that the "drive" exists (there is only drive A, 0)
-        LD HL, 0        ;Set error code
-        CP 0            ;For now there is only A
-        RET NZ
-        
+		LD A, C
+        LD HL, 0        	;Set error code
+		;LD (DISKNO), A
+        CP NUMDSK            
+        RET NC
         
         ;Tell Prop to target specific drive
         LD A, PROP_SELDSK
@@ -3993,10 +4005,16 @@ SELDSK_:
         LD A, C
         CALL PIO_SEND_CMD
         
-        ;Return pointer to drive table
+		;Return pointer to appropriate drive table
+		LD A, C
+		CP 0
+		JP NZ, SELDSK_B
+	SELDSK_A:
         LD HL, DISK0
-        
-        POP AF
+		RET
+	
+	SELDSK_B:
+        LD HL, DISK1
         RET
         
 ;Set the track in C
