@@ -36,7 +36,6 @@ void writeSector(SimpleDisk * Drive) {
   long int sOffset = Drive->CurrentSector * Drive->SectorSize;
   long int offset = tOffset + sOffset;
   
-  Drive->image = fopen("A.img", "r+");
   if(fseek(Drive->image, offset, SEEK_SET)){
     print("fseek failed at %x \t\t", offset);
     return;
@@ -46,7 +45,7 @@ void writeSector(SimpleDisk * Drive) {
     return; 
   }    
   print("Wrote %x bytes! \t\t", fwrite(Drive->Buffer, 1, 128, Drive->image));
-  fclose(Drive->image);
+  fflush(Drive->image);
 }
 
 /**
@@ -58,11 +57,9 @@ void readSector(SimpleDisk * Drive) {
   long int sOffset = Drive->CurrentSector * Drive->SectorSize;
   long int offset = tOffset + sOffset;
   
-  Drive->image = fopen("A.img", "rb");
   fseek(Drive->image, offset, SEEK_SET);
   fread(Drive->Buffer, sizeof(uint8_t), Drive->SectorSize, Drive->image);
   Drive->Index = 0;
-  fclose(Drive->image);
 }  
 
 /**
@@ -117,7 +114,7 @@ int setSector(SimpleDisk * Drive, uint8_t sector) {
 } 
 
 // Create disk image of appropriate size if none exists for this drive
-void createDiskImage(SimpleDisk * Drive) {
+/*void createDiskImage(SimpleDisk * Drive) {
     
   // Create filename from Drive letter
   char src[16];
@@ -133,7 +130,7 @@ void createDiskImage(SimpleDisk * Drive) {
   for(int i = 0; i < diskSectors((*Drive)); i++){
     fwrite(Drive->Buffer, sizeof(uint8_t), Drive->SectorSize, Drive->image);
   } 
-}  
+}  */
 
 // Set new drive to be the current drive
 // integer offset corresponds to letter 0=A, 1=B, etc
@@ -152,8 +149,8 @@ int selectDrive(uint8_t drive) {
       break;
       
     case 1 :
-      initDriveB();
-      currentDrive = &DriveB;
+      //initDriveB();
+      //currentDrive = &DriveB;
       return 0;
       break;
        
@@ -189,7 +186,7 @@ void initDriveA() {
   DriveA.CurrentTrack = 0;
   DriveA.Index = 0;
   DriveA.Buffer = calloc(DriveA.SectorSize, sizeof(uint8_t));
-  DriveA.image = fopen("A.img", "rb+");   //Open simply to see if the file exists
+  DriveA.image = fopen("A.img", "r");   //Open simply to see if the file exists
   
   //If no file exists, create a new one (might take a minute or so based on how large the image should be)
   if(DriveA.image == NULL) {
@@ -198,7 +195,7 @@ void initDriveA() {
   }
   fclose(DriveA.image);
   // Now file should be present and initilized
-  //DriveA.image = fopen("A.img", "rb+");
+  DriveA.image = fopen("A.img", "r+");
   //Drive should now be ready to read or write to
 }  
 
