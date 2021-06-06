@@ -3,10 +3,9 @@
 Rom Image Generator (R.I.G.)
 Given multiple binaries, create a ROM image with each file stored at a specified offset
 	Usage:
-	$ python rig.py file1.bin offset1 file2.bin offset2 ...
+	$ python rig.py [--c configfile] file1.bin file2.bin ...
 		-cfgFile : config file with start point for each binary
 		-file# : path to binary file
-		-offset : starting point for binary in file
 
 '''
 

@@ -38,36 +38,30 @@ int processCommand(uint8_t data) {
         
     case 0x80 :         // Sanity check
       writePIO('m');    // Return an ascii char to confirm PIO/PROP functionality
-      print("Sanity\n");
       return 0;
       break;
           
     case 0x90 :         // Set disk track
       foo = readPIO();  // Track number follows command
-      // printf("SelTrk\n");
       return setTrack(currentDrive, foo);
       break;
           
     case 0x91 :         // Set disk sector
       foo = readPIO();  // Sector number follows command
-      // printf("SelSect\n");
       return setSector(currentDrive, foo);
       break;
           
     case 0x92 :         // Select new disk
       foo = readPIO();  // Drive number follows command
-      // printf("SelDsk\n");
       return selectDrive(foo);
       break;
           
     case 0x93 :         // Prepare to read (Load sector into buffer)
-      // printf("READ Prep\n");
       readSector(currentDrive);
       return 0;
       break;
       
     case 0x94 :         // Read next sequential byte from loaded sector
-      // printf("GetByte\n");
       readSectorByte(currentDrive);
       return 0;
       break;
