@@ -214,7 +214,8 @@ GETSETUC: LD	C,32
 ;
 ;   Routine to set the current drive byte at (TDRIVE).
 ;
-SETCDRV:CALL	GETUSR		;get user number
+SETCDRV:
+	CALL	GETUSR		;get user number
 	ADD	A,A		;and shift into the upper 4 bits.
 	ADD	A,A
 	ADD	A,A
@@ -226,7 +227,8 @@ SETCDRV:CALL	GETUSR		;get user number
 ;
 ;   Move currently active drive down to (TDRIVE).
 ;
-MOVECD:	LD	A,(CDRIVE)
+MOVECD:	
+	LD	A,(CDRIVE)
 	LD	(TDRIVE),A
 	RET	
 ;
@@ -3992,10 +3994,10 @@ HOME_:
 ;Select the disc drive in register C (0=A:, 1=B: ...). Called with E=0 or 0FFFFh    
 SELDSK_:
         
-        ;Check that the "drive" exists (there is only drive A, 0)
+        ;Check that the "drive" exists (there is only drives A: and B:)
 		LD A, C
         LD HL, 0        	;Set error code
-		;LD (DISKNO), A
+		LD (TDRIVE), A
         CP NUMDSK            
         RET NC
         

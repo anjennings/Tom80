@@ -77,7 +77,6 @@ void readSectorByte(SimpleDisk * Drive) {
   
   writePIO(data);
   Drive->Index++;
-  // print("rdata is : %x \t\t\t\t", data);
 }  
 
 /**
@@ -92,7 +91,6 @@ void writeSectorByte(SimpleDisk * Drive, uint8_t data) {
   
   Drive->Buffer[Drive->Index] = data;
   Drive->Index++;
-  // print("wdata is : %x \t\t\t\t", data);
 }  
 
 // Set current track on drive
@@ -162,14 +160,13 @@ int selectDrive(uint8_t drive) {
 }  
 
 // Close disk image and 
-int closeDrive(SimpleDisk * drive) {
-  if (drive == NULL) {
+int closeDrive(SimpleDisk * Drive) {
+  if (Drive == NULL) {
     return -1; 
   }    
   
-  free(drive->Buffer);
-  fclose(drive->image);
-  currentDrive = NULL;
+  free(Drive->Buffer);
+  fclose(Drive->image);
   return 0;
 }  
 
@@ -199,19 +196,18 @@ void initDriveA() {
   //Drive should now be ready to read or write to
 }  
 
-// The largest potential disk CPM can support
-// Not implemented in CPM yet so do not call
+
 void initDriveB() {
-  DriveB.Sectors = 255;
-  DriveB.Tracks = 255;
+  DriveB.Sectors = 26;
+  DriveB.Tracks = 77;
   DriveB.SectorSize = 128;
   DriveB.BlockSize = 1024;
   DriveB.DriveLetter = 'B';
   DriveB.CurrentSector = 0;
   DriveB.CurrentTrack = 0;
   DriveB.Index = 0;
-  DriveB.Buffer = malloc(DriveA.SectorSize * sizeof(uint8_t));
-  DriveB.image = fopen("B.img", "r+");
+  DriveB.Buffer = malloc(DriveB.SectorSize * sizeof(uint8_t));
+  DriveB.image = fopen("B.IMG", "r+");
 }  
 
 int initDisk() {

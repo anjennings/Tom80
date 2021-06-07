@@ -98,7 +98,6 @@ int main(void)                                // Main function
   while(1) {
     
     data = readPIO();
-    // print("cmd:0x%x \t\t", data);
     
     if (data < 0x80) {                  // if less than 0x80 its just an ascii char
       while (vga_o != 0) {
