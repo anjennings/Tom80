@@ -3,6 +3,7 @@
 
 SimpleDisk DriveA;
 SimpleDisk DriveB;
+SimpleDisk DriveC;
 
 
 /**
@@ -37,14 +38,14 @@ void writeSector(SimpleDisk * Drive) {
   long int offset = tOffset + sOffset;
   
   if(fseek(Drive->image, offset, SEEK_SET)){
-    print("fseek failed at %x \t\t", offset);
+    //print("fseek failed at %x \t\t", offset);
     return;
   }    
   if (Drive->image == NULL) {
-    print("image is not open!");
+    //print("image is not open!");
     return; 
   }    
-  print("Wrote %x bytes! \t\t", fwrite(Drive->Buffer, 1, 128, Drive->image));
+  //print("Wrote %x bytes! \t\t", fwrite(Drive->Buffer, 1, 128, Drive->image));
   fflush(Drive->image);
 }
 
@@ -151,7 +152,13 @@ int selectDrive(uint8_t drive) {
       currentDrive = &DriveB;
       return 0;
       break;
-       
+      
+    case 2 :
+      initDriveC();
+      currentDrive = &DriveC;
+      return 0;
+      break;
+      
     default:
       return -1;
       break;
@@ -183,16 +190,12 @@ void initDriveA() {
   DriveA.CurrentTrack = 0;
   DriveA.Index = 0;
   DriveA.Buffer = calloc(DriveA.SectorSize, sizeof(uint8_t));
-  DriveA.image = fopen("A.img", "r");   //Open simply to see if the file exists
+  DriveA.image = fopen("A.img", "r+");   //Open simply to see if the file exists
   
   //If no file exists, create a new one (might take a minute or so based on how large the image should be)
   if(DriveA.image == NULL) {
     fclose(DriveA.image);
-    //createDiskImage(&DriveA);  
   }
-  fclose(DriveA.image);
-  // Now file should be present and initilized
-  DriveA.image = fopen("A.img", "r+");
   //Drive should now be ready to read or write to
 }  
 
@@ -208,6 +211,19 @@ void initDriveB() {
   DriveB.Index = 0;
   DriveB.Buffer = malloc(DriveB.SectorSize * sizeof(uint8_t));
   DriveB.image = fopen("B.IMG", "r+");
+}  
+
+void initDriveC() {
+  DriveC.Sectors = 26;
+  DriveC.Tracks = 77;
+  DriveC.SectorSize = 128;
+  DriveC.BlockSize = 1024;
+  DriveC.DriveLetter = 'C';
+  DriveC.CurrentSector = 0;
+  DriveC.CurrentTrack = 0;
+  DriveC.Index = 0;
+  DriveC.Buffer = malloc(DriveC.SectorSize * sizeof(uint8_t));
+  DriveC.image = fopen("C.IMG", "r+");
 }  
 
 int initDisk() {

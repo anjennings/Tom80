@@ -35,6 +35,7 @@ SimpleDisk * currentDrive;
 // Functions
 void initDriveA();
 void initDriveB();
+void initDriveC();
 int initDisk();
 void createDiskImage(SimpleDisk * Drive);
 int setSector(SimpleDisk * Drive, uint8_t sector);

@@ -18,7 +18,7 @@ include "../shared/CPM_locations.h"
 include "../shared/Prop.h"
 
 MEM	EQU	64		;for a 62k system (TS802 TEST - WORKS OK).
-NUMDSK	EQU	2
+NUMDSK	EQU	3
 ;
 RSTRT	EQU	0		;entry point for warm boot
 IOBYTE	EQU	3		;i/o definition byte.
@@ -3771,7 +3771,7 @@ DEFW    0                       ;Workspace
 DEFW    0                       ;Workspace
 DEFW    0                       ;Workspace
 DEFW    (DIRECTORY_BUFFER)      ;Shared across all disks
-DEFW    (DISK_PARAM_INFO)       ;Info about sectors, block size, etc
+DEFW    (DISK_PARAM_INFO)     ;Info about sectors, block size, etc
 DEFW    0                       ;No checksum vector as "disk" can not be removed
 DEFW    (ALLOCATION_VECTOR0)
 
@@ -3784,12 +3784,25 @@ DEFW    0                       ;Workspace
 DEFW    0                       ;Workspace
 DEFW    0                       ;Workspace
 DEFW    (DIRECTORY_BUFFER)      ;Shared across all disks
-DEFW    (DISK_PARAM_INFO)       ;Info about sectors, block size, etc
+DEFW    (DISK_PARAM_INFO)     ;Info about sectors, block size, etc
 DEFW    0                       ;No checksum vector as "disk" can not be removed
 DEFW    (ALLOCATION_VECTOR1)
 
 ALLOCATION_VECTOR1:
 org (ALLOCATION_VECTOR1+32)
+
+DISK2:
+DEFW    0                       ;No translation table
+DEFW    0                       ;Workspace
+DEFW    0                       ;Workspace
+DEFW    0                       ;Workspace
+DEFW    (DIRECTORY_BUFFER)      ;Shared across all disks
+DEFW    (DISK_PARAM_INFO)     	;Info about sectors, block size, etc
+DEFW    0                       ;No checksum vector as "disk" can not be removed
+DEFW    (ALLOCATION_VECTOR2)
+
+ALLOCATION_VECTOR2:
+org (ALLOCATION_VECTOR2+32)
 
 ; http://www.gaby.de/cpm/manuals/archive/cpm22htm/ch6.htm#Figure_6-4
 ; SPT is the total number of sectors per track.
@@ -3809,9 +3822,10 @@ EXM: DEFB	0	    ;null mask
 DSM: DEFW	242     ;disk size-1
 DRM: DEFW	63	    ;directory max
 AL0: DEFB	192	    ;alloc 0
-AL1: DEFB	0	    ;alloc 1 (some sources don't have this?)
+AL1: DEFB	0	    ;alloc 1
 CKS: DEFW	0	    ;check size
 OFF: DEFW	2	    ;track offset
+
 
 ;Scratch pad for disk
 DIRECTORY_BUFFER:
@@ -3828,10 +3842,10 @@ org DIRECTORY_BUFFER+128
 ;
 
 BOOT_MSG:
-DEFB		CR, LF, CR, LF, 'CP/M 2.2 FOR TOM80', CR, LF, '57k RAM', CR, LF, 'BUILD 2021-06-05', CR, LF, 0, 0
+DEFB		CR, LF, CR, LF, 'CP/M 2.2 FOR TOM80', CR, LF, '57k RAM', CR, LF, 'BUILD 2021-06-08', CR, LF, 0, 0
 
 WBOOT_DEBUG:
-DEFB		CR, LF, '...', CR, LF, 0, 0
+DEFB		CR, LF, 'RETURNING...', CR, LF, 0, 0
 
 ;Set up PIO, Text Output
 BOOT_:
@@ -3994,7 +4008,7 @@ HOME_:
 ;Select the disc drive in register C (0=A:, 1=B: ...). Called with E=0 or 0FFFFh    
 SELDSK_:
         
-        ;Check that the "drive" exists (there is only drives A: and B:)
+        ;Check that the "drive" exists (there is only drives A, B, C)
 		LD A, C
         LD HL, 0        	;Set error code
 		LD (TDRIVE), A
@@ -4009,8 +4023,11 @@ SELDSK_:
         
 		;Return pointer to appropriate drive table
 		LD A, C
-		CP 0
-		JP NZ, SELDSK_B
+		CP 2
+		JP Z, SELDSK_C
+		CP 1
+		JP Z, SELDSK_B
+		
 	SELDSK_A:
         LD HL, DISK0
 		RET
@@ -4018,6 +4035,10 @@ SELDSK_:
 	SELDSK_B:
         LD HL, DISK1
         RET
+		
+	SELDSK_C:
+		LD HL, DISK2
+		RET
         
 ;Set the track in C
 SETTRK_:
