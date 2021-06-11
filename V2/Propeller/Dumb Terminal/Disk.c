@@ -21,12 +21,12 @@ SimpleDisk DriveC;
  *  Called after read init command recieved
  *  Read data from file into buffer and transfer buffer to PIO
  **/
-/*void handleRead(SimpleDisk * Drive) {
+void handleRead(SimpleDisk * Drive) {
   readSector(Drive);
   for (int i = 0; i < Drive->SectorSize; i++) {
     writePIO(Drive->Buffer[i]);
   } 
-} */ 
+}  
 
 /**
  *  Write buffer back into file

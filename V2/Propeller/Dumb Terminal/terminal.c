@@ -61,7 +61,8 @@ int processCommand(uint8_t data) {
       break;
           
     case 0x93 :                         // Prepare to read (Load sector into buffer)
-      readSector(currentDrive);
+      //readSector(currentDrive);
+      handleRead(currentDrive);
       return 0;
       break;
       
@@ -76,7 +77,6 @@ int processCommand(uint8_t data) {
       break;
       
     case 0x96 :                         // Write incomming byte to next location in buffer
-      //foo = readPIO();
       writeSectorByte(currentDrive, readPIO());
       return 0;
       break;

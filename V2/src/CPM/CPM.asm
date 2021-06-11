@@ -4082,8 +4082,8 @@ READ_:
         
     READ_LOOP:
         LD B, A
-        LD A, PROP_READ_NEXT
-        CALL PIO_SEND_CMD
+        ;LD A, PROP_READ_NEXT
+        ;CALL PIO_SEND_CMD
         CALL PIO_GET_DATA
         LD (HL), A
         INC HL
