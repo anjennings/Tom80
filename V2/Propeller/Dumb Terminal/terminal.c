@@ -10,6 +10,9 @@ volatile char vga_o;
 
 vgatext *vga;                                 // VGA identifier
 
+/**
+ *    Separate cog that handles VGA output
+ **/
 void VGA_Proc() {
   
   vga = vgatext_open(16);                      // Open VGA port with P0 base
@@ -30,6 +33,10 @@ void VGA_Proc() {
   }    
 }  
 
+/**
+ *    Given command, jump to appropriate subroutine
+ **/
+
 int processCommand(uint8_t data) {
   
   uint8_t foo = 0;
@@ -42,18 +49,18 @@ int processCommand(uint8_t data) {
       break;
           
     case 0x90 :         // Set disk track
-      foo = readPIO();  // Track number follows command
-      return setTrack(currentDrive, foo);
+      //foo = readPIO();  // Track number follows command
+      return setTrack(currentDrive, readPIO());
       break;
           
     case 0x91 :         // Set disk sector
-      foo = readPIO();  // Sector number follows command
-      return setSector(currentDrive, foo);
+      //foo = readPIO();  // Sector number follows command
+      return setSector(currentDrive, readPIO());
       break;
           
     case 0x92 :         // Select new disk
-      foo = readPIO();  // Drive number follows command
-      return selectDrive(foo);
+      //foo = readPIO();  // Drive number follows command
+      return selectDrive(readPIO());
       break;
           
     case 0x93 :         // Prepare to read (Load sector into buffer)
@@ -72,8 +79,8 @@ int processCommand(uint8_t data) {
       break;
       
     case 0x96 :         // Write incomming byte to next location in buffer
-      foo = readPIO();
-      writeSectorByte(currentDrive, foo);
+      //foo = readPIO();
+      writeSectorByte(currentDrive, readPIO());
       return 0;
       break;
       
@@ -104,9 +111,7 @@ int main(void)                                // Main function
       }        
       vga_o = data;
     } else {                            // switch statement for commands
-      if(processCommand(data)) {
-        print("0x%x Bad Command \t\t", data);
-      }        
+      processCommand(data);     
     }               
   }
 }

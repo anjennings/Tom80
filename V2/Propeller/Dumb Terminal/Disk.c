@@ -38,14 +38,12 @@ void writeSector(SimpleDisk * Drive) {
   long int offset = tOffset + sOffset;
   
   if(fseek(Drive->image, offset, SEEK_SET)){
-    print("fseek failed at %x \t\t", offset);
     return;
   }    
   if (Drive->image == NULL) {
-    print("image is not open!");
     return; 
   }    
-  print("Wrote %x bytes! \t\t", fwrite(Drive->Buffer, 1, 128, Drive->image));
+  fwrite(Drive->Buffer, 1, 128, Drive->image);
   fflush(Drive->image);
 }
 
@@ -190,10 +188,10 @@ void initDriveA() {
   DriveA.CurrentTrack = 0;
   DriveA.Index = 0;
   DriveA.Buffer = calloc(DriveA.SectorSize, sizeof(uint8_t));
-  DriveA.image = fopen("A.img", "r");   //Open simply to see if the file exists
+  DriveA.image = fopen("A.img", "r+");   //Open simply to see if the file exists
   
   //If no file exists, create a new one (might take a minute or so based on how large the image should be)
-  if(DriveA.image == NULL) {
+  /*if(DriveA.image == NULL) {
     fclose(DriveA.image);
     //createDiskImage(&DriveA);  
   }
@@ -201,6 +199,7 @@ void initDriveA() {
   // Now file should be present and initilized
   DriveA.image = fopen("A.img", "r+");
   //Drive should now be ready to read or write to
+  */
 }  
 
 
@@ -232,14 +231,14 @@ void initDriveC() {
 
 int initDisk() {
   
-  print("Init Disk!\n");
+  //print("Init Disk!\n");
   currentDrive = NULL;
   if(sd_mount(SDDO, SDCLK, SDDI, SDCS)) {
-    print("SD Card Mount Failure!\n");
+    //print("SD Card Mount Failure!\n");
     return -1;
   }   
   initDriveA();
   currentDrive = &DriveA;
-  print("Init Disk Complete!\n");
+  //print("Init Disk Complete!\n");
   return 0;
 }  
