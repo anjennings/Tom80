@@ -8,7 +8,7 @@
 
 volatile char vga_o;
 
-vgatext *vga;                                 // VGA identifier
+vgatext *vga;
 
 /**
  *    Separate cog that handles VGA output
@@ -43,48 +43,45 @@ int processCommand(uint8_t data) {
   
   switch(data) {
         
-    case 0x80 :         // Sanity check
-      writePIO('m');    // Return an ascii char to confirm PIO/PROP functionality
+    case 0x80 :                         // Sanity check
+      writePIO('m');                    // Return an ascii char to confirm PIO/PROP functionality
       return 0;
       break;
           
-    case 0x90 :         // Set disk track
-      //foo = readPIO();  // Track number follows command
+    case 0x90 :                         // Set disk track
       return setTrack(currentDrive, readPIO());
       break;
           
-    case 0x91 :         // Set disk sector
-      //foo = readPIO();  // Sector number follows command
+    case 0x91 :                         // Set disk sector
       return setSector(currentDrive, readPIO());
       break;
           
-    case 0x92 :         // Select new disk
-      //foo = readPIO();  // Drive number follows command
+    case 0x92 :                         // Select new disk
       return selectDrive(readPIO());
       break;
           
-    case 0x93 :         // Prepare to read (Load sector into buffer)
+    case 0x93 :                         // Prepare to read (Load sector into buffer)
       readSector(currentDrive);
       return 0;
       break;
       
-    case 0x94 :         // Read next sequential byte from loaded sector
+    case 0x94 :                         // Read next sequential byte from loaded sector
       readSectorByte(currentDrive);
       return 0;
       break;
           
-    case 0x95 :         // Load sector into buffer, same as for a read
+    case 0x95 :                         // Load sector into buffer, same as for a read
       readSector(currentDrive);
       return 0;
       break;
       
-    case 0x96 :         // Write incomming byte to next location in buffer
+    case 0x96 :                         // Write incomming byte to next location in buffer
       //foo = readPIO();
       writeSectorByte(currentDrive, readPIO());
       return 0;
       break;
       
-    case 0x97 :         // Commit buffer back to disk
+    case 0x97 :                         // Commit buffer back to disk
       writeSector(currentDrive);
       return 0;
       break;
@@ -96,7 +93,7 @@ int processCommand(uint8_t data) {
   return 0;
 }  
 
-int main(void)                                // Main function
+int main(void)                          // Main function
 {
   cog_run(VGA_Proc, 1024);
   uint8_t data;
@@ -110,7 +107,7 @@ int main(void)                                // Main function
       while (vga_o != 0) {
       }        
       vga_o = data;
-    } else {                            // switch statement for commands
+    } else {
       processCommand(data);     
     }               
   }

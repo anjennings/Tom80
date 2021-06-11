@@ -110,25 +110,6 @@ int setSector(SimpleDisk * Drive, uint8_t sector) {
   return 0;
 } 
 
-// Create disk image of appropriate size if none exists for this drive
-/*void createDiskImage(SimpleDisk * Drive) {
-    
-  // Create filename from Drive letter
-  char src[16];
-  char dst[] = ".IMG";
-  src[0] = Drive->DriveLetter;
-  src[1] = '\0';
-  strcat(src, dst);
-  
-  // Create new File  
-  Drive->image = fopen(src, "wb");
-    
-  //Fill disk image with unused sectors
-  for(int i = 0; i < diskSectors((*Drive)); i++){
-    fwrite(Drive->Buffer, sizeof(uint8_t), Drive->SectorSize, Drive->image);
-  } 
-}  */
-
 // Set new drive to be the current drive
 // integer offset corresponds to letter 0=A, 1=B, etc
 int selectDrive(uint8_t drive) {
@@ -188,18 +169,7 @@ void initDriveA() {
   DriveA.CurrentTrack = 0;
   DriveA.Index = 0;
   DriveA.Buffer = calloc(DriveA.SectorSize, sizeof(uint8_t));
-  DriveA.image = fopen("A.img", "r+");   //Open simply to see if the file exists
-  
-  //If no file exists, create a new one (might take a minute or so based on how large the image should be)
-  /*if(DriveA.image == NULL) {
-    fclose(DriveA.image);
-    //createDiskImage(&DriveA);  
-  }
-  fclose(DriveA.image);
-  // Now file should be present and initilized
   DriveA.image = fopen("A.img", "r+");
-  //Drive should now be ready to read or write to
-  */
 }  
 
 
@@ -231,14 +201,11 @@ void initDriveC() {
 
 int initDisk() {
   
-  //print("Init Disk!\n");
   currentDrive = NULL;
   if(sd_mount(SDDO, SDCLK, SDDI, SDCS)) {
-    //print("SD Card Mount Failure!\n");
     return -1;
   }   
   initDriveA();
   currentDrive = &DriveA;
-  //print("Init Disk Complete!\n");
   return 0;
 }  
