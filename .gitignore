@@ -15,3 +15,4 @@ EEPROM Software/ASH.z80.bin
 EEPROM Software/tinyBasic.exe
 src/QuickLoad/qlTest.z80.bin.trm
 EEPROM Software/rom.dat
+EEPROM Software/RIG/config.cfg

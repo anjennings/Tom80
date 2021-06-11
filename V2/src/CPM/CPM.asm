@@ -1,36 +1,3 @@
-;//////////////////////////////////////
-;PIO REGISTERS
-;//////////////////////////////////////
-PIO_BASE        equ     0x0
-PIO_PORTA_DAT   equ     (PIO_BASE)
-PIO_PORTB_DAT   equ     (PIO_BASE+1)
-PIO_PORTA_CON   equ     (PIO_BASE+2)
-PIO_PORTB_CON   equ     (PIO_BASE+3)
-
-;Interrupt Vector
-PIO_INT_HIGH    equ     0xFF
-PIO_INT_LOW     equ     0x00    ;LSB is disregarded by PIO
-PIO_INT         equ     ((PIO_INT_HIGH*256) + (PIO_INT_LOW))
-PIO_INT_VECT_A  equ     (PIO_INT_LOW & 0xFE)
-PIO_INT_VECT_B  equ     (PIO_INT_LOW+2 & 0xFE)
-
-;Mode Control Words
-MODE_OUT       equ     0x0F    ;MODE 0
-MODE_IN        equ     0x4F    ;MODE 1
-MODE_BI        equ     0x8F    ;MODE 2
-MODE_CON       equ     0xCF    ;MODE 3
-
-;Must be sent after setting mode 3
-PIO_B_CON_IO    equ     0x00    ;Set PB0, all of port B to outputs
-
-;Interrupt Contro Words
-PIO_INT_EN_A    equ     0x87    ;Enable interrupt for mode 0-2
-PIO_INT_EN_B    equ     0x97    ;Enable interrupt for mode 3, mask follows
-PIO_INT_DE      equ     0x07    ;Disable interrupt for all modes
-
-PIO_MASK        equ     0xFF    ;Must follow Int enable on mode 3
-
-
 ;**************************************************************
 ;*
 ;*             C P / M   version   2 . 2
@@ -44,8 +11,16 @@ PIO_MASK        equ     0xFF    ;Must follow Int enable on mode 3
 ;   Set memory limit here. This is the amount of contigeous
 ; ram starting from 0000. CP/M will reside at the end of this space.
 ;
+
+include "PIO.h"
+include "Serial.h"
+include "../shared/CPM_locations.h"
+include "../shared/Prop.h"
+
 MEM	EQU	64		;for a 62k system (TS802 TEST - WORKS OK).
+NUMDSK	EQU	3
 ;
+RSTRT	EQU	0		;entry point for warm boot
 IOBYTE	EQU	3		;i/o definition byte.
 TDRIVE	EQU	4		;current drive name and user number.
 ENTRY	EQU	5		;entry point for the cp/m bdos.
@@ -72,7 +47,7 @@ DEL	EQU	7FH		;rubout
 ;
 ;   Set origin for CP/M
 ;
-	ORG	(MEM-7)*1024
+	ORG	CCP_BASE
 ;
 CBASE:	
     JP	COMMAND		;execute command processor (ccp).
@@ -239,7 +214,8 @@ GETSETUC: LD	C,32
 ;
 ;   Routine to set the current drive byte at (TDRIVE).
 ;
-SETCDRV:CALL	GETUSR		;get user number
+SETCDRV:
+	CALL	GETUSR		;get user number
 	ADD	A,A		;and shift into the upper 4 bits.
 	ADD	A,A
 	ADD	A,A
@@ -251,7 +227,8 @@ SETCDRV:CALL	GETUSR		;get user number
 ;
 ;   Move currently active drive down to (TDRIVE).
 ;
-MOVECD:	LD	A,(CDRIVE)
+MOVECD:	
+	LD	A,(CDRIVE)
 	LD	(TDRIVE),A
 	RET	
 ;
@@ -638,7 +615,8 @@ CLEARBUF: XOR	A
 ;*
 ;**************************************************************
 ;*
-COMMAND:LD	SP,CCPSTACK	;setup stack area.
+COMMAND:
+	LD	SP, CCPSTACK	;setup stack area.
 	PUSH	BC		;note that (C) should be equal to:
 	LD	A,C		;(uuuudddd) where 'uuuu' is the user number
 	RRA			;and 'dddd' is the drive number.
@@ -661,7 +639,8 @@ COMMAND:LD	SP,CCPSTACK	;setup stack area.
 ;
 ;   Entry point to get a command line from the console.
 ;
-CMMND1:	LD	SP,CCPSTACK	;set stack straight.
+CMMND1:	
+	LD	SP,CCPSTACK	;set stack straight.
 	CALL	CRLF		;start a new line on the screen.
 	CALL	GETDSK		;get current drive.
 	ADD	A,'a'
@@ -1282,6 +1261,7 @@ ROFILE:	DEFW	ERROR4		;file is read only.
 ;   Entry into bdos. (DE) or (E) are the parameters passed. The
 ; function number desired is in register (C).
 ;
+BDOS_START:
 FBASE1:	EX	DE,HL		;save the (DE) parameters.
 	LD	(PARAMS),HL
 	EX	DE,HL
@@ -1352,7 +1332,8 @@ DISKRO:	DEFB	'R/O$'
 ;
 ;   Print bdos error message.
 ;
-PRTERR:	PUSH	HL		;save second message pointer.
+PRTERR:	
+	PUSH	HL		;save second message pointer.
 	CALL	OUTCRLF		;send (cr)(lf).
 	LD	A,(ACTIVE)	;get active drive.
 	ADD	A,'A'		;make ascii.
@@ -1759,7 +1740,8 @@ DE2HL1:	DEC	C
 ;
 ;   Select the desired drive.
 ;
-SELECT:	LD	A,(ACTIVE)	;get active disk.
+SELECT:
+	LD	A,(ACTIVE)	;get active disk.
 	LD	C,A
 	CALL	SELDSK		;select it.
 	LD	A,H		;valid drive?
@@ -3751,8 +3733,8 @@ CKSUMTBL: DEFB	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 ;**************************************************************
 ; (only add a jump if the function is done)
 BIOS:
-BOOT:	    JP	0		;NOTE WE USE FAKE DESTINATIONS
-WBOOT:	    JP	0
+BOOT:	    JP	BOOT_
+WBOOT:	    JP	WBOOT_
 CONST:	    JP	CONST_
 CONIN:	    JP	CONIN_
 CONOUT:	    JP	CONOUT_
@@ -3776,22 +3758,6 @@ SECTRAN:	JP	SECTRAN_
 ;*
 ;**************************************************************
 ;
-PROP_SETTRK     equ     0x90        ;Set track in "disk"
-PROP_SETSEC     equ     0x91        ;Goto sector in "disk"
-PROP_SELDSK     equ     0x92        ;Open disk image
-PROP_PREP_READ  equ     0x93        ;Prepare to read
-PROP_READ_NEXT  equ     0x94        ;Get next byte from sector
-PROP_PREP_WRITE equ     0x94        ;Prepare to write
-PROP_WRITE_NEXT equ     0x95        ;Write next byte to sector
-
-UART_DHR        equ     0x10 ;UART Data R/W register
-UART_IER        equ     0x11 ;Interrupt Enable Register
-UART_IFR        equ     0x12 ;Interrupt ID Reg (READ), FIFO Control Reg (WRITE)
-UART_LCR        equ     0x13 ;Line Control Register
-UART_MCR        equ     0x14 ;Modem Control
-UART_LSR        equ     0x15 ;Line Status Register
-UART_MSR        equ     0x16 ;Modem Status (Unused)
-UART_SCR        equ     0x17 ;Arbitrary data can be stored here
 
 SECTOR_SIZE     equ     128   
 DPH_ADDR        equ     0x0000      ;Disk Parameter Header
@@ -3805,12 +3771,38 @@ DEFW    0                       ;Workspace
 DEFW    0                       ;Workspace
 DEFW    0                       ;Workspace
 DEFW    (DIRECTORY_BUFFER)      ;Shared across all disks
-DEFW    (DISK_PARAM_INFO)       ;Info about sectors, block size, etc
+DEFW    (DISK_PARAM_INFO)     ;Info about sectors, block size, etc
 DEFW    0                       ;No checksum vector as "disk" can not be removed
 DEFW    (ALLOCATION_VECTOR0)
 
 ALLOCATION_VECTOR0:
 org (ALLOCATION_VECTOR0+32)
+
+DISK1:
+DEFW    0                       ;No translation table
+DEFW    0                       ;Workspace
+DEFW    0                       ;Workspace
+DEFW    0                       ;Workspace
+DEFW    (DIRECTORY_BUFFER)      ;Shared across all disks
+DEFW    (DISK_PARAM_INFO)     ;Info about sectors, block size, etc
+DEFW    0                       ;No checksum vector as "disk" can not be removed
+DEFW    (ALLOCATION_VECTOR1)
+
+ALLOCATION_VECTOR1:
+org (ALLOCATION_VECTOR1+32)
+
+DISK2:
+DEFW    0                       ;No translation table
+DEFW    0                       ;Workspace
+DEFW    0                       ;Workspace
+DEFW    0                       ;Workspace
+DEFW    (DIRECTORY_BUFFER)      ;Shared across all disks
+DEFW    (DISK_PARAM_INFO)     	;Info about sectors, block size, etc
+DEFW    0                       ;No checksum vector as "disk" can not be removed
+DEFW    (ALLOCATION_VECTOR2)
+
+ALLOCATION_VECTOR2:
+org (ALLOCATION_VECTOR2+32)
 
 ; http://www.gaby.de/cpm/manuals/archive/cpm22htm/ch6.htm#Figure_6-4
 ; SPT is the total number of sectors per track.
@@ -3830,9 +3822,10 @@ EXM: DEFB	0	    ;null mask
 DSM: DEFW	242     ;disk size-1
 DRM: DEFW	63	    ;directory max
 AL0: DEFB	192	    ;alloc 0
-AL1: DEFB	0	    ;alloc 1 (some sources don't have this?)
+AL1: DEFB	0	    ;alloc 1
 CKS: DEFW	0	    ;check size
 OFF: DEFW	2	    ;track offset
+
 
 ;Scratch pad for disk
 DIRECTORY_BUFFER:
@@ -3848,47 +3841,121 @@ org DIRECTORY_BUFFER+128
 ;**************************************************************
 ;
 
+BOOT_MSG:
+DEFB		CR, LF, CR, LF, 'CP/M 2.2 FOR TOM80', CR, LF, '57k RAM', CR, LF, 'BUILD 2021-06-08', CR, LF, 0, 0
+
+WBOOT_DEBUG:
+DEFB		CR, LF, 'RETURNING...', CR, LF, 0, 0
+
 ;Set up PIO, Text Output
 BOOT_:
-        ;Assume that serial is set up
         DI
-        ;TODO: Change PIO Interrupt vector
-        ;TODO: Disable CTC
-        ;TODO: Disable EEPROM
-        ;TODO: Update Interrupt Vector
-        ;else (?)
-        
-        LD A, 0
-        LD (IOBYTE), A
-        LD (TDRIVE), A
+		
+		;Turn both status lights on
+		IN A, (UART_MCR)
+		AND 0x3
+		OUT (UART_MCR), A
+		
+		LD SP, 0
         CALL PIO_INIT
+        CALL DISABLE_EEPROM
+		
+		;Flip light as an indication that boot process has begun
+		IN A, (UART_MCR)
+		OR 0x4
+		OUT (UART_MCR), A
+		
+		
+		;Print a friendly message to output
+		LD HL, BOOT_MSG
+		
+	BOOT_PRINT_MSG:
+		
+		LD C, (HL)
+		CALL CONOUT
+		LD A, (HL)
+		INC HL
+		CP 0
+		JP NZ, BOOT_PRINT_MSG
+		
+		;Init IO Byte
+        LD A, 0
+		LD (IOBYTE), A
+		LD (TDRIVE), A
+		
+		;All systems should be loaded on cold boot
+		JP WBOOT_EXIT
         
-      
-CCP_BASE    EQU 0xE400
-BDOS_BASE   EQU 0xEC06
-BIOS_BASE   EQU 0xFA00
-BDOS_SIZE   EQU (BIOS_BASE-BDOS_BASE)
-CCP_SIZE    EQU (BDOS_BASE-CCP_BASE)
-BDOS_EEPROM EQU 0x0000 ;(TODO) Location of BDOS in RAM
-CCP_EEPROM  EQU 0x0000 ;(TODO) Location of CCP in RAM
+		
 ;Reloads the command processor and (on some systems) the BDOS as well.
 ;All of CPM will fit within ROM so just copy it from there
 WBOOT_:
 
-    WBOOT_CCP:
-        LD HL, CCP_EEPROM
-        LD DE, CCP_BASE
-        LD BC, CCP_SIZE
-        CALL LOAD_EEPROM
+		LD SP, 0
+		
+		;Send null bytes to Prop to clear any previous commands that were interrupted
+		LD A, 0
+		CALL PIO_SEND_CMD
+		LD A, PROP_WRITE_FIN
+		CALL PIO_SEND_CMD
+		LD A, 0
+		CALL PIO_SEND_CMD
+		
+		;Return to start of disk
+		LD C, 0
+		CALL SELDSK
+		CALL HOME
 
-    WBOOT_BDOS:
-        LD HL, BDOS_EEPROM
-        LD DE, BDOS_BASE
-        LD BC, BDOS_SIZE
+		LD HL, WBOOT_DEBUG
+		
+	WBOOT_PRINT_MSG:
+		
+		LD C, (HL)
+		CALL CONOUT
+		LD A, (HL)
+		INC HL
+		CP 0
+		JP NZ, WBOOT_PRINT_MSG
+
+    WBOOT_CCP:
+        LD HL, CPM_ROM_BASE
+        LD DE, CPM_BASE
+        LD BC, WBOOT_SIZE
         CALL LOAD_EEPROM
     
     WBOOT_EXIT:
-        JP COMMAND
+	
+		;Set reset vector to warm boot 
+		LD HL, 0
+		LD A, 0xC3			;JUMP unconditional
+		LD (HL), A
+		INC HL
+		LD DE, WBOOT_LOC
+		LD (HL), E
+		INC HL
+		LD (HL), D
+		
+		;Set up BDOS ENTRY
+		LD HL, ENTRY
+		LD A, 0xC3			;JUMP unconditional
+		LD (HL), A
+		INC HL
+		LD DE, BDOS_BASE
+		LD (HL), E
+		INC HL
+		LD (HL), D
+	
+		;Flip other light as an indicator that Boot is done
+		IN A, (UART_MCR)
+		OR 0x8
+		OUT (UART_MCR), A
+		
+		LD A, 0
+		LD (TDRIVE), A
+		LD C, A
+	
+        LD HL, COMMAND
+		JP (HL)
 
 ;Returns its status in A; 0 if no character is ready, 0FFh if one is.       
 CONST_:
@@ -3940,13 +4007,13 @@ HOME_:
 
 ;Select the disc drive in register C (0=A:, 1=B: ...). Called with E=0 or 0FFFFh    
 SELDSK_:
-        PUSH AF
         
-        ;Check that the "drive" exists (there is only drive A, 0)
-        LD HL, 0        ;Set error code
-        CP 0            ;For now there is only A
-        RET NZ
-        LD HL, DISK0
+        ;Check that the "drive" exists (there is only drives A, B, C)
+		LD A, C
+        LD HL, 0        	;Set error code
+		LD (TDRIVE), A
+        CP NUMDSK            
+        RET NC
         
         ;Tell Prop to target specific drive
         LD A, PROP_SELDSK
@@ -3954,11 +4021,24 @@ SELDSK_:
         LD A, C
         CALL PIO_SEND_CMD
         
-        ;Return pointer to drive table
-        LD HL, (DISK0)
-        
-        POP AF
+		;Return pointer to appropriate drive table
+		LD A, C
+		CP 2
+		JP Z, SELDSK_C
+		CP 1
+		JP Z, SELDSK_B
+		
+	SELDSK_A:
+        LD HL, DISK0
+		RET
+	
+	SELDSK_B:
+        LD HL, DISK1
         RET
+		
+	SELDSK_C:
+		LD HL, DISK2
+		RET
         
 ;Set the track in C
 SETTRK_:
@@ -4042,6 +4122,11 @@ WRITE_:
         JP NZ, WRITE_LOOP
     
     WRITE_END:
+	
+		;Commit to disk
+		LD A, PROP_WRITE_FIN
+		CALL PIO_SEND_CMD
+	
         POP BC
         POP AF
         LD A, 0
@@ -4124,7 +4209,6 @@ SERIAL_PUTC:
         RET
         
 SERIAL_GETC:
-        PUSH AF
         
         ;Clear DLAB
         IN A, (UART_LCR)
@@ -4139,35 +4223,47 @@ SERIAL_GETC:
             JP NZ, GETCH_LOOP
     
         ;Get next char from data holding register
-        IN A, (UART_DHR)
-        POP AF
+		IN A, (UART_DHR)
+		
         RET
 
-
+DISABLE_EEPROM:
+		;Disable Rom Bank
+		LD C, UART_MCR
+		IN A, (C)
+		OR 0x01
+		OUT (C), A
+		RET
+		
+ENABLE_EEPROM:
+		;Enable Rom Bank
+		LD C, UART_MCR
+		IN A, (C)
+		AND 0xE
+		OUT (C), A
+		RET
 
 ;Expects DE to be base in RAM
 ;Expects HL to be base in ROM
 ;Expects BC to be size of section
 LOAD_EEPROM:
-        ;TODO: Turn EEPROM on
+		CALL ENABLE_EEPROM
         
-    LOAD_BDOS_LOOP:
+    LOAD_EEPROM_LOOP:
         LD A, (HL)
         LD (DE), A              ;Copy Value
+		INC HL
+		INC DE
         DEC BC
         
-        PUSH HL                 ;Save EEPROM address
-        LD HL, 0
+		LD A, 0
+		CP B
+        JP NZ, LOAD_EEPROM_LOOP   	;Return if B != 0
+		CP C
+		JP NZ, LOAD_EEPROM_LOOP		;Return if C != 0
         
-        OR A
-        SBC HL, BC
-        ADD HL, BC              ;Compare Size to count in BC
-        POP HL
-        JP NZ, LOAD_BDOS_LOOP   ;Return if count != 0
-        
-    
-    LOAD_BDOS_EXIT:
-        ;TODO: Turn EEPROM off
+    LOAD_EEPROM_EXIT:
+		CALL DISABLE_EEPROM
         RET
         
 PIO_INIT:
@@ -4214,7 +4310,16 @@ PIO_INIT:
         POP AF
         IM 2
         RET
+		
+PIO_INT_HANDLER_A:
+		RETI
+		
+PIO_INT_HANDLER_B:
+		RETI
 ;*
 ;******************   E N D   O F   C P / M   *****************
 ;*
 
+ORG PIO_INT
+dw (PIO_INT_HANDLER_A)
+dw (PIO_INT_HANDLER_B)
