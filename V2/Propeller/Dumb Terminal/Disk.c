@@ -4,6 +4,7 @@
 SimpleDisk DriveA;
 SimpleDisk DriveB;
 SimpleDisk DriveC;
+SimpleDisk DriveD;
 
 
 /**
@@ -138,6 +139,12 @@ int selectDrive(uint8_t drive) {
       return 0;
       break;
       
+    case 3 :
+      initDriveD();
+      currentDrive = &DriveD;
+      return 0;
+      break;
+      
     default:
       return -1;
       break;
@@ -161,7 +168,7 @@ int closeDrive(SimpleDisk * Drive) {
  **/
 void initDriveA() {
   DriveA.Sectors = 26;
-  DriveA.Tracks = 77;
+  DriveA.Tracks = 80;
   DriveA.SectorSize = 128;
   DriveA.BlockSize = 1024;
   DriveA.DriveLetter = 'A';
@@ -175,7 +182,7 @@ void initDriveA() {
 
 void initDriveB() {
   DriveB.Sectors = 26;
-  DriveB.Tracks = 77;
+  DriveB.Tracks = 80;
   DriveB.SectorSize = 128;
   DriveB.BlockSize = 1024;
   DriveB.DriveLetter = 'B';
@@ -188,7 +195,7 @@ void initDriveB() {
 
 void initDriveC() {
   DriveC.Sectors = 26;
-  DriveC.Tracks = 77;
+  DriveC.Tracks = 80;
   DriveC.SectorSize = 128;
   DriveC.BlockSize = 1024;
   DriveC.DriveLetter = 'C';
@@ -197,6 +204,19 @@ void initDriveC() {
   DriveC.Index = 0;
   DriveC.Buffer = malloc(DriveC.SectorSize * sizeof(uint8_t));
   DriveC.image = fopen("C.IMG", "r+");
+}  
+
+void initDriveD() {
+  DriveD.Sectors = 26;
+  DriveD.Tracks = 80;
+  DriveD.SectorSize = 128;
+  DriveD.BlockSize = 1024;
+  DriveD.DriveLetter = 'D';
+  DriveD.CurrentSector = 0;
+  DriveD.CurrentTrack = 0;
+  DriveD.Index = 0;
+  DriveD.Buffer = malloc(DriveD.SectorSize * sizeof(uint8_t));
+  DriveD.image = fopen("D.IMG", "r+");
 }  
 
 int initDisk() {
