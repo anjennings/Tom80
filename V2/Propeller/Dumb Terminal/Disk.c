@@ -168,7 +168,7 @@ int closeDrive(SimpleDisk * Drive) {
  **/
 void initDriveA() {
   DriveA.Sectors = 26;
-  DriveA.Tracks = 80;
+  DriveA.Tracks = 255;
   DriveA.SectorSize = 128;
   DriveA.BlockSize = 1024;
   DriveA.DriveLetter = 'A';
@@ -182,7 +182,7 @@ void initDriveA() {
 
 void initDriveB() {
   DriveB.Sectors = 26;
-  DriveB.Tracks = 80;
+  DriveB.Tracks = 255;
   DriveB.SectorSize = 128;
   DriveB.BlockSize = 1024;
   DriveB.DriveLetter = 'B';
@@ -195,7 +195,7 @@ void initDriveB() {
 
 void initDriveC() {
   DriveC.Sectors = 26;
-  DriveC.Tracks = 80;
+  DriveC.Tracks = 255;
   DriveC.SectorSize = 128;
   DriveC.BlockSize = 1024;
   DriveC.DriveLetter = 'C';
@@ -208,7 +208,7 @@ void initDriveC() {
 
 void initDriveD() {
   DriveD.Sectors = 26;
-  DriveD.Tracks = 80;
+  DriveD.Tracks = 255;
   DriveD.SectorSize = 128;
   DriveD.BlockSize = 1024;
   DriveD.DriveLetter = 'D';
