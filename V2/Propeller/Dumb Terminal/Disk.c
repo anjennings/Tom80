@@ -23,9 +23,8 @@ SimpleDisk DriveD;
  *  Read data from file into buffer and transfer buffer to PIO
  **/
 void handleRead(SimpleDisk * Drive) {
-  readSector(Drive);
   for (int i = 0; i < Drive->SectorSize; i++) {
-    writePIO(Drive->Buffer[i]);
+    readSectorByte(Drive);
   } 
 }  
 
@@ -33,33 +32,30 @@ void handleRead(SimpleDisk * Drive) {
  *  Write buffer back into file
  *  Does NOT recieve data to PIO
  **/
-void writeSector(SimpleDisk * Drive) {
+void writeTrack(SimpleDisk * Drive) {
   long int tOffset = Drive->CurrentTrack * Drive->Sectors * Drive->SectorSize;
-  long int sOffset = Drive->CurrentSector * Drive->SectorSize;
-  long int offset = tOffset + sOffset;
   
-  if(fseek(Drive->image, offset, SEEK_SET)){
-    return;
-  }    
   if (Drive->image == NULL) {
     return; 
-  }    
-  fwrite(Drive->Buffer, 1, 128, Drive->image);
+  } 
+  if(fseek(Drive->image, tOffset, SEEK_SET)){
+    return;
+  }       
+  fwrite(Drive->Buffer, 1, Drive->Sectors * Drive->SectorSize, Drive->image);
   fflush(Drive->image);
 }
 
 /**
- *  Read sector of file into buffer
+ *  Read track of file into buffer
  *  Does NOT send data to PIO
  **/
-void readSector(SimpleDisk * Drive) {
+void readTrack(SimpleDisk * Drive) {
   long int tOffset = Drive->CurrentTrack * Drive->Sectors * Drive->SectorSize;
-  long int sOffset = Drive->CurrentSector * Drive->SectorSize;
-  long int offset = tOffset + sOffset;
   
-  fseek(Drive->image, offset, SEEK_SET);
-  fread(Drive->Buffer, sizeof(uint8_t), Drive->SectorSize, Drive->image);
+  fseek(Drive->image, tOffset, SEEK_SET);
+  fread(Drive->Buffer, sizeof(uint8_t), Drive->SectorSize * Drive->Sectors, Drive->image);
   Drive->Index = 0;
+  setSector(Drive, 0);
 }  
 
 /**
@@ -67,44 +63,39 @@ void readSector(SimpleDisk * Drive) {
  *  Assumes that readSector has already been called once
  **/
 void readSectorByte(SimpleDisk * Drive) {
-  
-  uint8_t data;
-  if (Drive->Index >= 128) {
-    data = 0;
-  } else {   
-    data = Drive->Buffer[Drive->Index];
-  }    
-  
-  writePIO(data);
+  writePIO(Drive->Buffer[(Drive->Sectors * Drive->CurrentSector) + Drive->Index]);
   Drive->Index++;
+  if (Drive->Index == 128) {
+    Drive->Index = 0;
+    setSector(Drive, Drive->CurrentSector+1);
+  }
 }  
 
 /**
  *  Get byte from PIO, place into buffer
  *  Assumes that readSector has already been called once
  **/
-void writeSectorByte(SimpleDisk * Drive, uint8_t data) {
-  
-  if (Drive->Index >= 128) {
-    return;  
-  }    
-  
-  Drive->Buffer[Drive->Index] = data;
+void writeSectorByte(SimpleDisk * Drive, uint8_t data) {   
+  Drive->Buffer[Drive->Index + (Drive->SectorSize * Drive->CurrentSector)] = data;
   Drive->Index++;
+  if (Drive->Index == 128) {
+    Drive->Index = 0;
+    setSector(Drive, Drive->CurrentSector+1);
+    writeTrack(Drive);
+  }
 }  
 
-// Set current track on drive
+// Set current track on drive and load new one into buffer
 int setTrack(SimpleDisk * Drive, uint8_t track) {
-  
   if ((track < 0) || (track >= Drive->Tracks))
     return -1;
   Drive->CurrentTrack = track;  
   return 0;
+  readTrack(currentDrive);
 }  
 
 // Set current sector on drive
 int setSector(SimpleDisk * Drive, uint8_t sector) {
-  
   if ((sector < 0) || (sector >= Drive->Sectors))
     return -1; 
   Drive->CurrentSector = sector;  
@@ -152,7 +143,7 @@ int selectDrive(uint8_t drive) {
   }     
 }  
 
-// Close disk image and 
+// Close disk image and free buffer
 int closeDrive(SimpleDisk * Drive) {
   if (Drive == NULL) {
     return -1; 
@@ -175,7 +166,7 @@ void initDriveA() {
   DriveA.CurrentSector = 0;
   DriveA.CurrentTrack = 0;
   DriveA.Index = 0;
-  DriveA.Buffer = calloc(DriveA.SectorSize, sizeof(uint8_t));
+  DriveA.Buffer = malloc(DriveA.SectorSize * DriveA.Sectors * sizeof(uint8_t));
   DriveA.image = fopen("A.img", "r+");
 }  
 

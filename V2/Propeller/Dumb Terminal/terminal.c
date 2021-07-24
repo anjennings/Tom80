@@ -6,6 +6,10 @@
 
 #define DEBUG 0
 
+#undef VGA_TEXT_COLS 
+#define VGA_TEXT_COLS 80
+
+
 volatile char vga_o;
 
 vgatext *vga;
@@ -48,7 +52,7 @@ int processCommand(uint8_t data) {
       return 0;
       break;
           
-    case 0x90 :                         // Set disk track
+    case 0x90 :                         // Set disk track and read into buffer
       return setTrack(currentDrive, readPIO());
       break;
           
@@ -60,19 +64,18 @@ int processCommand(uint8_t data) {
       return selectDrive(readPIO());
       break;
           
-    case 0x93 :                         // Prepare to read (Load sector into buffer)
-      //readSector(currentDrive);
+    case 0x93 :                         // Send sector from buffer to Z80
       handleRead(currentDrive);
       return 0;
       break;
       
     case 0x94 :                         // Read next sequential byte from loaded sector
-      readSectorByte(currentDrive);
+      handleRead(currentDrive);
       return 0;
       break;
           
     case 0x95 :                         // Load sector into buffer, same as for a read
-      readSector(currentDrive);
+      //readTrack(currentDrive);
       return 0;
       break;
       
@@ -82,7 +85,7 @@ int processCommand(uint8_t data) {
       break;
       
     case 0x97 :                         // Commit buffer back to disk
-      writeSector(currentDrive);
+      writeTrack(currentDrive);
       return 0;
       break;
           
