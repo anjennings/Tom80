@@ -13,7 +13,7 @@ BDOS_SIZE   EQU BIOS_BASE-BDOS_BASE
 WBOOT_SIZE	EQU	0x1600
 
 ;Locations of each system in ROM
-CCP_EEPROM  EQU 0x3000 						;Location of CCP in RAM
+CCP_EEPROM  EQU 0x2030 						;Location of CCP in RAM
 BDOS_EEPROM EQU CCP_EEPROM+CCP_SIZE 		;Location of BDOS in RAM
 
 ;Values used when loading from RAM to ROM

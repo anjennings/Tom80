@@ -18,7 +18,7 @@ include "../shared/CPM_locations.h"
 include "../shared/Prop.h"
 
 MEM	EQU	64		;for a 62k system (TS802 TEST - WORKS OK).
-NUMDSK	EQU	3
+NUMDSK	EQU	4
 ;
 RSTRT	EQU	0		;entry point for warm boot
 IOBYTE	EQU	3		;i/o definition byte.
@@ -3804,6 +3804,19 @@ DEFW    (ALLOCATION_VECTOR2)
 ALLOCATION_VECTOR2:
 org (ALLOCATION_VECTOR2+32)
 
+DISK3:
+DEFW    0                       ;No translation table
+DEFW    0                       ;Workspace
+DEFW    0                       ;Workspace
+DEFW    0                       ;Workspace
+DEFW    (DIRECTORY_BUFFER)      ;Shared across all disks
+DEFW    (DISK_PARAM_INFO)     	;Info about sectors, block size, etc
+DEFW    0                       ;No checksum vector as "disk" can not be removed
+DEFW    (ALLOCATION_VECTOR3)
+
+ALLOCATION_VECTOR3:
+org (ALLOCATION_VECTOR3+32)
+
 ; http://www.gaby.de/cpm/manuals/archive/cpm22htm/ch6.htm#Figure_6-4
 ; SPT is the total number of sectors per track.
 ; BSH is the data allocation block shift factor, determined by the data block allocation size.
@@ -3819,12 +3832,24 @@ SPT: DEFW  	26	    ;sectors per track
 BSH: DEFB	3	    ;block shift factor
 BLM: DEFB	7	    ;block mask
 EXM: DEFB	0	    ;null mask
-DSM: DEFW	242     ;disk size-1
+DSM: DEFW	255     ;disk size-1
 DRM: DEFW	63	    ;directory max
 AL0: DEFB	192	    ;alloc 0
 AL1: DEFB	0	    ;alloc 1
 CKS: DEFW	0	    ;check size
 OFF: DEFW	2	    ;track offset
+
+DISK_PARAM_INFO_L:
+SPTL: DEFW  26	    ;sectors per track
+BSHL: DEFB	3	    ;block shift factor
+BLML: DEFB	7	    ;block mask
+EXML: DEFB	0	    ;null mask
+DSML: DEFW	811     ;disk size-1
+DRML: DEFW	63	    ;directory max
+AL0L: DEFB	192	    ;alloc 0
+AL1L: DEFB	0	    ;alloc 1
+CKSL: DEFW	0	    ;check size
+OFFL: DEFW	2	    ;track offset
 
 
 ;Scratch pad for disk
@@ -3842,7 +3867,7 @@ org DIRECTORY_BUFFER+128
 ;
 
 BOOT_MSG:
-DEFB		CR, LF, CR, LF, 'CP/M 2.2 FOR TOM80', CR, LF, '57k RAM', CR, LF, 'BUILD 2021-06-08', CR, LF, 0, 0
+DEFB		CR, LF, CR, LF, 'CP/M 2.2 FOR TOM80', CR, LF, '57k RAM', CR, LF, 'BUILD 2021-08-26', CR, LF, 0, 0
 
 WBOOT_DEBUG:
 DEFB		CR, LF, 'RETURNING...', CR, LF, 0, 0
@@ -3864,7 +3889,6 @@ BOOT_:
 		IN A, (UART_MCR)
 		OR 0x4
 		OUT (UART_MCR), A
-		
 		
 		;Print a friendly message to output
 		LD HL, BOOT_MSG
@@ -3950,8 +3974,8 @@ WBOOT_:
 		OR 0x8
 		OUT (UART_MCR), A
 		
-		LD A, 0
-		LD (TDRIVE), A
+		;LD A, 0
+		LD A, (TDRIVE)
 		LD C, A
 	
         LD HL, COMMAND
@@ -4023,6 +4047,8 @@ SELDSK_:
         
 		;Return pointer to appropriate drive table
 		LD A, C
+		CP 3
+		JP Z, SELDSK_D
 		CP 2
 		JP Z, SELDSK_C
 		CP 1
@@ -4038,6 +4064,10 @@ SELDSK_:
 		
 	SELDSK_C:
 		LD HL, DISK2
+		RET
+		
+	SELDSK_D:
+		LD HL, DISK3
 		RET
         
 ;Set the track in C
@@ -4082,8 +4112,8 @@ READ_:
         
     READ_LOOP:
         LD B, A
-        LD A, PROP_READ_NEXT
-        CALL PIO_SEND_CMD
+        ;LD A, PROP_READ_NEXT
+        ;CALL PIO_SEND_CMD
         CALL PIO_GET_DATA
         LD (HL), A
         INC HL
@@ -4139,8 +4169,13 @@ PRSTAT_:
         
 ;Translate sector numbers to take account of skewing.
 ;Skewing does not apply, its just a .bin file
+;Logical sector number in BC
+;Table address in DE
 SECTRAN_:
-        LD H, B
+        EX DE, HL
+		ADD HL, BC
+		RET
+		LD H, B
         LD L, C
         RET
 ;
@@ -4250,17 +4285,18 @@ LOAD_EEPROM:
 		CALL ENABLE_EEPROM
         
     LOAD_EEPROM_LOOP:
-        LD A, (HL)
-        LD (DE), A              ;Copy Value
-		INC HL
-		INC DE
-        DEC BC
+        ;LD A, (HL)
+        ;LD (DE), A              ;Copy Value
+		;INC HL
+		;INC DE
+        ;DEC BC
         
-		LD A, 0
-		CP B
-        JP NZ, LOAD_EEPROM_LOOP   	;Return if B != 0
-		CP C
-		JP NZ, LOAD_EEPROM_LOOP		;Return if C != 0
+		;LD A, 0
+		;CP B
+        ;JP NZ, LOAD_EEPROM_LOOP   	;Return if B != 0
+		;CP C
+		;JP NZ, LOAD_EEPROM_LOOP		;Return if C != 0
+		LDIR
         
     LOAD_EEPROM_EXIT:
 		CALL DISABLE_EEPROM
