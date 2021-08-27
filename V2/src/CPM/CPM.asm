@@ -3867,7 +3867,7 @@ org DIRECTORY_BUFFER+128
 ;
 
 BOOT_MSG:
-DEFB		CR, LF, CR, LF, 'CP/M 2.2 FOR TOM80', CR, LF, '57k RAM', CR, LF, 'BUILD 2021-06-12', CR, LF, 0, 0
+DEFB		CR, LF, CR, LF, 'CP/M 2.2 FOR TOM80', CR, LF, '57k RAM', CR, LF, 'BUILD 2021-08-26', CR, LF, 0, 0
 
 WBOOT_DEBUG:
 DEFB		CR, LF, 'RETURNING...', CR, LF, 0, 0
@@ -4285,17 +4285,18 @@ LOAD_EEPROM:
 		CALL ENABLE_EEPROM
         
     LOAD_EEPROM_LOOP:
-        LD A, (HL)
-        LD (DE), A              ;Copy Value
-		INC HL
-		INC DE
-        DEC BC
+        ;LD A, (HL)
+        ;LD (DE), A              ;Copy Value
+		;INC HL
+		;INC DE
+        ;DEC BC
         
-		LD A, 0
-		CP B
-        JP NZ, LOAD_EEPROM_LOOP   	;Return if B != 0
-		CP C
-		JP NZ, LOAD_EEPROM_LOOP		;Return if C != 0
+		;LD A, 0
+		;CP B
+        ;JP NZ, LOAD_EEPROM_LOOP   	;Return if B != 0
+		;CP C
+		;JP NZ, LOAD_EEPROM_LOOP		;Return if C != 0
+		LDIR
         
     LOAD_EEPROM_EXIT:
 		CALL DISABLE_EEPROM

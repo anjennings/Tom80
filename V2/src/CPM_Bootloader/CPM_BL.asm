@@ -22,18 +22,19 @@ CPM_BOOTSTRAP:
 ;Expects BC to be size of section
 LOAD_EEPROM:
         
-    LOAD_EEPROM_LOOP:
-        LD A, (HL)
-        LD (DE), A              ;Copy Value
-		INC HL
-		INC DE
-        DEC BC
+    ;LOAD_EEPROM_LOOP:
+    ;    LD A, (HL)
+    ;    LD (DE), A              ;Copy Value
+;		INC HL
+	;	INC DE
+    ;    DEC BC
         
-		LD A, 0
-		CP B
-        JP NZ, LOAD_EEPROM_LOOP   	;Return if B != 0
-		CP C
-		JP NZ, LOAD_EEPROM_LOOP		;Return if C != 0
+	;	LD A, 0
+	;	CP B
+    ;    JP NZ, LOAD_EEPROM_LOOP   	;Return if B != 0
+	;	CP C
+	;	JP NZ, LOAD_EEPROM_LOOP		;Return if C != 0
         
     LOAD_EEPROM_EXIT:
+		LDIR
         RET
