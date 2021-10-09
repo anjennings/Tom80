@@ -1,0 +1,58 @@
+ASxxxx Assembler V02.00 + NoICE + SDCC mods  (Zilog Z80 / Hitachi HD64180 / ZX-Next), page 1.
+Hexadecimal [16-Bits]
+
+Symbol Table
+
+    .__.$$$.=  2710 L   |     .__.ABS.=  0000 G   |     .__.CPU.=  0000 L
+    .__.H$L.=  0000 L   |     BUFSIZE =  0208     |     CONFIG_S=  0001 
+    EAGAIN  =  000B     |     NBUFS   =  0001     |     OS_BANK =  0000 
+    PFL_BATC=  0002     |     PFL_GRAP=  0003     |     PROGBASE=  0000 
+    PROGLOAD=  0100     |     P_READY =  0002     |     P_RUNNIN=  0001 
+    P_TAB__P=  0001     |     P_TAB__P=  0011     |     P_TAB__P=  000F 
+    P_TAB__P=  0003     |     P_TAB__P=  0000     |     P_TAB__P=  0002 
+    U_DATA_S=  BE00     |     U_DATA__=  0200     |     U_DATA__=  0012 
+    U_DATA__=  0014     |     U_DATA__=  0016     |     U_DATA__=  0018 
+    U_DATA__=  0062     |     U_DATA__=  001E     |     U_DATA__=  0007 
+    U_DATA__=  0020     |     U_DATA__=  0064     |     U_DATA__=  0011 
+    U_DATA__=  000C     |     U_DATA__=  0010     |     U_DATA__=  0006 
+    U_DATA__=  001A     |     U_DATA__=  0066     |     U_DATA__=  0002 
+    U_DATA__=  0004     |     U_DATA__=  0000     |     U_DATA__=  000A 
+    U_DATA__=  0022     |     U_DATA__=  000E     |     U_DATA__=  0008 
+    U_DATA__=  001C     |     Z80_MMU_=  0000     |     Z80_TYPE=  0001 
+  1 _bufpool   0000 GR  |     _has_684   **** GX  |     _has_rem   **** GX
+  2 _int_dis   000A GR  |   2 _irqvect   0012 GR  |   2 _kernel_   0121 GR
+    _membank   **** GX  |   2 _platfor   000B GR  |   2 _platfor   000D GR
+  4 _probe_6   0000 R   |     _probe_p   **** GX  |     _procmem   **** GX
+  2 _program   00AC GR  |     _ramsize   **** GX  |   0 _sil_mem   0066 GR
+  0 _sn76489   00A2 GR  |     _udata     **** GX  |     _vdp_ini   **** GX
+    _vdp_loa   **** GX  |     _vdp_res   **** GX  |     _vdp_typ   **** GX
+    _vdp_wip   **** GX  |     _vdpport   **** GX  |     _vdptype   **** GX
+    _vtinit    **** GX  |   2 bogus_in   001C R   |   3 crtcmap    0000 R
+  2 ctc0_int   0013 R   |   2 find_my_   0063 R   |   2 find_rem   008C R
+  2 found_se   0085 R   |   0 init6845   0007 R   |   0 init_ear   0000 GR
+  0 init_har   0011 GR  |     interrup   **** GX  |   2 intvecto   0000 GR
+  2 map_buff   00E7 GR  |   2 map_copy   0120 R   |   2 map_for_   00F7 GR
+  2 map_kern   00E7 GR  |   2 map_kern   00E7 GR  |   2 map_proc   00F2 GR
+  2 map_proc   00F7 GR  |   2 map_proc   00FD GR  |   2 map_proc   00FD GR
+  2 map_proc   00F2 GR  |   2 map_rest   0119 GR  |   2 map_save   0108 GR
+  2 map_set_   0101 R   |   2 map_stor   011F R   |     nmi_hand   **** GX
+  2 nobanks    005E R   |   2 nope       007C R   |   2 not_reme   00A2 R
+    null_han   **** GX  |     outbc      **** GX  |   2 outchar    0122 GR
+    outcharh   **** GX  |     outde      **** GX  |     outhl      **** GX
+    outnewli   **** GX  |     outstrin   **** GX  |     outstrin   **** GX
+    platform   **** GX  |   2 serial_i   001F R   |   0 sil_copy   0096 R
+  0 sil_mwri   009C R   |   2 size_nex   0031 R   |   2 size_non   0044 R
+  2 size_ram   0029 R   |   2 sizer      005B R   |   2 test_ban   0065 R
+  2 trace_in   001C R   |     unix_sys   **** GX  |   0 vdp_setu   0033 R
+
+ASxxxx Assembler V02.00 + NoICE + SDCC mods  (Zilog Z80 / Hitachi HD64180 / ZX-Next), page 2.
+Hexadecimal [16-Bits]
+
+Area Table
+
+   0 _CODE      size   A8   flags    0
+   1 _BUFFERS   size  208   flags    0
+   2 _COMMONM   size  127   flags    0
+   3 _CONST     size   11   flags    0
+   4 _DISCARD   size   1E   flags    0
+

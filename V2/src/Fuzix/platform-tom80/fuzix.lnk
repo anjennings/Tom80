@@ -1,0 +1,44 @@
+-mwxuy
+-i fuzix.ihx
+-b _CODE=0x0100
+-b _COMMONMEM=0xc000
+-b _DISCARD=0xb700
+-l z80
+platform-tom80/crt0.rel
+platform-tom80/commonmem.rel
+platform-tom80/main.rel
+start.rel
+version.rel
+lowlevel-z80.rel
+usermem_std-z80.rel
+platform-tom80/tricks.rel
+timer.rel
+kdata.rel
+usermem.rel
+platform-tom80/devices.rel
+devio.rel
+filesys.rel
+process.rel
+inode.rel
+syscall_exec.rel
+syscall_exec16.rel
+syscall_fs.rel
+syscall_fs2.rel
+syscall_fs3.rel
+syscall_proc.rel
+syscall_other.rel
+tty.rel
+mm.rel
+bankfixed.rel
+devsys.rel
+devinput.rel
+platform-tom80/devtty.rel
+platform-tom80/blkdev.rel
+platform-tom80/mbr.rel
+platform-tom80/uart.rel
+platform-tom80/ctc.rel
+platform-tom80/pio.rel
+platform-tom80/tom80.rel
+platform-tom80/devprop.rel
+platform-tom80/discard.rel
+-e

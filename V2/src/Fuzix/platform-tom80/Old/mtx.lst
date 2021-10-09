@@ -1,0 +1,557 @@
+                              1 ;
+                              2 ;	MTX512 hardware support
+                              3 ;
+                              4 
+                              5 
+                              6             .module mtx
+                              7 
+                              8             ; exported symbols
+                              9             .globl init_early
+                             10             .globl init_hardware
+                             11             .globl _program_vectors
+                             12 	    .globl platform_interrupt_all
+                             13 
+                             14 	    .globl map_kernel
+                             15 	    .globl map_buffers
+                             16 	    .globl map_kernel_di
+                             17 	    .globl map_process
+                             18 	    .globl map_process_di
+                             19 	    .globl map_process_a
+                             20 	    .globl map_process_always
+                             21 	    .globl map_process_always_di
+                             22 	    .globl map_save_kernel
+                             23 	    .globl map_restore
+                             24 	    .globl map_for_swap
+                             25 	    .globl _kernel_map
+                             26 
+                             27 	    .globl _int_disabled
+                             28 
+                             29 	    .globl _sil_memcpy
+                             30 
+                             31 	    .globl _irqvector
+                             32 
+                             33             ; exported debugging tools
+                             34             .globl _platform_monitor
+                             35             .globl _platform_reboot
+                             36             .globl outchar
+                             37 
+                             38             ; imported symbols
+                             39             .globl _ramsize
+                             40             .globl _procmem
+                             41 	    .globl _membanks
+                             42 	    .globl _udata
+                             43 
+                             44 	    .globl unix_syscall_entry
+                             45             .globl null_handler
+                             46 	    .globl nmi_handler
+                             47             .globl interrupt_handler
+                             48 
+                             49 	    .globl _vdp_init
+                             50 	    .globl _vdp_load_font
+                             51 	    .globl _vdp_restore_font
+                             52 	    .globl _vdp_type
+                             53 	    .globl _vdp_wipe_consoles
+                             54 
+                             55 	    .globl _vtinit
+                             56 	    .globl _probe_prop
+                             57 	    .globl _has_6845
+                             58 	    .globl _has_rememo
+                             59 	    .globl _vdptype
+                             60 	    .globl _vdpport
+                             61 
+                             62             .globl outcharhex
+                             63             .globl outhl, outde, outbc
+                             64             .globl outnewline
+                             65             .globl outstring
+                             66             .globl outstringhex
+                             67 
+                             68             .include "kernel.def"
+                              1 ; UZI mnemonics for memory addresses etc
+                              2 
+                     0200     3 U_DATA__TOTALSIZE           .equ 0x200        ; 256+256 bytes @ F000
+                              4 
+                     BE00     5 U_DATA_STASH		    .equ 0xBE00	      ; BE00-BFFF
+                              6 
+                     0000     7 PROGBASE		    .equ 0x0000
+                     0100     8 PROGLOAD		    .equ 0x0100
+                              9 
+                     0001    10 Z80_TYPE		    .equ 1
+                             11 
+                     0000    12 Z80_MMU_HOOKS		    .equ 0
+                             13 
+                     0001    14 CONFIG_SWAP		    .equ 1
+                             15 
+                     0001    16 NBUFS			    .equ 1		; must match config.h
+                             69             .include "../kernel-z80.def"
+                              1 
+                              2 		.globl _udata
+                              3 
+                              4 ; Keep these in sync with struct u_data!!
+                     0000     5 U_DATA__U_PTAB              .equ 0   ; struct p_tab*
+                     0002     6 U_DATA__U_PAGE              .equ 2   ; uint16_t
+                     0004     7 U_DATA__U_PAGE2             .equ 4   ; uint16_t
+                     0006     8 U_DATA__U_INSYS             .equ 6   ; bool
+                     0007     9 U_DATA__U_CALLNO            .equ 7   ; uint8_t
+                     0008    10 U_DATA__U_SYSCALL_SP        .equ 8   ; void *
+                     000A    11 U_DATA__U_RETVAL            .equ 10  ; int16_t
+                     000C    12 U_DATA__U_ERROR             .equ 12  ; int16_t
+                     000E    13 U_DATA__U_SP                .equ 14  ; void *
+                     0010    14 U_DATA__U_ININTERRUPT       .equ 16  ; bool
+                     0011    15 U_DATA__U_CURSIG            .equ 17  ; int8_t
+                     0012    16 U_DATA__U_ARGN              .equ 18  ; uint16_t
+                     0014    17 U_DATA__U_ARGN1             .equ 20  ; uint16_t
+                     0016    18 U_DATA__U_ARGN2             .equ 22  ; uint16_t
+                     0018    19 U_DATA__U_ARGN3             .equ 24  ; uint16_t
+                     001A    20 U_DATA__U_ISP               .equ 26  ; void * (initial stack pointer when _exec()ing)
+                     001C    21 U_DATA__U_TOP               .equ 28  ; uint16_t
+                     001E    22 U_DATA__U_BREAK             .equ 30  ; uint16_t
+                     0020    23 U_DATA__U_CODEBASE          .equ 32  ; uint16_t
+                     0022    24 U_DATA__U_SIGVEC            .equ 34  ; table of function pointers (void *)
+                     0062    25 U_DATA__U_BASE              .equ 98  ; uint8_t *
+                     0064    26 U_DATA__U_COUNT             .equ 100  ; uint16_t
+                     0066    27 U_DATA__U_OFFSET            .equ 102 ; uint32_t
+                             28 
+                             29 ; Keep these in sync with struct p_tab!!
+                     0000    30 P_TAB__P_STATUS_OFFSET      .equ 0
+                     0001    31 P_TAB__P_FLAGS_OFFSET	    .equ 1
+                     0002    32 P_TAB__P_TTY_OFFSET         .equ 2
+                     0003    33 P_TAB__P_PID_OFFSET         .equ 3
+                     000F    34 P_TAB__P_PAGE_OFFSET        .equ 15
+                     0011    35 P_TAB__P_PAGE2_OFFSET       .equ 17
+                             36 
+                     0001    37 P_RUNNING                   .equ 1            ; value from include/kernel.h
+                     0002    38 P_READY                     .equ 2            ; value from include/kernel.h
+                             39 
+                     0002    40 PFL_BATCH		    .equ 2	      ; bit number
+                     0003    41 PFL_GRAPHICS		    .equ 3	      ; bit number
+                             42 
+                     0000    43 OS_BANK                     .equ 0            ; value from include/kernel.h
+                             44 
+                     000B    45 EAGAIN                      .equ 11           ; value from include/kernel.h
+                             46 
+                             47 ; Keep in sync with struct blkbuf
+                     0208    48 BUFSIZE                     .equ 520
+                             70 
+                             71 ;
+                             72 ;	Disk buffers
+                             73 ;
+                             74 	    .globl _bufpool
+                             75 	    .area _BUFFERS
+                             76 
+   0000                      77 _bufpool:
+   0000                      78 	    .ds BUFSIZE * NBUFS
+                             79 
+                             80 
+                             81 ; -----------------------------------------------------------------------------
+                             82 ; COMMON MEMORY BANK (0xC000 upwards)
+                             83 ; -----------------------------------------------------------------------------
+                             84             .area _COMMONMEM
+                             85 ;
+                             86 ;	This is linked straight after the udata block so is 256 byte
+                             87 ; aligned. Put the im2 table first
+                             88 ;
+                             89 	     .globl intvectors
+                             90 
+   0000                      91 intvectors:
+   0000r13r00                92 	    .dw ctc0_int	; VDP counting timer
+   0002r1Cr00                93 	    .dw bogus_int	; Baud generator
+   0004r1Cr00                94 	    .dw bogus_int	; Baud generator
+   0006r1Cr00                95 	    .dw trace_int	; can be used for CPU tracing etc
+   0008r1Fr00                96 	    .dw serial_int	; we don't use the vector mod functions
+                             97 
+   000A                      98 _int_disabled:
+   000A 01                   99 	    .db 1
+                            100 
+   000B                     101 _platform_monitor:
+   000B F3            [ 4]  102 	    di
+   000C 76            [ 4]  103 	    halt
+                            104 
+   000D                     105 _platform_reboot:
+   000D F3            [ 4]  106 	    di
+   000E AF            [ 4]  107 	    xor a
+   000F D3 00         [11]  108 	    out (0),a		; ROM mode, we are in common so survive
+   0011 C7            [11]  109 	    rst 0		; kaboom
+                            110 
+   0012                     111 _irqvector:
+   0012 00                  112 	    .db 0		; used to identify the vector in question
+                            113 
+   0013 F5            [11]  114 ctc0_int:   push af
+   0014 AF            [ 4]  115 	    xor a
+   0015 32r12r00      [13]  116 	    ld (_irqvector), a
+   0018 F1            [10]  117 	    pop af
+   0019 C3r00r00      [10]  118 	    jp interrupt_handler
+   001C                     119 trace_int:
+   001C FB            [ 4]  120 bogus_int:  ei
+   001D ED 4D         [14]  121 	    reti
+   001F                     122 serial_int:
+   001F F5            [11]  123 	    push af
+   0020 3E 01         [ 7]  124 	    ld a, #1
+   0022 32r12r00      [13]  125 	    ld (_irqvector), a
+   0025 F1            [10]  126 	    pop af
+   0026 C3r00r00      [10]  127 	    jp interrupt_handler
+                            128 
+                            129 ; We always have 0x80 so we just need to count the banks that differ
+                            130 ; If we have partial banks they appear from 0 but we can't use them.
+                            131 ; Check in the 8000-BFFF range therefore.
+                            132 ;
+                            133 ; We use BFFF as this is harmlessly in kernel data space for the kernel
+                            134 ; bank.
+   0029                     135 size_ram:
+   0029 21 FF BF      [10]  136 	    ld hl, #0xBFFF	; clear of anything we need
+   002C 7E            [ 7]  137 	    ld a,(hl)
+   002D F5            [11]  138 	    push af		; save kernel BFFF
+   002E 01 00 81      [10]  139 	    ld bc, #0x8100	; port 0 in c, b = 0x81
+   0031                     140 size_next:
+   0031 ED 41         [12]  141 	    out (c), b
+   0033 3E A5         [ 7]  142 	    ld a, #0xA5
+   0035 77            [ 7]  143 	    ld (hl), a
+   0036 BE            [ 7]  144 	    cp (hl)
+   0037 20 0B         [12]  145 	    jr nz, size_nonram
+   0039 2F            [ 4]  146 	    cpl
+   003A 77            [ 7]  147 	    ld (hl), a
+   003B BE            [ 7]  148 	    cp (hl)
+   003C 20 06         [12]  149 	    jr nz, size_nonram
+   003E 04            [ 4]  150 	    inc b
+   003F 3E 90         [ 7]  151 	    ld a, #0x90
+   0041 B8            [ 4]  152 	    cp b
+   0042 20 ED         [12]  153 	    jr nz, size_next	; All banks done
+   0044                     154 size_nonram:
+   0044 3Ar21r01      [13]  155 	    ld a, (_kernel_map)
+   0047 ED 79         [12]  156 	    out (c), a		; Return to kernel
+   0049 CB B8         [ 8]  157 	    res 7,b		; Clear the flag so we just have banks
+   004B 78            [ 4]  158 	    ld a, b
+   004C 32r00r00      [13]  159 	    ld (_membanks), a	; Number of banks (0 - membanks - 1)
+   004F B7            [ 4]  160 	    or a
+   0050 28 0C         [12]  161 	    jr z,nobanks
+   0052 21 00 00      [10]  162 	    ld hl, #0
+   0055 11 30 00      [10]  163 	    ld de, #48
+   0058 05            [ 4]  164 	    dec b
+   0059 28 03         [12]  165 	    jr z, nobanks
+   005B 19            [11]  166 sizer:	    add hl, de
+   005C 10 FD         [13]  167 	    djnz sizer
+   005E                     168 nobanks:
+   005E F1            [10]  169 	    pop af
+   005F 32 FF BF      [13]  170 	    ld (0xBFFF),a
+   0062 C9            [10]  171 	    ret
+                            172 
+   0063                     173 find_my_ram:
+   0063 3E 80         [ 7]  174 	    ld a,#0x80
+   0065                     175 test_bank:
+   0065 D3 00         [11]  176 	    out (0),a
+   0067 21r00r00      [10]  177 	    ld hl,#crtcmap
+   006A 08            [ 4]  178 	    ex af,af
+   006B 7E            [ 7]  179 	    ld a,(hl)
+   006C FE 77         [ 7]  180 	    cp #0x77
+   006E 20 0C         [12]  181 	    jr nz,nope
+   0070 23            [ 6]  182 	    inc hl
+   0071 7E            [ 7]  183 	    ld a,(hl)
+   0072 FE 50         [ 7]  184             cp #0x50
+   0074 20 06         [12]  185 	    jr nz,nope
+   0076 23            [ 6]  186             inc hl
+   0077 7E            [ 7]  187 	    ld a,(hl)
+   0078 FE 5C         [ 7]  188 	    cp #0x5C
+   007A 28 09         [12]  189             jr z,found_self
+   007C 08            [ 4]  190 nope:	    ex af,af
+   007D 3C            [ 4]  191 	    inc a
+   007E FE 90         [ 7]  192 	    cp #0x90
+   0080 20 E3         [12]  193 	    jr nz, test_bank
+   0082 C3r0Dr00      [10]  194             jp _platform_reboot
+                            195 
+   0085                     196 found_self:
+   0085 08            [ 4]  197 	    ex af,af
+   0086 D3 00         [11]  198 	    out (0),a
+   0088 32r21r01      [13]  199 	    ld (_kernel_map),a
+   008B C9            [10]  200 	    ret
+                            201 
+   008C                     202 find_rememorizer:
+   008C 3E 8F         [ 7]  203 	    ld a,#0x8F
+   008E D3 00         [11]  204 	    out (0),a
+   0090 AF            [ 4]  205 	    xor a
+   0091 D3 D0         [11]  206 	    out (0xD0),a	; 0x4000 should now be 0xC000 on a
+                            207 				; rememorizer only
+   0093 2Ar00r80      [16]  208 	    ld hl,(intvectors-0x8000)
+   0096 ED 5Br00r00   [20]  209 	    ld de,(intvectors)
+   009A B7            [ 4]  210 	    or a
+   009B ED 52         [15]  211 	    sbc hl,de
+   009D 3E 00         [ 7]  212 	    ld a,#0
+   009F 20 01         [12]  213 	    jr nz,not_rememo
+   00A1 3C            [ 4]  214 	    inc a
+   00A2                     215 not_rememo:
+   00A2 4F            [ 4]  216 	    ld c,a		; save the rememorizer state
+   00A3 3Ar21r01      [13]  217 	    ld a,(_kernel_map)
+   00A6 D3 00         [11]  218 	    out (0),a
+                            219 	    ; memory back so we can now write the state
+   00A8 79            [ 4]  220 	    ld a,c
+   00A9 D3 D0         [11]  221 	    out (0xD0),a
+   00AB C9            [10]  222 	    ret
+                            223 
+                            224 ; -----------------------------------------------------------------------------
+                            225 ; KERNEL MEMORY BANK (below 0xC000, only accessible when the kernel is mapped)
+                            226 ; -----------------------------------------------------------------------------
+                            227 
+                            228 	    .area _CONST
+   0000                     229 crtcmap:
+   0000 77 50 5C 09 1E 03   230 	    .db	   0x77, 0x50, 0x5c, 0x09, 0x1e, 0x03, 0x18, 0x1b
+        18 1B
+   0008 00 09 60 09 00 00   231 	    .db    0x00, 0x09, 0x60, 0x09, 0x00, 0x00, 0x00, 0x00, 0x00
+        00 00 00
+                            232 
+                            233             .area _CODE
+                            234 
+   0000                     235 init_early:
+                            236 ;
+                            237 ;	Bring up the 80 column card early so it can be used for debug
+                            238 ;	Will effectively be a no-op if we then turn out to have a prop
+                            239 ;	based board
+                            240 ;
+   0000 21r00r00      [10]  241 	    ld hl, #crtcmap
+   0003 AF            [ 4]  242 	    xor a
+   0004 01 39 11      [10]  243 	    ld bc, #0x1139		; 17 commands to port 0x38/39
+   0007                     244 init6845:
+   0007 0D            [ 4]  245 	    dec c
+   0008 ED 79         [12]  246 	    out (c), a
+   000A 0C            [ 4]  247 	    inc c
+   000B 3C            [ 4]  248 	    inc a
+   000C ED A3         [16]  249 	    outi
+   000E 20 F7         [12]  250 	    jr nz, init6845
+   0010 C9            [10]  251             ret
+                            252 
+   0011                     253 init_hardware:
+                            254 	    ; Task 1. Find my bank
+   0011 CDr63r00      [17]  255 	    call find_my_ram
+                            256 	    ; Count banks
+   0014 CDr29r00      [17]  257 	    call size_ram
+   0017 22r00r00      [16]  258             ld (_procmem), hl
+   001A 11 40 00      [10]  259 	    ld de,#64			; common memory and kernel
+   001D 19            [11]  260 	    add hl,de
+   001E 22r00r00      [16]  261 	    ld (_ramsize),hl
+                            262 
+                            263 	    ; We can now check for a Rememorizer. If we have one then we can
+                            264 	    ; do extra games with the memory banking
+   0021 CDr8Cr00      [17]  265 	    call find_rememorizer
+                            266             ; set up interrupt vectors for the kernel (also sets up common memory in page 0x000F which is unused)
+   0024 21 00 00      [10]  267             ld hl, #0
+   0027 E5            [11]  268             push hl
+   0028 CDrACr00      [17]  269             call _program_vectors
+   002B E1            [10]  270             pop hl
+                            271 
+                            272 	    ; Program the video engine
+                            273 
+   002C CDr00r00      [17]  274 	    call _vdp_type
+   002F 7D            [ 4]  275 	    ld a,l
+   0030 32r00r00      [13]  276 	    ld (_vdptype),a
+                            277 
+   0033                     278 vdp_setup:
+   0033 CDr00r00      [17]  279 	    call _vdp_init
+   0036 CDr00r00      [17]  280 	    call _vdp_load_font
+   0039 CDr00r00      [17]  281 	    call _vdp_restore_font
+   003C CDr00r00      [17]  282 	    call _vdp_wipe_consoles
+                            283 
+                            284 	    ; 08 is channel 0, which is input from VDP
+                            285             ; 09 is channel 1, output for DART ser 0 } fed 4MHz/13
+                            286             ; 0A is channel 2, output for DATA ser 1 }
+                            287 	    ; 0B is channel 3, counting CSTTE edges (cpu clocks) at 4MHz
+                            288 
+   003F 3E 03         [ 7]  289 	    ld a,#3
+   0041 D3 08         [11]  290 	    out (0x08),a
+   0043 D3 09         [11]  291 	    out (0x09),a
+   0045 D3 0A         [11]  292 	    out (0x0A),a
+   0047 D3 0B         [11]  293 	    out (0x0B),a
+   0049 AF            [ 4]  294 	    xor a
+   004A D3 08         [11]  295 	    out (0x08), a		; vector 0
+   004C 3E A5         [ 7]  296 	    ld a, #0xA5
+   004E D3 08         [11]  297 	    out (0x08), a		; CTC 0 as our IRQ source
+   0050 3E FA         [ 7]  298 	    ld a, #0xFA			; 250 - 62.5Hz
+   0052 D3 08         [11]  299 	    out (0x08), a		; Timer constant
+                            300 
+   0054 21r00r00      [10]  301 	    ld hl, #intvectors		; Work around SDCC crappiness
+   0057 7C            [ 4]  302 	    ld a, h
+   0058 ED 47         [ 9]  303 	    ld i, a
+   005A ED 5E         [ 8]  304             im 2 ; set CPU interrupt mode
+                            305 
+   005C CDr00r00      [17]  306 	    call _probe_6845		; look for 80 column video
+   005F CDr00r00      [17]  307 	    call _probe_prop		; see if we have CFII prop video
+   0062 CDr00r00      [17]  308 	    call _vtinit		; init the console video
+                            309 
+   0065 C9            [10]  310             ret
+                            311 
+   0066                     312 _sil_memcpy:
+   0066 DD E5         [15]  313 	    push ix
+   0068 DD 21 00 00   [14]  314 	    ld ix, #0
+   006C DD 39         [15]  315 	    add ix, sp
+   006E DD 6E 06      [19]  316 	    ld l, 6(ix)	; dptr
+   0071 DD 66 07      [19]  317 	    ld h, 7(ix)
+   0074 DD 7E 05      [19]  318 	    ld a, 5(ix)	; map
+   0077 DD 5E 08      [19]  319 	    ld e, 8(ix)	; block
+   007A DD 56 09      [19]  320 	    ld d, 9(ix)
+   007D CDrF7r00      [17]  321 	    call map_process_a	; map in the user space we want
+   0080 DD 4E 0B      [19]  322 	    ld c, 11(ix) ; port base
+   0083 ED 59         [12]  323 	    out (c), e	 ; block low
+   0085 0C            [ 4]  324 	    inc c
+   0086 ED 51         [12]  325 	    out (c), d	 ; block high
+   0088 0C            [ 4]  326 	    inc c
+   0089 0C            [ 4]  327 	    inc c
+   008A 06 00         [ 7]  328 	    ld b, #0
+   008C DD CB 04 46   [20]  329 	    bit 0, 4(ix) ; read ? 
+   0090 28 0A         [12]  330 	    jr z, sil_mwrite
+   0092 ED B2         [21]  331 	    inir	 ; load 256 bytes
+   0094 ED B2         [21]  332 	    inir	 ; load 256 bytes
+   0096                     333 sil_copydone:
+   0096 CDrE7r00      [17]  334 	    call map_kernel
+   0099 DD E1         [14]  335 	    pop ix
+   009B C9            [10]  336 	    ret
+   009C                     337 sil_mwrite:
+   009C ED B3         [21]  338 	    otir	; write 256 bytes
+   009E ED B3         [21]  339 	    otir	; write 256 bytes
+   00A0 18 F4         [12]  340 	    jr sil_copydone
+                            341 
+                            342 ;
+                            343 ; Helper for the SN76489. We need to keep thee 32 clocks apart and that's
+                            344 ; hard to do in C but easy if it has to call a tiny fastcall helper
+                            345 ;
+                            346 ; From the strobe we have a minimum of
+                            347 ; ret  			10
+                            348 ; ld l,r		4
+                            349 ; call xxxx		17
+                            350 ; ld a,l		4
+                            351 ;
+                            352 ; so we are safe.
+                            353 ;
+                            354 ;
+                            355 	    .globl _sn76489_write
+                            356 
+   00A2                     357 _sn76489_write:
+   00A2 7D            [ 4]  358 	    ld a,l
+   00A3 D3 06         [11]  359 	    out (0x06),a
+   00A5 DB 03         [11]  360 	    in a,(0x03)
+   00A7 C9            [10]  361 	    ret
+                            362 
+                            363 ;------------------------------------------------------------------------------
+                            364 ; COMMON MEMORY PROCEDURES FOLLOW
+                            365 
+                            366             .area _COMMONMEM
+                            367 
+                            368 
+   00AC                     369 _program_vectors:
+                            370             ; we are called, with interrupts disabled, by both newproc() and crt0
+                            371 	    ; will exit with interrupts off
+   00AC F3            [ 4]  372             di ; just to be sure
+   00AD D1            [10]  373             pop de ; temporarily store return address
+   00AE E1            [10]  374             pop hl ; function argument -- base page number
+   00AF E5            [11]  375             push hl ; put stack back as it was
+   00B0 D5            [11]  376             push de
+                            377 
+   00B1 CDrF2r00      [17]  378 	    call map_process
+                            379 
+                            380             ; write zeroes across all vectors
+   00B4 21 00 00      [10]  381             ld hl, #0
+   00B7 11 01 00      [10]  382             ld de, #1
+   00BA 01 7F 00      [10]  383             ld bc, #0x007f ; program first 0x80 bytes only
+   00BD 36 00         [10]  384             ld (hl), #0x00
+   00BF ED B0         [21]  385             ldir
+                            386 
+                            387             ; now install the interrupt vector at 0x0038
+   00C1 3E C3         [ 7]  388             ld a, #0xC3 ; JP instruction
+   00C3 32 38 00      [13]  389             ld (0x0038), a
+   00C6 21r00r00      [10]  390             ld hl, #interrupt_handler
+   00C9 22 39 00      [16]  391             ld (0x0039), hl
+                            392 
+                            393             ; set restart vector for UZI system calls
+   00CC 32 30 00      [13]  394             ld (0x0030), a   ;  (rst 30h is unix function call vector)
+   00CF 21r00r00      [10]  395             ld hl, #unix_syscall_entry
+   00D2 22 31 00      [16]  396             ld (0x0031), hl
+                            397 
+                            398             ; Set vector for jump to NULL
+   00D5 32 00 00      [13]  399             ld (0x0000), a   
+   00D8 21r00r00      [10]  400             ld hl, #null_handler  ;   to Our Trap Handler
+   00DB 22 01 00      [16]  401             ld (0x0001), hl
+                            402 
+   00DE 32 66 00      [13]  403             ld (0x0066), a  ; Set vector for NMI
+   00E1 21r00r00      [10]  404             ld hl, #nmi_handler
+   00E4 22 67 00      [16]  405             ld (0x0067), hl
+                            406 
+                            407 	    ; our platform has a "true" common area, if it did not we would
+                            408 	    ; need to copy the "common" code into the common area of the new
+                            409 	    ; process.
+                            410 
+                            411 	    ; falls through
+                            412 
+                            413             ; put the paging back as it was -- we're in kernel mode so this is predictable
+   00E7                     414 map_kernel:
+   00E7                     415 map_buffers:
+   00E7                     416 map_kernel_di:
+   00E7 F5            [11]  417 	    push af
+   00E8 3Ar21r01      [13]  418 	    ld a, (_kernel_map)	; ROM off bank for kernel
+                            419 	    ; the map port is write only, so keep a local stash
+   00EB 32r20r01      [13]  420 	    ld (map_copy), a
+   00EE D3 00         [11]  421 	    out (0), a
+   00F0 F1            [10]  422 	    pop af
+   00F1 C9            [10]  423             ret
+   00F2                     424 map_process:
+   00F2                     425 map_process_di:
+   00F2 7C            [ 4]  426 	    ld a, h
+   00F3 B5            [ 4]  427 	    or l
+   00F4 28 F1         [12]  428 	    jr z, map_kernel
+   00F6 7E            [ 7]  429 	    ld a, (hl)
+   00F7                     430 map_for_swap:
+   00F7                     431 map_process_a:
+   00F7 32r20r01      [13]  432 	    ld (map_copy), a
+   00FA D3 00         [11]  433 	    out (0), a
+   00FC C9            [10]  434 	    ret
+   00FD                     435 map_process_always:
+   00FD                     436 map_process_always_di:
+   00FD F5            [11]  437 	    push af
+   00FE 3Ar02r00      [13]  438 	    ld a, (_udata + U_DATA__U_PAGE)
+   0101                     439 map_set_a:
+   0101 32r20r01      [13]  440 	    ld (map_copy), a
+   0104 D3 00         [11]  441 	    out (0), a
+   0106 F1            [10]  442 	    pop af
+   0107 C9            [10]  443 	    ret
+   0108                     444 map_save_kernel:
+   0108 F5            [11]  445 	    push af
+   0109 3Ar20r01      [13]  446 	    ld a, (map_copy)
+   010C 32r1Fr01      [13]  447 	    ld (map_store), a
+   010F 3Ar21r01      [13]  448 	    ld a, (_kernel_map)	; ROM off bank for kernel
+                            449 	    ; the map port is write only, so keep a local stash
+   0112 32r20r01      [13]  450 	    ld (map_copy), a
+   0115 D3 00         [11]  451 	    out (0), a
+   0117 F1            [10]  452 	    pop af
+   0118 C9            [10]  453             ret
+   0119                     454 map_restore:
+   0119 F5            [11]  455 	    push af
+   011A 3Ar1Fr01      [13]  456 	    ld a, (map_store)
+   011D 18 E2         [12]  457 	    jr map_set_a
+                            458 
+   011F                     459 map_store:
+   011F 00                  460 	    .db 0
+   0120                     461 map_copy:
+   0120 00                  462 	    .db 0
+   0121                     463 _kernel_map:
+   0121 00                  464 	    .db 0
+                            465 
+                            466 ; outchar: Wait for UART TX idle, then print the char in A
+                            467 ; destroys: AF
+   0122                     468 outchar:
+   0122 D3 60         [11]  469 	    out (0x60), a
+   0124 D3 0C         [11]  470 	    out (0x0c), a
+   0126 C9            [10]  471             ret
+                            472 
+                            473 	    .area _DISCARD
+   0000                     474 _probe_6845:
+   0000 3E 20         [ 7]  475 	    ld a,#' '
+   0002 D3 32         [11]  476 	    out (0x32),a
+   0004 3E 07         [ 7]  477 	    ld a,#0x07
+   0006 D3 33         [11]  478 	    out (0x33),a
+   0008 3E E0         [ 7]  479 	    ld a,#0xE0
+   000A D3 31         [11]  480 	    out (0x31),a
+   000C AF            [ 4]  481 	    xor a
+   000D D3 30         [11]  482 	    out (0x30),a
+                            483 	    ; Now read back
+   000F D3 31         [11]  484 	    out (0x31),a
+   0011 3E 20         [ 7]  485 	    ld a,#0x20
+   0013 D3 30         [11]  486 	    out (0x30),a
+   0015 DB 32         [11]  487 	    in a,(0x32)
+   0017 FE 20         [ 7]  488 	    cp #0x20
+   0019 C0            [11]  489 	    ret nz
+   001A 32r00r00      [13]  490 	    ld (_has_6845),a
+   001D C9            [10]  491 	    ret
