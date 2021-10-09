@@ -13,16 +13,16 @@
 
 // Structs
 typedef struct SimpleDisk {
-  uint16_t   Sectors;
-  uint16_t   Tracks;
-  uint16_t  SectorSize;
+  uint8_t   Sectors;
+  uint8_t   Tracks;
+  uint16_t   SectorSize;
   uint16_t  BlockSize;
   char      DriveLetter;
   uint8_t   CurrentSector;
   uint8_t   CurrentTrack;
   FILE*     image;
   uint8_t*  Buffer;
-  uint16_t   Index;
+  uint8_t   Index;
 }SimpleDisk;  
 
 // Macros
@@ -50,6 +50,5 @@ void handleRead(SimpleDisk * Drive);
 int selectDrive(uint8_t drive);
 int closeDrive(SimpleDisk * drive);
 void readTransfer(SimpleDisk * Drive);
-void initFUZIXDrive();
 
 #endif // DISK_H_

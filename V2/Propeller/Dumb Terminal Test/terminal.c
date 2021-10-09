@@ -27,8 +27,7 @@ int processCommand(uint8_t data) {
       break;
           
     case 0x92 :                         // Select new disk
-      selectDrive(readPIO());
-      return 0;
+      return selectDrive(readPIO());
       break;
           
     case 0x93 :                         // Prepare to read (Load sector into buffer)
@@ -66,8 +65,12 @@ int processCommand(uint8_t data) {
 int main(void)                          // Main function
 {
   initDisk();
+  printf("hello terminal");
   
-  while(1) {
-    processCommand(readPIO());                    
-  }
+  //while(1) {
+    //processCommand(readPIO());   
+    selectDrive(0);
+    handleRead(currentDrive);
+    
+  //}
 }
