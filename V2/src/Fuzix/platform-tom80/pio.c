@@ -18,9 +18,19 @@ __sfr __at PIO_PORTA_CON PORTA_C;
 __sfr __at PIO_PORTB_DAT PORTB_D;
 __sfr __at PIO_PORTB_CON PORTB_C;
 
+extern unsigned volatile char pio_wait_in;
+extern unsigned volatile char pio_wait_out;
+
 // Send raw byte to PIO
 void pio_putb(char b)
 {
+	//kprintf("\np %x, %d, %d", b, pio_wait_in, pio_wait_out);
+	ei();
+	while (pio_wait_out) {}
+	pio_wait_out = 0xFF;
+	PORTA_D = b;
+
+	/*
 	__asm
 		LD IY, #2
 		ADD IY, SP
@@ -30,20 +40,26 @@ void pio_putb(char b)
 		EI
 		HALT
 		DI
-	__endasm;
+	__endasm;*/
 }
 
 // Get byte from PIO
-char pio_getb() __naked
+char pio_getb() 
 {
+	ei();
+	while (pio_wait_out) {}
+	//while (pio_wait_in) {}
+	//pio_wait_in = 0xFF;
+
 	__asm
 		EI
 		HALT
-		DI
+		//DI
+
 		IN A, (_PORTA_D)
 		LD L, A
-		RET
 	__endasm;
+	
 }
 
 // Read from currently selected track/sect

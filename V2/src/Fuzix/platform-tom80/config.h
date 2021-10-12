@@ -16,7 +16,7 @@
 #define CONFIG_BANKS	1
 #define MAXPAGES	8
 
-#define TICKSPERSEC 10      /* Ticks per second */
+#define TICKSPERSEC 100     /* Ticks per second */
 #define PROGBASE    0x0000  /* also data base  was 0x0*/
 #define PROGLOAD    0x0100  /* also data base */
 #define PROGTOP     0xbc00  /* Top of program, base of U_DATA copy */

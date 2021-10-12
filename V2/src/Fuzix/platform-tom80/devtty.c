@@ -32,6 +32,7 @@ tcflag_t termios_mask[NUM_DEV_TTY + 1] = {
 };
 
 /* Output for the system console (kprintf etc) */
+// Should block
 void kputchar(uint_fast8_t c)
 {
 	while(!uart_rdy2send()){};
@@ -43,14 +44,15 @@ ttyready_t tty_writeready(uint_fast8_t minor)
 {
 	if (uart_rdy2send()) {
 		return TTY_READY_NOW;
-	} else {
-		return TTY_READY_SOON;
 	}
+	return TTY_READY_SOON;
 }
 
+// Does not block, drop data if busy
 void tty_putc(uint_fast8_t minor, uint_fast8_t c)
 {
-	kputchar(c);
+	if (uart_rdy2send())
+		uart_putc(c);
 }
 
 int tty_carrier(uint_fast8_t minor)
@@ -80,18 +82,19 @@ void platform_interrupt() {
 
 	// Poll 16550 since it has no interrupt line
 	// call tty_inproc in uart handler
-	if (!uart_rdy2get()) {
+	if (uart_rdy2get()) {
 		tty_inproc(1, uart_getc());
 	}
 
-	kprintf("\nint!\n");
+	//kprintf("\nint!\n");
 
 	switch(irqvector) {
 		case 0:			// CTC 0
-			return;
 		case 1:			// CTC 1
-			if ((tickCount++) % 16)
+			if ((tickCount++) == 120) {
+				tickCount = 0;
 				uart_toggle_o1();
+			}
 
 			timer_interrupt();
 			return;

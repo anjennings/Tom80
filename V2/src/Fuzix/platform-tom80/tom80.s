@@ -52,6 +52,10 @@
             .globl outstring
             .globl outstringhex
 
+	    ; Used in pio code
+	    .globl _pio_wait_out
+	    .globl _pio_wait_in
+
             .include "kernel.def"
             .include "../kernel-z80.def"
 
@@ -76,24 +80,21 @@ _bufpool:
 	     .globl intvectors
 
 intvectors:
+		; SDCC should add byte alignment
+		.dw 0
+		.dw 0
 _ctc0_int_v:
 	    	.dw ctc0_int
+_ctc1_int_v:
+		.dw ctc1_int
+_ctc2_int_v:
+		.dw 0
+_ctc3_int_v:
+		.dw 0
 _pioI_int_v:
 		.dw pioI_int
 _pioO_int_v:
 		.dw pioO_int
-
-		; CTC ints require byte alignment but sdcc doesn't seem to have that
-		.dw ctc1_int
-	    	.dw ctc1_int
-		.dw ctc1_int
-		.dw ctc1_int
-		.dw ctc1_int
-		.dw ctc1_int
-		.dw ctc1_int
-		.dw ctc1_int
-_ctc1_int_v:
-		.dw ctc1_int
 		
 _irqvector:
 		.dw #0xFF
@@ -113,31 +114,33 @@ _platform_reboot:
 
 ; For each of these, set appropriate flags and jump to handler
 ; see devtty.c for actual handler
-ctc0_int:   
-		PUSH AF
-		LD A, #0
-		LD (_irqvector), A
-		POP AF
-		jp interrupt_handler
+ctc0_int:
 ctc1_int:
 		PUSH AF
 		LD A, #1
 		LD (_irqvector), A
-		LD A, #0xA
-		CALL outchar
-		LD A, #105
-		CALL outchar
-		LD A, #0xA
-		CALL outchar
 		POP AF
 		jp interrupt_handler
 
 pioI_int:
+		PUSH AF
+		LD A, #0
+		LD (_pio_wait_in), A
+		POP AF
 		RETI
 
 pioO_int:
+		PUSH AF
+		LD A, #0
+		LD (_pio_wait_out), A
+		POP AF
 		RETI
 
+; FF if there is nothing waiting
+_pio_wait_in:	.dw	0xFF
+
+; Zero if register is clear to send
+_pio_wait_out:	.dw	0
 
 ; -----------------------------------------------------------------------------
 ; KERNEL MEMORY BANK (below 0xC000, only accessible when the kernel is mapped)
@@ -174,11 +177,15 @@ init_hardware:
 
 BOOT_CTC_INIT:
 		; Just set interrupt vector, device init does the rest
-		LD HL, #_ctc1_int_v
+		LD HL, #_ctc0_int_v
 		LD A, L
 		AND A, #0xF8	; 8 byte aligned
-		OR A, #0x2	; Channel 1
-		OUT (#8), A
+		OUT (#8), A	; Channel 0
+		OR A, #0x2
+		OUT (#8), A	; Channel 1
+
+		; Add more as needed
+
 		ret
 
 BOOT_PIO_INIT:

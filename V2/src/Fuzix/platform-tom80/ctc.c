@@ -14,33 +14,24 @@ __sfr __at (CTC_BASE+3)	CTC_CH3;
 #define CTC_CH1_DI	0x41	// Disable ints, INT DI, COUNT, 16x, Falling Edge, NO TC, NO RESET, Control
 #define CTC_CH1_EI	0xC1	// Enable ints,  INT EN, COUNT, 16x, Falling Edge, NO TC, NO RESET, Control
 
-extern uint16_t ctc1_int_v;
 
-// Disable interrupts from ctc, countdown continues
+#define CTC_CH0_EI	0xA1			// Re-enable CH0 interrupts, do not reset count
+#define CTC_CH0_DI	(CTC_CH0_EI & 0x7F)	// Disable CH0 interrupts, do not reset count
+
+// Disable interrupts from ctc
 void ctc_di(){
-	//CTC_CH1 = CTC_RESET;// CTC_CH1_DI;
+	//CTC_CH0 = CTC_CH0_DI;
 }
 
 // Enable interrupts from ctc
 void ctc_ei(){
-	
-	//ctc_init_single();
-	return;
-/*
-	// if the countdown is 0, just reset (call interrupt handler?)
-	if (CTC_CH1 == 0) {
-		CTC_CH1 = CTC_SINGLE;
-		CTC_CH1 = 0;
-	} else {
-		CTC_CH1 = CTC_SINGLE;
-	}
-	*/
+	//CTC_CH0 = CTC_CH0_EI;	
 }
 
 // Called no matter what mode is selected
 void ctc_init() {
 
-	kprintf("CTC INIT\n");
+	//kprintf("CTC Initilized\n");
 	// Reset all registers
 	CTC_CH0 = CTC_RESET;
 	CTC_CH1 = CTC_RESET;
@@ -48,29 +39,27 @@ void ctc_init() {
 	CTC_CH3 = CTC_RESET;
 
 	// Reset all interrupt vectors
-	CTC_CH0 = 0x0;
-	CTC_CH0 = 0x2;
-	CTC_CH0 = 0x4;
-	CTC_CH0 = 0x6;
+	// vectors are programmed in tom80.s
+	// CTC_CH0 = 0x0;
+	// CTC_CH0 = 0x2;
+	// CTC_CH0 = 0x4;
+	// CTC_CH0 = 0x6;
 
-	ctc_init_single();
+	//ctc_init_single();
 }
 
-// Set channel 1 to generate an interrupt every 65532 ticks 
+// Set channel 0 to generate an interrupt every 64k ticks 
 void ctc_init_single() {
 	CTC_CH1 = CTC_RESET; 			// Reset control register
-	CTC_CH1 = CTC_SINGLE;			// Set control register for single timer with following constant
+	CTC_CH1 = (CTC_SINGLE & 0x7F);		// Set control register for single timer with following constant
 	CTC_CH1 = 0;				// Set time constant (0 means 256 ticks)
 }
 
 // Set channel 0 & 1 to generate an interrupt every ~1M ticks
 void ctc_init_multi() {
 
-	kprintf("CTC INIT\n");
 	CTC_CH0 = CTC_RESET;		// Reset both registers
 	CTC_CH1 = CTC_RESET;
-
-	//CTC_CH0 = ((int_vector & CTC_INT_MASK) | 2);	//Do this in crt0
 
 	CTC_CH0 = 0x27;			// 244 * 256 Ticks, timer, no interrupt, tc follows
 	CTC_CH0 = 244;

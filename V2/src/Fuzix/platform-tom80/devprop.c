@@ -11,27 +11,21 @@
 int devprop_open(uint8_t minor, uint16_t flag)
 {
 	// Open filesystem
-	ctc_di();
+	ei();
 	pio_mountfs();
-	ctc_ei();
 	return 0;
 }
 
 int devprop_close(uint8_t minor)
 {
 	// Commit write, do not actually close the disk
-	ctc_di();
 	pio_commit();
-	ctc_ei();
 	return 0;
 }
 
 int devprop_read(uint8_t minor, uint8_t rawflag, uint8_t flag)
 {
 	int ret = -1;
-
-	// Prevent ctc from interrupting us mid-read;
-	ctc_di();
 
 	if (rawflag == 0) {
 		// Block IO
@@ -55,6 +49,7 @@ int devprop_read(uint8_t minor, uint8_t rawflag, uint8_t flag)
 			offset = 0;
 		}	
 
+		// TODO: only multiply if needed to save time
 		ret = (512 * udata.u_nblock);
 
 	} else if (rawflag == 1) {
@@ -67,8 +62,6 @@ int devprop_read(uint8_t minor, uint8_t rawflag, uint8_t flag)
 		udata.u_error = ENODEV;
 	}
 
-	// ctc now can (and may) interrupt 
-	ctc_ei();
 	return ret;
 }
 
@@ -94,6 +87,7 @@ int devprop_write(uint8_t minor, uint8_t rawflag, uint8_t flag)
 			pio_write_sector(udata.u_dptr);
 			udata.u_dptr += 512;
 		}
+		// TODO: only multiply when needed
 		ret = (512 * udata.u_nblock);
 
 	} else {

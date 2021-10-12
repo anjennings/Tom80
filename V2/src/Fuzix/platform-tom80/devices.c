@@ -17,9 +17,9 @@ struct devsw dev_tab[] =  /* The device driver switch table */
 // minor    open         close        read      write       ioctl
 // -----------------------------------------------------------------
   /* 0: /dev/hd		Hard disc block devices (hdx - not supported yet) */
-  {  no_open,  no_close,    no_rdwr,  no_rdwr, no_ioctl }, //blkdev_ioctl   },
+  {  devprop_open, devprop_close, devprop_read, devprop_write, devprop_ioctl }, //blkdev_ioctl   },
   /* 1: floppy disk */
-  {  devprop_open, devprop_close, devprop_read, devprop_write,  devprop_ioctl },
+  {  devprop_open, devprop_close, devprop_read, devprop_write, devprop_ioctl },
   /* 2: tty serial */
   {  tty_open, tty_close, tty_read, tty_write, no_ioctl  },//{  uart_open, no_close, uart_read, uart_write,    no_ioctl  },
 //  {  no_open,      no_close,    no_rdwr,  no_rdwr,    no_ioctl  },
@@ -40,6 +40,6 @@ bool validdev(uint16_t dev)
 void device_init(void)
 {
 	/* Called before init before devices are opened */
-	// ctc_init();
+	//ctc_init();
 	// uart should not need an init but if it does, do it here
 }

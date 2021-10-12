@@ -21,6 +21,7 @@ int uart_open(uint_fast8_t minor, uint16_t flag) {
 	return 0;
 }
 
+/*
 int uart_write(uint_fast8_t minor, uint_fast8_t rawflag, uint_fast8_t flag){
 
 	#ifdef DDEBUG	
@@ -38,8 +39,9 @@ int uart_write(uint_fast8_t minor, uint_fast8_t rawflag, uint_fast8_t flag){
 	} else {
 		return -1;
 	}
-}
+}*/
 
+/*
 int uart_read(uint_fast8_t minor, uint_fast8_t rawflag, uint_fast8_t flag) {
 	
 	#ifdef DDEBUG
@@ -59,7 +61,7 @@ int uart_read(uint_fast8_t minor, uint_fast8_t rawflag, uint_fast8_t flag) {
 		udata.u_error = ENODEV;
 		return -1;
 	}
-}
+}*/
 
 void uart_clr_dlab()
 {
@@ -72,14 +74,25 @@ int uart_rdy2get()
 	return ((UART_LSR & 0x1F) == 1);
 }
 
+// Put character into fifo
+void uart_putc(char c) {
+	UART_DHR = c;
+}
+
 char uart_getc() {
+	return UART_DHR;
+}
+
+
+// Wait to get
+char uart_getcw() {
 	uart_clr_dlab();
 	while (uart_rdy2get() == 0) {}
 	return UART_DHR;
 }
 	
-
-void uart_putc(char c)
+// Wait to put
+void uart_putcw(char c)
 {
 	uart_clr_dlab();
 	while(uart_rdy2send() == 0) {}

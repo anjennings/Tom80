@@ -13,13 +13,14 @@ struct blkbuf *bufpool_end = bufpool + NBUFS;
 void platform_idle(void)
 {
 	// Check the fifo while idle
-	if (uart_rdy2get())
+	if (uart_rdy2get()) {
 		tty_inproc(1, uart_getc());
+	}
 }
 
+// Do something to get user's attention
 void do_beep(void){
-	// TODO: flip an LED? send a bell code?
-	return;
+	uart_toggle_o2();
 }
 
 void pagemap_init(void) {

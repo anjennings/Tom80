@@ -11,7 +11,9 @@
 #define UART_BUF_LEN	10	// Arbitrary, theres buffers in the UART and the bridge
 
 char uart_getc();
+char uart_getcw();
 void uart_putc(char c);
+void uart_putcw(char c);
 int uart_rdy2send();
 int uart_rdy2get();
 void enable_rom();
