@@ -124,6 +124,8 @@ ctc1_int:
 
 pioI_int:
 		PUSH AF
+		;ld a, #0x49
+		;call outchar
 		LD A, #0
 		LD (_pio_wait_in), A
 		POP AF
@@ -131,6 +133,8 @@ pioI_int:
 
 pioO_int:
 		PUSH AF
+		;LD A, #0x4F
+		;call outchar
 		LD A, #0
 		LD (_pio_wait_out), A
 		POP AF

@@ -24,41 +24,35 @@ extern unsigned volatile char pio_wait_out;
 // Send raw byte to PIO
 void pio_putb(char b)
 {
-	//kprintf("\np %x, %d, %d", b, pio_wait_in, pio_wait_out);
 	ei();
 	while (pio_wait_out) {}
 	pio_wait_out = 0xFF;
 	PORTA_D = b;
-
-	/*
-	__asm
-		LD IY, #2
-		ADD IY, SP
-
-		LD A, (IY)
-		OUT (_PORTA_D), A
-		EI
-		HALT
-		DI
-	__endasm;*/
 }
 
 // Get byte from PIO
 char pio_getb() 
 {
-	ei();
-	while (pio_wait_out) {}
-	//while (pio_wait_in) {}
-	//pio_wait_in = 0xFF;
-
+	// pio_wait_in is 0 following an int
 	__asm
+		EI
+	__endasm;
+	while (pio_wait_out) {}
+	__asm
+		EI
+	__endasm;
+	while (pio_wait_in) {}
+	pio_wait_in = 0xFF;
+	return PORTA_D;
+
+	/*__asm
 		EI
 		HALT
 		//DI
 
 		IN A, (_PORTA_D)
 		LD L, A
-	__endasm;
+	__endasm;*/
 	
 }
 

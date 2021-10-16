@@ -6,7 +6,7 @@
 #include <diskgeom.h>
 #include <tty.h>
 #include <ctc.h>
-
+#include <uart.h>
 
 int devprop_open(uint8_t minor, uint16_t flag)
 {
@@ -26,6 +26,8 @@ int devprop_close(uint8_t minor)
 int devprop_read(uint8_t minor, uint8_t rawflag, uint8_t flag)
 {
 	int ret = -1;
+
+	uart_toggle_o2();
 
 	if (rawflag == 0) {
 		// Block IO
