@@ -11,9 +11,11 @@ Specs:
 	-See V2.0, differences listed here
 	-400k usable ram 8x48k banks and 16k fixed common memory, CPU sees 64k at all times but lower 48k can be swapped around
 	
-	2B is the "definitive" version so all code going forward is designed for that version of the board.  Minor hardware differences mean that code for 2.0 may not work on 2.0B without tweaks (mostly related to ram banking)
+	2B is the "definitive" version so all code going forward is designed for that version of the board.  
+	Minor hardware differences mean that code for 2.0 may not work on 2.0B without tweaks (mostly related to ram banking)
 	
-Video about 2.0B comming eventually...
+Video about 2.0B (and its Operating Systems):
+https://youtu.be/dH-JcmUzEUg
 
 ## Version 2.0
 
