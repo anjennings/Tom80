@@ -1,0 +1,8 @@
+(sym_lib_table
+  (lib (name Zilog_Z8)(type Legacy)(uri "C:/Users/aidan/Documents/vga idea/Z80-CPU-for-KiCAD-master (1)/Z80-CPU-for-KiCAD-master/Zilog_Z8.lib")(options "")(descr ""))
+  (lib (name Zilog_Z80_Peripherals)(type Legacy)(uri "C:/Users/aidan/Documents/vga idea/Z80-CPU-for-KiCAD-master (1)/Z80-CPU-for-KiCAD-master/Zilog_Z80_Peripherals.lib")(options "")(descr ""))
+  (lib (name Zilog_Z180)(type Legacy)(uri "C:/Users/aidan/Documents/vga idea/Z80-CPU-for-KiCAD-master (1)/Z80-CPU-for-KiCAD-master/Zilog_Z180.lib")(options "")(descr ""))
+  (lib (name 65C22PLCC)(type Legacy)(uri ${KIPRJMOD}/65C22PLCC.lib)(options "")(descr ""))
+  (lib (name as6c8008-55_tsop)(type Legacy)(uri ${KIPRJMOD}/as6c8008-55_tsop.lib)(options "")(descr ""))
+  (lib (name AS6C8008)(type Legacy)(uri "C:/Users/aidan/Documents/vga idea/2022-02-05_02-19-15/2022-02-05_02-19-15.lib")(options "")(descr ""))
+)

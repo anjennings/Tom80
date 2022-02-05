@@ -1,0 +1,353 @@
+EESchema Schematic File Version 4
+EELAYER 30 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 3 16
+Title ""
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+Text Notes 1150 7250 0    197  ~ 39
+This page has NOT been checked!
+$Comp
+L Oscillator:ACO-xxxMHz X2000
+U 1 1 61E80A40
+P 1900 3700
+F 0 "X2000" H 1557 3746 50  0000 R CNN
+F 1 "ACO-10.000MHz" H 1557 3655 50  0000 R CNN
+F 2 "Oscillator:Oscillator_DIP-14" H 2350 3350 50  0001 C CNN
+F 3 "http://www.conwin.com/datasheets/cx/cx030.pdf" H 1800 3700 50  0001 C CNN
+	1    1900 3700
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:+5V #PWR0108
+U 1 1 61E80A46
+P 1900 3400
+F 0 "#PWR0108" H 1900 3250 50  0001 C CNN
+F 1 "+5V" H 1915 3573 50  0000 C CNN
+F 2 "" H 1900 3400 50  0001 C CNN
+F 3 "" H 1900 3400 50  0001 C CNN
+	1    1900 3400
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR0109
+U 1 1 61E80A4C
+P 1900 4000
+F 0 "#PWR0109" H 1900 3750 50  0001 C CNN
+F 1 "GND" H 1905 3827 50  0000 C CNN
+F 2 "" H 1900 4000 50  0001 C CNN
+F 3 "" H 1900 4000 50  0001 C CNN
+	1    1900 4000
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	2200 3700 2450 3700
+Text Label 2450 3700 0    50   ~ 0
+CLK
+$Sheet
+S 5300 -1950 750  900 
+U 61EFA1CE
+F0 "2200_SIO" 50
+F1 "2200_SIO.sch" 50
+F2 "RESET" I L 5300 -1850 50 
+F3 "M1" I L 5300 -1750 50 
+F4 "IORQ" I L 5300 -1650 50 
+F5 "RD" I L 5300 -1550 50 
+F6 "CLK" I L 5300 -1450 50 
+F7 "INT" T R 6050 -1750 50 
+F8 "IEI" I L 5300 -1350 50 
+F9 "IEO" O R 6050 -1650 50 
+F10 "CE" I L 5300 -1250 50 
+F11 "D[0..7]" B R 6050 -1550 50 
+F12 "A[0..15]" B R 6050 -1850 50 
+$EndSheet
+Wire Wire Line
+	4150 -1650 4300 -1650
+Wire Wire Line
+	4150 -1550 4300 -1550
+Wire Wire Line
+	4150 -1450 4300 -1450
+Wire Wire Line
+	3350 -1750 3200 -1750
+Wire Wire Line
+	3350 -1650 3200 -1650
+Wire Wire Line
+	3350 -1550 3200 -1550
+Text Label 3200 -1750 0    50   ~ 0
+CLK
+Wire Wire Line
+	5300 -1450 5150 -1450
+Text Label 5150 -1450 2    50   ~ 0
+CLK
+Text Label 3200 -1650 0    50   ~ 0
+INT
+Wire Wire Line
+	6200 -1750 6050 -1750
+Text Label 6200 -1750 0    50   ~ 0
+INT
+Wire Bus Line
+	6350 -1850 6350 -2200
+Wire Bus Line
+	4650 -1850 4650 -2200
+Wire Bus Line
+	6050 -1850 6350 -1850
+Wire Bus Line
+	6350 -1550 6050 -1550
+$Sheet
+S 6800 -1950 800  900 
+U 61EEEF32
+F0 "2300_CTC" 50
+F1 "2300_CTC.sch" 50
+F2 "D[0..7]" B R 7600 -1550 50 
+F3 "IEO" O R 7600 -1650 50 
+F4 "INT" T R 7600 -1750 50 
+F5 "A[0..15]" B R 7600 -1850 50 
+F6 "CLK" I L 6800 -1450 50 
+F7 "RESET" I L 6800 -1850 50 
+F8 "M1" I L 6800 -1750 50 
+F9 "IORQ" I L 6800 -1650 50 
+F10 "RD" I L 6800 -1550 50 
+F11 "IEI" I L 6800 -1350 50 
+F12 "CE" I L 6800 -1250 50 
+$EndSheet
+Wire Bus Line
+	7600 -1850 7900 -1850
+Wire Bus Line
+	7900 -1850 7900 -2200
+Wire Bus Line
+	7900 -1550 7600 -1550
+Wire Wire Line
+	7750 -1750 7600 -1750
+Text Label 7750 -1750 0    50   ~ 0
+INT
+Wire Bus Line
+	4150 -1750 4650 -1750
+Connection ~ 4650 -2200
+Wire Bus Line
+	4150 -2200 4650 -2200
+Wire Bus Line
+	4150 -1850 4650 -1850
+$Sheet
+S 8350 -1950 800  900 
+U 61F73F94
+F0 "2400_PIO" 50
+F1 "2400_PIO.sch" 50
+F2 "M1" I L 8350 -1750 50 
+F3 "IORQ" I L 8350 -1650 50 
+F4 "RD" I L 8350 -1550 50 
+F5 "IEI" I L 8350 -1350 50 
+F6 "CE" I L 8350 -1250 50 
+F7 "CLK" I L 8350 -1450 50 
+F8 "D[0..7]" B R 9150 -1550 50 
+F9 "IEO" O R 9150 -1650 50 
+F10 "INT" T R 9150 -1750 50 
+F11 "A[0..15]" B R 9150 -1850 50 
+F12 "PA[0..7]" B R 9150 -1250 50 
+F13 "PB[0..7]" B R 9150 -1150 50 
+$EndSheet
+Wire Bus Line
+	9150 -1850 9450 -1850
+Wire Bus Line
+	9450 -1850 9450 -2200
+Wire Bus Line
+	9150 -1550 9450 -1550
+Wire Wire Line
+	9300 -1750 9150 -1750
+Text Label 9300 -1750 0    50   ~ 0
+INT
+Wire Bus Line
+	4150 -500 4650 -500
+Wire Bus Line
+	7900 -1550 7900 -500
+Wire Bus Line
+	9450 -1550 9450 -500
+Wire Bus Line
+	6350 -1550 6350 -500
+Wire Bus Line
+	4650 -1750 4650 -500
+Connection ~ 4650 -500
+Text Label 4600 -1000 2    50   ~ 0
+PIO_EN
+Text Label 4600 -900 2    50   ~ 0
+CTC_EN
+Text Label 4600 -800 2    50   ~ 0
+SIO_EN
+Wire Wire Line
+	8350 -1250 8200 -1250
+Wire Wire Line
+	6800 -1250 6650 -1250
+Wire Wire Line
+	5300 -1250 5150 -1250
+Text Label 8200 -1250 2    50   ~ 0
+PIO_EN
+Text Label 6650 -1250 2    50   ~ 0
+CTC_EN
+Text Label 5150 -1250 2    50   ~ 0
+SIO_EN
+Connection ~ 7900 -2200
+Connection ~ 7900 -500
+Connection ~ 6350 -2200
+Wire Bus Line
+	6350 -2200 7900 -2200
+Connection ~ 6350 -500
+Wire Bus Line
+	6350 -500 7900 -500
+Wire Bus Line
+	4650 -2200 6350 -2200
+Wire Bus Line
+	4650 -500 6350 -500
+Wire Bus Line
+	7900 -2200 9450 -2200
+Wire Bus Line
+	7900 -500 9450 -500
+Wire Wire Line
+	4150 -1000 4600 -1000
+Wire Wire Line
+	4150 -900 4600 -900
+Wire Wire Line
+	4150 -800 4600 -800
+$Sheet
+S 3350 -1950 800  1250
+U 61F0BDAE
+F0 "2100_CPU" 50
+F1 "2100_CPU.sch" 50
+F2 "RESET" I L 3350 -1850 50 
+F3 "A[0..15]" O R 4150 -1850 50 
+F4 "D[0..7]" B R 4150 -1750 50 
+F5 "RD" O R 4150 -1650 50 
+F6 "WR" O R 4150 -1550 50 
+F7 "MRQ" O R 4150 -1450 50 
+F8 "CLK" I L 3350 -1750 50 
+F9 "INT" I L 3350 -1650 50 
+F10 "BSRQ" I L 3350 -1550 50 
+F11 "SIO_EN" O R 4150 -800 50 
+F12 "CTC_EN" O R 4150 -900 50 
+F13 "PIO_EN" O R 4150 -1000 50 
+F14 "IRQ" O R 4150 -1100 50 
+F15 "M1" O R 4150 -1350 50 
+F16 "BSACK" O R 4150 -1250 50 
+$EndSheet
+Wire Wire Line
+	4150 -1100 4600 -1100
+Text Label 4600 -1100 2    50   ~ 0
+IRQ
+Wire Wire Line
+	4150 -1350 4300 -1350
+Wire Wire Line
+	4150 -1250 4300 -1250
+$Sheet
+S 4400 3300 900  1100
+U 61EBDADB
+F0 "2100_ALTCPU" 50
+F1 "2100_ALTCPU.sch" 50
+F2 "RESET" I L 4400 3400 50 
+F3 "BUSRQ" I L 4400 3500 50 
+F4 "INT" I L 4400 3600 50 
+F5 "D[0..7]" B R 5300 3500 50 
+F6 "A[0..19]" T R 5300 3400 50 
+F7 "MREQ" O R 5300 3700 50 
+F8 "BUSAK" O R 5300 3900 50 
+F9 "ST" O R 5300 4200 50 
+F10 "M1" O R 5300 4300 50 
+F11 "IORQ" O R 5300 4000 50 
+F12 "RD" O R 5300 4100 50 
+F13 "WR" O R 5300 3800 50 
+F14 "CLK" I L 4400 3700 50 
+$EndSheet
+$Sheet
+S 6450 3300 850  1150
+U 61F28B7D
+F0 "2200_PERP_ALT" 50
+F1 "2200_PERP_ALT.sch" 50
+F2 "RESET" I L 6450 3700 50 
+F3 "A[0..19]" I L 6450 3400 50 
+F4 "D[0..7]" B L 6450 3500 50 
+F5 "RW" I L 6450 3800 50 
+F6 "CLK" I L 6450 3900 50 
+F7 "CS" I L 6450 4000 50 
+$EndSheet
+Wire Wire Line
+	6450 3900 6200 3900
+Text Label 6200 3900 0    50   ~ 0
+CLK
+Text HLabel 5650 4300 2    50   Output ~ 0
+M1
+Text HLabel 5650 4200 2    50   Output ~ 0
+ST
+Text HLabel 5650 4100 2    50   Output ~ 0
+RD
+Text HLabel 5650 4000 2    50   Output ~ 0
+IORQ
+Text HLabel 5650 3900 2    50   Output ~ 0
+BUSACK
+Text HLabel 5650 3800 2    50   Output ~ 0
+WR
+Text HLabel 5650 3700 2    50   Output ~ 0
+MREQ
+Wire Wire Line
+	5300 3900 5650 3900
+Wire Wire Line
+	5300 3800 5650 3800
+Wire Wire Line
+	5300 3700 5650 3700
+Wire Wire Line
+	5300 4000 5650 4000
+Wire Wire Line
+	5300 4100 5650 4100
+Wire Wire Line
+	5300 4200 5650 4200
+Wire Wire Line
+	5300 4300 5650 4300
+Text Label 5450 4000 0    50   ~ 0
+IORQ
+Wire Wire Line
+	6200 3800 6450 3800
+Wire Wire Line
+	6200 4000 6450 4000
+Text Label 6200 4000 0    50   ~ 0
+IORQ
+Text Label 5500 3800 0    50   ~ 0
+WR
+Text Label 6200 3800 0    50   ~ 0
+WR
+Wire Bus Line
+	5300 3400 5400 3400
+Wire Bus Line
+	5400 3400 5400 3150
+Wire Bus Line
+	5400 3150 5150 3150
+Wire Bus Line
+	5300 3500 5500 3500
+Wire Bus Line
+	5500 3500 5500 3050
+Wire Bus Line
+	5500 3050 5150 3050
+Wire Bus Line
+	5500 3500 6450 3500
+Connection ~ 5500 3500
+Wire Bus Line
+	5400 3400 6450 3400
+Connection ~ 5400 3400
+Text HLabel 5150 3050 0    50   3State ~ 0
+A[0..19]
+Text HLabel 5150 3150 0    50   3State ~ 0
+D[0..7]
+Text Notes 4900 4850 0    50   ~ 0
+Some key signals need to be tied high during BUSASK
+Wire Wire Line
+	4400 3700 4150 3700
+Text Label 4150 3700 0    50   ~ 0
+CLK
+Text HLabel 4400 3400 0    50   Input ~ 0
+RESET
+Text HLabel 6450 3700 0    50   Input ~ 0
+RESET
+$EndSCHEMATC

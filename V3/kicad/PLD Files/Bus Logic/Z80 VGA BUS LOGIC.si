@@ -1,0 +1,23 @@
+Name     Z80 VGA Bus Logic;
+PartNo   00;
+Date     11/15/2021;
+Revision 01;
+Designer Aidan J;
+Company  ;
+Assembly None;
+Location ;
+Device   G16V8;
+
+
+ORDER: !A15, !BUSACK, !CLK, !ROM_CS, !MREQ; 
+
+
+VECTORS:
+00000
+0****
+*****
+*****
+*****
+*****
+*****
+*****

@@ -1,0 +1,172 @@
+EESchema Schematic File Version 4
+EELAYER 30 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 11 16
+Title ""
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L 65C22PLCC:65C22QFP U2200
+U 1 1 61F28C63
+P 4950 900
+F 0 "U2200" H 5575 -885 50  0000 C CNN
+F 1 "65C22QFP" H 5575 -976 50  0000 C CNN
+F 2 "Package_QFP:LQFP-44_10x10mm_P0.8mm" H 4950 1050 50  0001 C CNN
+F 3 "" H 4950 1050 50  0001 C CNN
+	1    4950 900 
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4950 3350 4800 3350
+Wire Wire Line
+	4950 3450 4800 3450
+Wire Wire Line
+	4950 3550 4800 3550
+Wire Wire Line
+	4950 3650 4800 3650
+Wire Wire Line
+	4950 3850 4800 3850
+Wire Wire Line
+	4950 3950 4800 3950
+Wire Wire Line
+	4950 4050 4800 4050
+Wire Wire Line
+	4950 4150 4800 4150
+Wire Wire Line
+	4950 4250 4800 4250
+Wire Wire Line
+	4950 4350 4800 4350
+Wire Wire Line
+	4950 4450 4800 4450
+Wire Wire Line
+	4950 4550 4800 4550
+Entry Wire Line
+	4700 3250 4800 3350
+Entry Wire Line
+	4700 3350 4800 3450
+Entry Wire Line
+	4700 3450 4800 3550
+Entry Wire Line
+	4700 3550 4800 3650
+Wire Bus Line
+	4700 3250 4600 3250
+Entry Wire Line
+	4700 3750 4800 3850
+Entry Wire Line
+	4700 3850 4800 3950
+Entry Wire Line
+	4700 3950 4800 4050
+Entry Wire Line
+	4700 4050 4800 4150
+Entry Wire Line
+	4700 4150 4800 4250
+Entry Wire Line
+	4700 4250 4800 4350
+Entry Wire Line
+	4700 4350 4800 4450
+Entry Wire Line
+	4700 4450 4800 4550
+Wire Bus Line
+	4700 3750 4600 3750
+$Comp
+L power:GND #PWR0174
+U 1 1 61F2DE19
+P 4950 5150
+F 0 "#PWR0174" H 4950 4900 50  0001 C CNN
+F 1 "GND" V 4955 5022 50  0000 R CNN
+F 2 "" H 4950 5150 50  0001 C CNN
+F 3 "" H 4950 5150 50  0001 C CNN
+	1    4950 5150
+	0    1    1    0   
+$EndComp
+$Comp
+L power:+5V #PWR0175
+U 1 1 61F2E28B
+P 4950 5050
+F 0 "#PWR0175" H 4950 4900 50  0001 C CNN
+F 1 "+5V" V 4965 5178 50  0000 L CNN
+F 2 "" H 4950 5050 50  0001 C CNN
+F 3 "" H 4950 5050 50  0001 C CNN
+	1    4950 5050
+	0    -1   -1   0   
+$EndComp
+Text HLabel 4950 3150 0    50   Input ~ 0
+RESET
+Text HLabel 4600 3250 0    50   Input ~ 0
+A[0..19]
+Text HLabel 4600 3750 0    50   BiDi ~ 0
+D[0..7]
+Text HLabel 4950 2950 0    50   Input ~ 0
+RW
+Text HLabel 4950 3050 0    50   Input ~ 0
+CLK
+$Comp
+L power:+5V #PWR0176
+U 1 1 61F0C3D7
+P 4950 4850
+F 0 "#PWR0176" H 4950 4700 50  0001 C CNN
+F 1 "+5V" V 4965 4978 50  0000 L CNN
+F 2 "" H 4950 4850 50  0001 C CNN
+F 3 "" H 4950 4850 50  0001 C CNN
+	1    4950 4850
+	0    -1   -1   0   
+$EndComp
+Text HLabel 4950 4750 0    50   Input ~ 0
+CS
+NoConn ~ 6200 2950
+$Comp
+L Connector:Conn_01x08_Male J2200
+U 1 1 61F25B6F
+P 6900 3850
+F 0 "J2200" H 6872 3732 50  0000 R CNN
+F 1 "Conn_01x08_Male" H 6872 3823 50  0000 R CNN
+F 2 "" H 6900 3850 50  0001 C CNN
+F 3 "~" H 6900 3850 50  0001 C CNN
+	1    6900 3850
+	-1   0    0    1   
+$EndComp
+Wire Wire Line
+	6700 4150 6200 4150
+Wire Wire Line
+	6700 4050 6200 4050
+Wire Wire Line
+	6700 3950 6200 3950
+Wire Wire Line
+	6700 3850 6200 3850
+Wire Wire Line
+	6700 3750 6200 3750
+Wire Wire Line
+	6700 3650 6200 3650
+Wire Wire Line
+	6700 3550 6200 3550
+Wire Wire Line
+	6700 3450 6200 3450
+Text Label 6550 4150 2    50   ~ 0
+MOSI
+Text Label 6550 4050 2    50   ~ 0
+SCK
+Text Label 6550 3850 2    50   ~ 0
+CS0
+Text Label 6550 3950 2    50   ~ 0
+MISO
+Text Label 6550 3750 2    50   ~ 0
+CS1
+Text Label 6550 3550 2    50   ~ 0
+CS3
+Text Label 6550 3650 2    50   ~ 0
+CS2
+Text Label 6550 3450 2    50   ~ 0
+CS4
+Wire Bus Line
+	4700 3250 4700 3550
+Wire Bus Line
+	4700 3750 4700 4450
+$EndSCHEMATC

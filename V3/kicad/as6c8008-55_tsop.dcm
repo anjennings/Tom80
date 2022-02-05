@@ -1,0 +1,9 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP AS6C8008-55_TSOP
+D 512K x 8 Low Power CMOS RAM, DIP-32
+K RAM SRAM CMOS MEMORY
+F https://www.alliancememory.com/wp-content/uploads/pdf/AS6C4008.pdf
+$ENDCMP
+#
+#End Doc Library

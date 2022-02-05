@@ -1,0 +1,162 @@
+37256098234989
+Package_LCC
+PLCC-20
+PLCC, 20 pins, surface mount
+plcc smt
+0
+20
+20
+Package_LCC
+PLCC-20_SMD-Socket
+PLCC, 20 pins, surface mount
+plcc smt
+0
+20
+20
+Package_LCC
+PLCC-20_THT-Socket
+PLCC, 20 pins, through hole
+plcc leaded
+0
+20
+20
+Package_LCC
+PLCC-28
+PLCC, 28 pins, surface mount
+plcc smt
+0
+28
+28
+Package_LCC
+PLCC-28_SMD-Socket
+PLCC, 28 pins, surface mount
+plcc smt
+0
+28
+28
+Package_LCC
+PLCC-28_THT-Socket
+PLCC, 28 pins, through hole
+plcc leaded
+0
+28
+28
+Package_LCC
+PLCC-32_11.4x14.0mm_P1.27mm
+PLCC, 32 Pin (http://ww1.microchip.com/downloads/en/DeviceDoc/doc0015.pdf), generated with kicad-footprint-generator ipc_plcc_jLead_generator.py
+PLCC LCC
+0
+32
+32
+Package_LCC
+PLCC-32_THT-Socket
+PLCC, 32 pins, through hole, http://www.assmann-wsw.com/fileadmin/datasheets/ASS_0981_CO.pdf
+plcc leaded
+0
+32
+32
+Package_LCC
+PLCC-44
+PLCC, 44 pins, surface mount
+plcc smt
+0
+44
+44
+Package_LCC
+PLCC-44_16.6x16.6mm_P1.27mm
+PLCC, 44 Pin (http://www.microsemi.com/index.php?option=com_docman&task=doc_download&gid=131095), generated with kicad-footprint-generator ipc_plcc_jLead_generator.py
+PLCC LCC
+0
+44
+44
+Package_LCC
+PLCC-44_SMD-Socket
+PLCC, 44 pins, surface mount
+plcc smt
+0
+44
+44
+Package_LCC
+PLCC-44_THT-Socket
+PLCC, 44 pins, through hole
+plcc leaded
+0
+44
+44
+Package_LCC
+PLCC-52
+PLCC, 52 pins, surface mount
+plcc smt
+0
+52
+52
+Package_LCC
+PLCC-52_SMD-Socket
+PLCC, 52 pins, surface mount
+plcc smt
+0
+52
+52
+Package_LCC
+PLCC-52_THT-Socket
+PLCC, 52 pins, through hole
+plcc leaded
+0
+52
+52
+Package_LCC
+PLCC-68
+PLCC, 68 pins, surface mount
+plcc smt
+0
+68
+68
+Package_LCC
+PLCC-68_24.2x24.2mm_P1.27mm
+PLCC, 68 Pin (http://www.microsemi.com/index.php?option=com_docman&task=doc_download&gid=131095), generated with kicad-footprint-generator ipc_plcc_jLead_generator.py
+PLCC LCC
+0
+68
+68
+Package_LCC
+PLCC-68_SMD-Socket
+PLCC, 68 pins, surface mount
+plcc smt
+0
+68
+68
+Package_LCC
+PLCC-68_THT-Socket
+PLCC, 68 pins, through hole
+plcc leaded
+0
+68
+68
+Package_LCC
+PLCC-84
+PLCC, 84 pins, surface mount
+plcc smt
+0
+84
+84
+Package_LCC
+PLCC-84_29.3x29.3mm_P1.27mm
+PLCC, 84 Pin (http://www.microsemi.com/index.php?option=com_docman&task=doc_download&gid=131095), generated with kicad-footprint-generator ipc_plcc_jLead_generator.py
+PLCC LCC
+0
+84
+84
+Package_LCC
+PLCC-84_SMD-Socket
+PLCC, 84 pins, surface mount
+plcc smt
+0
+84
+84
+Package_LCC
+PLCC-84_THT-Socket
+PLCC, 84 pins, through hole
+plcc leaded
+0
+84
+84

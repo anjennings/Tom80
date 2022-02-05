@@ -1,0 +1,143 @@
+EESchema Schematic File Version 4
+EELAYER 30 0
+EELAYER END
+$Descr A3 16535 11693
+encoding utf-8
+Sheet 1 16
+Title ""
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+Text Notes 1050 10550 0    197  ~ 39
+This page has NOT been checked!
+$Sheet
+S 5200 4900 550  200 
+U 61D852D7
+F0 "1000_Reset" 50
+F1 "1000_Reset.sch" 50
+F2 "Reset" I R 5750 5000 50 
+$EndSheet
+$Sheet
+S 6800 4900 750  1000
+U 6191B6A2
+F0 "2000_Z80" 50
+F1 "2000_Z80.sch" 50
+F2 "RESET" I L 6800 5000 50 
+F3 "RD" O R 7550 5100 50 
+F4 "WR" O R 7550 5200 50 
+F5 "M1" O R 7550 5400 50 
+F6 "BSRQ" I L 6800 5100 50 
+F7 "ST" O R 7550 5600 50 
+F8 "IORQ" O R 7550 5700 50 
+F9 "BUSACK" O R 7550 5500 50 
+F10 "MREQ" O R 7550 5300 50 
+F11 "A[0..19]" T R 7550 5000 50 
+F12 "D[0..7]" T R 7550 5800 50 
+$EndSheet
+Wire Wire Line
+	5750 5000 5900 5000
+Text Label 5900 5000 0    50   ~ 0
+MRESET
+Wire Wire Line
+	6800 5000 6500 5000
+Text Label 6500 5000 0    50   ~ 0
+MRESET
+$Sheet
+S 10050 4950 800  400 
+U 61E50944
+F0 "4000_VideoLogic" 50
+F1 "4000_VideoLogic.sch" 50
+F2 "RESET" I L 10050 5050 50 
+F3 "BUSACK" I L 10050 5150 50 
+F4 "A[0..15]" O R 10850 5050 50 
+F5 "D[0..7]" I L 10050 5250 50 
+F6 "BSREQ" O R 10850 5150 50 
+$EndSheet
+Wire Wire Line
+	7550 5300 8100 5300
+$Sheet
+S 8100 4900 850  1000
+U 6195D2C9
+F0 "3000_Memory" 50
+F1 "3000_Memory.sch" 50
+F2 "A[0..15]" I R 8950 5000 50 
+F3 "MRQ" I L 8100 5300 50 
+F4 "RD" I L 8100 5100 50 
+F5 "M1" I L 8100 5400 50 
+F6 "BSACK" I L 8100 5500 50 
+F7 "WR" I L 8100 5200 50 
+F8 "BANK[0..4]" I L 8100 5600 50 
+F9 "ROM_BANK" I L 8100 5700 50 
+F10 "D[0..7]" B R 8950 5800 50 
+$EndSheet
+Wire Wire Line
+	7550 5200 8100 5200
+Wire Wire Line
+	7550 5100 8100 5100
+Wire Wire Line
+	7550 5400 8100 5400
+Wire Bus Line
+	7550 5000 7700 5000
+Wire Bus Line
+	8950 5000 9100 5000
+Wire Wire Line
+	10050 5050 9750 5050
+Text Label 9750 5050 0    50   ~ 0
+MRESET
+Wire Bus Line
+	11000 5050 10850 5050
+Wire Wire Line
+	10850 5150 11000 5150
+Wire Wire Line
+	11000 5150 11000 6300
+Wire Wire Line
+	11000 6300 6650 6300
+Wire Wire Line
+	6650 6300 6650 5100
+Wire Wire Line
+	6650 5100 6800 5100
+Wire Bus Line
+	7700 4550 9100 4550
+Wire Bus Line
+	7700 4550 7700 5000
+Wire Bus Line
+	9100 4550 9100 5000
+Connection ~ 9100 4550
+Wire Bus Line
+	9100 4550 11000 4550
+Wire Bus Line
+	11000 4550 11000 5050
+Wire Bus Line
+	7800 5800 7800 4650
+Wire Bus Line
+	7800 4650 9600 4650
+Wire Bus Line
+	9600 4650 9600 5250
+Wire Bus Line
+	9600 5250 10050 5250
+Wire Bus Line
+	9600 5250 9600 5800
+Connection ~ 9600 5250
+Wire Bus Line
+	7550 5800 7800 5800
+Wire Bus Line
+	8950 5800 9600 5800
+Wire Wire Line
+	7550 5500 7900 5500
+Wire Wire Line
+	9700 5150 10050 5150
+Wire Wire Line
+	9700 5150 9700 4750
+Wire Wire Line
+	9700 4750 7900 4750
+Wire Wire Line
+	7900 4750 7900 5500
+Connection ~ 7900 5500
+Wire Wire Line
+	7900 5500 8100 5500
+$EndSCHEMATC

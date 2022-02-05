@@ -1,0 +1,49 @@
+Name     Z80 VGA Bus Logic ;
+PartNo   00 ;
+Date     11/15/2021 ;
+Revision 01 ;
+Designer Aidan J ;
+Company   ;
+Assembly None ;
+Location  ;
+Device   G16V8 ;
+
+/* *************** INPUT PINS *********************/
+PIN 1 = CLK                    ; /*                                 */ 
+PIN 2 = READ                   ; /*   Active Low                              */ 
+PIN 3 = WRITE                  ; /*   Active Low                              */ 
+PIN 4 = MREQ                   ; /*   Active Low                              */ 
+PIN 5 = IORQ                   ; /*   Active Low                              */ 
+PIN 6 = BUSACK                 ; /*   Active Low                              */ 
+PIN 7 = A15                    ; /*   Active Low                              */ 
+PIN 8 = PS2CLK                 ; /*                                 */ 
+PIN 9 = M1                     ; /*   Active Low                              */ 
+/* PIN 10 =                       ;       Unused                           */ 
+
+/* *************** OUTPUT PINS *********************/
+PIN 19 = ROM_CS                ; /*   Active Low                              */ 
+PIN 18 = RAM_CS                ; /*   Active Low                              */  
+PIN 17 = ROM_OE                ; /*   Active Low                              */ 
+PIN 16 = RAM_OE                ; /*   Active Low                              */ 
+PIN 15 = nPS2                  ; /*                                 */ 
+PIN 14 = SIO_CS                ; /*   Active Low                              */ 
+/* PIN 13 =                         ;     Unused                             */ 
+/* PIN 12 =                         ;     Unused                             */ 
+
+// Active when BUSACK is inactive and when accessing memory 0x0000 - 0x7FFF
+!ROM_CS = !A15 & !MREQ & BUSACK;
+
+// Active when BUSACK is inactive on a read memory request
+!ROM_OE = !MREQ & !READ & BUSACK;
+
+// Active when BUSACK is active or when accessing memory 0x8000 - 0xFFFF
+!RAM_CS = (A15 & !MREQ) # !BUSACK;
+
+// Active when BUSACK is active or a read memory request
+!RAM_OE = (!MREQ & !READ) # !BUSACK;
+
+// Active when IORQ and BUSACK is inactive (what about interrupt request?)
+!SIO_CS = !IORQ & BUSACK;
+
+// Invert PS/2 Clock (possibly not needed)
+nPS2 = !PS2CLK;
