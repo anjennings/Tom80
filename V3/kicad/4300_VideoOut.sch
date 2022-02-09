@@ -3,7 +3,7 @@ EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 13 16
+Sheet 7 10
 Title ""
 Date ""
 Rev ""
@@ -38,7 +38,7 @@ AR Path="/61A0CB1F/61A0D795" Ref="U?"  Part="1"
 AR Path="/61E50944/61E5229A/61A0D795" Ref="U4300"  Part="1" 
 F 0 "U4300" H 3900 5181 50  0000 R CNN
 F 1 "74LS151" H 3900 5090 50  0000 R CNN
-F 2 "" H 3900 4100 50  0001 C CNN
+F 2 "Package_DIP:DIP-16_W7.62mm_LongPads" H 3900 4100 50  0001 C CNN
 F 3 "http://www.ti.com/lit/gpn/sn74LS151" H 3900 4100 50  0001 C CNN
 	1    3900 4100
 	1    0    0    -1  
@@ -169,7 +169,7 @@ AR Path="/61A0CB1F/61938074" Ref="JP?"  Part="1"
 AR Path="/61E50944/61E5229A/61938074" Ref="JP4300"  Part="1" 
 F 0 "JP4300" H 6050 3789 50  0000 C CNN
 F 1 "Jumper_NC_Dual" H 6050 3698 50  0000 C CNN
-F 2 "" H 6050 3550 50  0001 C CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical" H 6050 3550 50  0001 C CNN
 F 3 "~" H 6050 3550 50  0001 C CNN
 	1    6050 3550
 	0    -1   -1   0   
@@ -368,7 +368,7 @@ AR Path="/61E50944/61E514B0/6203245C" Ref="C?"  Part="1"
 AR Path="/61E50944/61E5229A/6203245C" Ref="C4300"  Part="1" 
 F 0 "C4300" H 5265 5196 50  0000 L CNN
 F 1 "C" H 5265 5105 50  0000 L CNN
-F 2 "" H 5188 5000 50  0001 C CNN
+F 2 "Capacitor_THT:C_Rect_L4.0mm_W2.5mm_P2.50mm" H 5188 5000 50  0001 C CNN
 F 3 "~" H 5150 5150 50  0001 C CNN
 	1    5150 5150
 	1    0    0    -1  

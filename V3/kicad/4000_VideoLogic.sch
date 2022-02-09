@@ -3,7 +3,7 @@ EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 12 16
+Sheet 6 10
 Title ""
 Date ""
 Rev ""
@@ -35,16 +35,14 @@ F0 "4100_AddressBuffers" 50
 F1 "4100_AddressBuffers.sch" 50
 F2 "E1" I L 5400 3350 50 
 F3 "E2" I L 5400 3450 50 
-F4 "A[0..15]" O R 6550 3350 50 
-F5 "LC[0..9]" I L 5400 4000 50 
-F6 "PC[0..9]" I L 5400 4100 50 
+F4 "LC[0..9]" I L 5400 4000 50 
+F5 "PC[0..9]" I L 5400 4100 50 
+F6 "A[0..19]" O R 6550 3350 50 
 $EndSheet
 Text HLabel 4450 3800 2    50   Input ~ 0
 RESET
 Text HLabel 7350 3650 0    50   Input ~ 0
 BUSACK
-Text HLabel 6550 3350 2    50   Output ~ 0
-A[0..15]
 Text HLabel 5400 3350 0    50   Input ~ 0
 BUSACK
 Wire Wire Line
@@ -101,4 +99,6 @@ Wire Wire Line
 	7100 3450 7350 3450
 Text HLabel 4450 3600 2    50   Output ~ 0
 BSREQ
+Text HLabel 6550 3350 2    50   Output ~ 0
+A[0..19]
 $EndSCHEMATC

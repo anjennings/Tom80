@@ -3,7 +3,7 @@ EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 15 16
+Sheet 9 10
 Title ""
 Date ""
 Rev ""
@@ -16,7 +16,7 @@ $EndDescr
 Text Notes 5750 1050 0    50   ~ 0
 (800x600) / 4 = (400x300)\nDivide 40 MHz clock by 2 \nEach Byte contains 8 pixels\n(512x300)/8 = 18.75kb
 Text Notes 2800 4450 0    50   ~ 0
-0 - 399 Visible Area (Video Enable)\n400 - 419 Front Porch\n420 - 483 Pulse = (PC7 & C8 & (C6 | C5))\n484 - 527 Back Porch\n\n(Clock is 40MHz/2 so all values are 1/2\nAll values are divisible by 4 so that makes it even easier\n\nReset still needs all lines for most accurate signal\n\nH_CPU_EN signals that the visible area has passed\nH_CNT_RST resets the 4040
+0 - 399 Visible Area (Video Enable)\n400 - 419 Front Porch\n420 - 483 Pulse = (PC7 & C8 & (C6 | C5))\n484 - 527 Back Porch\n\n(Clock is 40MHz/2 so all values are 1/2\nAll values are divisible by 4 so that makes it even easier\n\nReset still needs all lines for most accurate signal\n\nH_VIS signals that the visible area has passed\nH_RST resets the 4040 count
 $Comp
 L Logic_Programmable:GAL16V8 U?
 U 1 1 619BBF10
@@ -26,7 +26,7 @@ AR Path="/619B58B4/619BBF10" Ref="U601"  Part="1"
 AR Path="/61E50944/61E514A1/619BBF10" Ref="U4202"  Part="1" 
 F 0 "U4202" H 4750 2881 50  0000 C CNN
 F 1 "GAL16V8" H 4750 2790 50  0000 C CNN
-F 2 "" H 4750 2000 50  0001 C CNN
+F 2 "Package_DIP:DIP-20_W7.62mm_Socket_LongPads" H 4750 2000 50  0001 C CNN
 F 3 "" H 4750 2000 50  0001 C CNN
 	1    4750 2000
 	1    0    0    -1  
@@ -40,13 +40,13 @@ AR Path="/619B58B4/619BBF19" Ref="U600"  Part="1"
 AR Path="/61E50944/61E514A1/619BBF19" Ref="U4200"  Part="1" 
 F 0 "U4200" H 2600 2981 50  0000 C CNN
 F 1 "4040" H 2600 2890 50  0000 C CNN
-F 2 "" H 2600 2000 50  0001 C CNN
+F 2 "Package_DIP:DIP-16_W7.62mm_LongPads" H 2600 2000 50  0001 C CNN
 F 3 "http://www.intersil.com/content/dam/Intersil/documents/cd40/cd4020bms-24bms-40bms.pdf" H 2600 2000 50  0001 C CNN
 	1    2600 2000
 	1    0    0    -1  
 $EndComp
-Text Notes 8150 3150 0    50   ~ 0
-0 - 599 Visible Area\n600 Front Porch\n601 - 604 Pulse\n605 - 627 Back Porch\n\nH_CLU_EN + lines past the visible area = CPU_EN
+Text Notes 8000 3550 0    50   ~ 0
+0 - 599 Visible Area\n600 Front Porch\n601 - 604 Pulse\n605 - 627 Back Porch\n\nH_VIS + lines past the visible area = CPU_EN
 $Comp
 L Logic_Programmable:GAL16V8 U?
 U 1 1 619BBF35
@@ -56,7 +56,7 @@ AR Path="/619B58B4/619BBF35" Ref="U603"  Part="1"
 AR Path="/61E50944/61E514A1/619BBF35" Ref="U4203"  Part="1" 
 F 0 "U4203" H 9600 2881 50  0000 C CNN
 F 1 "GAL16V8" H 9600 2790 50  0000 C CNN
-F 2 "" H 9600 2000 50  0001 C CNN
+F 2 "Package_DIP:DIP-20_W7.62mm_Socket_LongPads" H 9600 2000 50  0001 C CNN
 F 3 "" H 9600 2000 50  0001 C CNN
 	1    9600 2000
 	1    0    0    -1  
@@ -70,7 +70,7 @@ AR Path="/619B58B4/619BBF3E" Ref="U602"  Part="1"
 AR Path="/61E50944/61E514A1/619BBF3E" Ref="U4201"  Part="1" 
 F 0 "U4201" H 7450 2981 50  0000 C CNN
 F 1 "4040" H 7450 2890 50  0000 C CNN
-F 2 "" H 7450 2000 50  0001 C CNN
+F 2 "Package_DIP:DIP-16_W7.62mm_LongPads" H 7450 2000 50  0001 C CNN
 F 3 "http://www.intersil.com/content/dam/Intersil/documents/cd40/cd4020bms-24bms-40bms.pdf" H 7450 2000 50  0001 C CNN
 	1    7450 2000
 	1    0    0    -1  
@@ -214,58 +214,38 @@ Wire Wire Line
 Wire Wire Line
 	3950 2400 4250 2400
 Connection ~ 3500 1150
-Wire Wire Line
-	1850 3350 1850 1800
-Wire Wire Line
-	1850 1800 2100 1800
-$Comp
-L Oscillator:ACO-xxxMHz X?
-U 1 1 619D14D4
-P 1550 1500
-AR Path="/619D14D4" Ref="X?"  Part="1" 
-AR Path="/619B58B4/619D14D4" Ref="X600"  Part="1" 
-AR Path="/61E50944/61E514A1/619D14D4" Ref="X4200"  Part="1" 
-F 0 "X4200" H 1207 1546 50  0000 R CNN
-F 1 "ACO-20.000MHz" H 1207 1455 50  0000 R CNN
-F 2 "Oscillator:Oscillator_DIP-14" H 2000 1150 50  0001 C CNN
-F 3 "http://www.conwin.com/datasheets/cx/cx030.pdf" H 1450 1500 50  0001 C CNN
-	1    1550 1500
-	1    0    0    -1  
-$EndComp
 $Comp
 L power:+5V #PWR?
 U 1 1 619D14DA
-P 1550 1200
+P 1950 900
 AR Path="/619D14DA" Ref="#PWR?"  Part="1" 
 AR Path="/619B58B4/619D14DA" Ref="#PWR?"  Part="1" 
 AR Path="/61E50944/61E514A1/619D14DA" Ref="#PWR0137"  Part="1" 
-F 0 "#PWR0137" H 1550 1050 50  0001 C CNN
-F 1 "+5V" H 1565 1373 50  0000 C CNN
-F 2 "" H 1550 1200 50  0001 C CNN
-F 3 "" H 1550 1200 50  0001 C CNN
-	1    1550 1200
-	1    0    0    -1  
+F 0 "#PWR0137" H 1950 750 50  0001 C CNN
+F 1 "+5V" H 1965 1073 50  0000 C CNN
+F 2 "" H 1950 900 50  0001 C CNN
+F 3 "" H 1950 900 50  0001 C CNN
+	1    1950 900 
+	0    1    1    0   
 $EndComp
 $Comp
 L power:GND #PWR?
 U 1 1 619D14E0
-P 1550 1800
+P 1350 900
 AR Path="/619D14E0" Ref="#PWR?"  Part="1" 
 AR Path="/619B58B4/619D14E0" Ref="#PWR?"  Part="1" 
 AR Path="/61E50944/61E514A1/619D14E0" Ref="#PWR0138"  Part="1" 
-F 0 "#PWR0138" H 1550 1550 50  0001 C CNN
-F 1 "GND" H 1555 1627 50  0000 C CNN
-F 2 "" H 1550 1800 50  0001 C CNN
-F 3 "" H 1550 1800 50  0001 C CNN
-	1    1550 1800
-	1    0    0    -1  
+F 0 "#PWR0138" H 1350 650 50  0001 C CNN
+F 1 "GND" H 1355 727 50  0000 C CNN
+F 2 "" H 1350 900 50  0001 C CNN
+F 3 "" H 1350 900 50  0001 C CNN
+	1    1350 900 
+	0    1    1    0   
 $EndComp
 Wire Wire Line
 	5250 1500 5550 1500
 Wire Wire Line
 	6950 1800 6750 1800
-Wire Wire Line
-	6750 1800 6750 3300
 $Comp
 L power:GND #PWR0139
 U 1 1 619E1F40
@@ -419,11 +399,9 @@ Text Label 8850 2300 0    50   ~ 0
 LC8
 Text Label 8850 2400 0    50   ~ 0
 LC9
-Wire Wire Line
-	6750 3300 10400 3300
 Text HLabel 10100 1500 2    50   Output ~ 0
 H_SYNC
-Text HLabel 10700 1700 2    50   Output ~ 0
+Text HLabel 10100 1700 2    50   Output ~ 0
 CPU_EN
 Text HLabel 5250 2200 2    50   Input ~ 0
 RESET
@@ -439,10 +417,10 @@ U 1 1 619265E5
 P 6850 4200
 AR Path="/61A26BC0/619265E5" Ref="C?"  Part="1" 
 AR Path="/619B58B4/619265E5" Ref="C600"  Part="1" 
-AR Path="/61E50944/61E514A1/619265E5" Ref="C2200"  Part="1" 
-F 0 "C2200" H 6965 4246 50  0000 L CNN
+AR Path="/61E50944/61E514A1/619265E5" Ref="C4200"  Part="1" 
+F 0 "C4200" H 6965 4246 50  0000 L CNN
 F 1 "C" H 6965 4155 50  0000 L CNN
-F 2 "" H 6888 4050 50  0001 C CNN
+F 2 "Capacitor_THT:C_Rect_L4.0mm_W2.5mm_P2.50mm" H 6888 4050 50  0001 C CNN
 F 3 "~" H 6850 4200 50  0001 C CNN
 	1    6850 4200
 	1    0    0    -1  
@@ -470,10 +448,10 @@ U 1 1 619265F7
 P 7350 4200
 AR Path="/61A26BC0/619265F7" Ref="C?"  Part="1" 
 AR Path="/619B58B4/619265F7" Ref="C601"  Part="1" 
-AR Path="/61E50944/61E514A1/619265F7" Ref="C2201"  Part="1" 
-F 0 "C2201" H 7465 4246 50  0000 L CNN
+AR Path="/61E50944/61E514A1/619265F7" Ref="C4201"  Part="1" 
+F 0 "C4201" H 7465 4246 50  0000 L CNN
 F 1 "C" H 7465 4155 50  0000 L CNN
-F 2 "" H 7388 4050 50  0001 C CNN
+F 2 "Capacitor_THT:C_Rect_L4.0mm_W2.5mm_P2.50mm" H 7388 4050 50  0001 C CNN
 F 3 "~" H 7350 4200 50  0001 C CNN
 	1    7350 4200
 	1    0    0    -1  
@@ -501,10 +479,10 @@ U 1 1 61928F88
 P 7850 4200
 AR Path="/61A26BC0/61928F88" Ref="C?"  Part="1" 
 AR Path="/619B58B4/61928F88" Ref="C602"  Part="1" 
-AR Path="/61E50944/61E514A1/61928F88" Ref="C2202"  Part="1" 
-F 0 "C2202" H 7965 4246 50  0000 L CNN
+AR Path="/61E50944/61E514A1/61928F88" Ref="C4202"  Part="1" 
+F 0 "C4202" H 7965 4246 50  0000 L CNN
 F 1 "C" H 7965 4155 50  0000 L CNN
-F 2 "" H 7888 4050 50  0001 C CNN
+F 2 "Capacitor_THT:C_Rect_L4.0mm_W2.5mm_P2.50mm" H 7888 4050 50  0001 C CNN
 F 3 "~" H 7850 4200 50  0001 C CNN
 	1    7850 4200
 	1    0    0    -1  
@@ -532,10 +510,10 @@ U 1 1 61928F9A
 P 8350 4200
 AR Path="/61A26BC0/61928F9A" Ref="C?"  Part="1" 
 AR Path="/619B58B4/61928F9A" Ref="C603"  Part="1" 
-AR Path="/61E50944/61E514A1/61928F9A" Ref="C2203"  Part="1" 
-F 0 "C2203" H 8465 4246 50  0000 L CNN
+AR Path="/61E50944/61E514A1/61928F9A" Ref="C4203"  Part="1" 
+F 0 "C4203" H 8465 4246 50  0000 L CNN
 F 1 "C" H 8465 4155 50  0000 L CNN
-F 2 "" H 8388 4050 50  0001 C CNN
+F 2 "Capacitor_THT:C_Rect_L4.0mm_W2.5mm_P2.50mm" H 8388 4050 50  0001 C CNN
 F 3 "~" H 8350 4200 50  0001 C CNN
 	1    8350 4200
 	1    0    0    -1  
@@ -563,10 +541,10 @@ U 1 1 6192BEC7
 P 8850 4200
 AR Path="/61A26BC0/6192BEC7" Ref="C?"  Part="1" 
 AR Path="/619B58B4/6192BEC7" Ref="C604"  Part="1" 
-AR Path="/61E50944/61E514A1/6192BEC7" Ref="C2204"  Part="1" 
-F 0 "C2204" H 8965 4246 50  0000 L CNN
+AR Path="/61E50944/61E514A1/6192BEC7" Ref="C4204"  Part="1" 
+F 0 "C4204" H 8965 4246 50  0000 L CNN
 F 1 "C" H 8965 4155 50  0000 L CNN
-F 2 "" H 8888 4050 50  0001 C CNN
+F 2 "Capacitor_THT:C_Rect_L4.0mm_W2.5mm_P2.50mm" H 8888 4050 50  0001 C CNN
 F 3 "~" H 8850 4200 50  0001 C CNN
 	1    8850 4200
 	1    0    0    -1  
@@ -588,8 +566,6 @@ F 3 "" H 8850 4350 50  0001 C CNN
 	1    8850 4350
 	1    0    0    -1  
 $EndComp
-Wire Wire Line
-	2100 1500 1850 1500
 Wire Wire Line
 	5550 1500 5550 1300
 $Comp
@@ -648,11 +624,7 @@ F 3 "" H 8850 4050 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	10100 1700 10700 1700
-Wire Wire Line
 	5250 1700 5700 1700
-Wire Wire Line
-	1850 3350 5700 3350
 Text Label 4000 1500 0    50   ~ 0
 PC0
 Text Label 4000 1600 0    50   ~ 0
@@ -666,8 +638,6 @@ Entry Wire Line
 Entry Wire Line
 	3850 1500 3950 1600
 Wire Wire Line
-	10400 1900 10400 3300
-Wire Wire Line
 	5550 1300 5650 1300
 Text HLabel 5650 1300 2    50   Output ~ 0
 V_SYNC
@@ -675,17 +645,97 @@ Connection ~ 5550 1500
 Wire Wire Line
 	5550 1500 6950 1500
 Text Label 5700 1600 2    50   ~ 0
-H_CPU_EN
-Wire Wire Line
-	5700 1700 5700 3350
+H_VIS
 Text Label 5700 1700 2    50   ~ 0
-H_CNT_RST
+H_RST
 Wire Wire Line
 	5250 1600 5700 1600
-Text Label 10550 1800 2    50   ~ 0
-H_CPU_EN
+Text Label 10400 1800 2    50   ~ 0
+H_VIS
+Text Label 10200 1900 0    50   ~ 0
+V_RST
+Text Label 1700 1800 0    50   ~ 0
+H_RST
 Wire Wire Line
-	10100 1800 10550 1800
+	1650 1200 1650 1500
+Wire Wire Line
+	1650 1500 2100 1500
+$Comp
+L Oscillator:ACO-xxxMHz X?
+U 1 1 619D14D4
+P 1650 900
+AR Path="/619D14D4" Ref="X?"  Part="1" 
+AR Path="/619B58B4/619D14D4" Ref="X600"  Part="1" 
+AR Path="/61E50944/61E514A1/619D14D4" Ref="X4200"  Part="1" 
+F 0 "X4200" V 1307 946 50  0000 L CNN
+F 1 "ACO-20.000MHz" V 1307 855 50  0000 R CNN
+F 2 "Oscillator:Oscillator_DIP-14" H 2100 550 50  0001 C CNN
+F 3 "http://www.conwin.com/datasheets/cx/cx030.pdf" H 1550 900 50  0001 C CNN
+	1    1650 900 
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	1700 1800 2100 1800
+Text Label 6750 1800 0    50   ~ 0
+V_RST
+$Comp
+L power:+5V #PWR?
+U 1 1 6203FB41
+P 2600 1200
+AR Path="/6203FB41" Ref="#PWR?"  Part="1" 
+AR Path="/619B58B4/6203FB41" Ref="#PWR?"  Part="1" 
+AR Path="/61E50944/61E514A1/6203FB41" Ref="#PWR0107"  Part="1" 
+F 0 "#PWR0107" H 2600 1050 50  0001 C CNN
+F 1 "+5V" H 2615 1373 50  0000 C CNN
+F 2 "" H 2600 1200 50  0001 C CNN
+F 3 "" H 2600 1200 50  0001 C CNN
+	1    2600 1200
+	0    1    1    0   
+$EndComp
+$Comp
+L power:+5V #PWR?
+U 1 1 62041750
+P 4750 1300
+AR Path="/62041750" Ref="#PWR?"  Part="1" 
+AR Path="/619B58B4/62041750" Ref="#PWR?"  Part="1" 
+AR Path="/61E50944/61E514A1/62041750" Ref="#PWR0110"  Part="1" 
+F 0 "#PWR0110" H 4750 1150 50  0001 C CNN
+F 1 "+5V" H 4765 1473 50  0000 C CNN
+F 2 "" H 4750 1300 50  0001 C CNN
+F 3 "" H 4750 1300 50  0001 C CNN
+	1    4750 1300
+	0    1    1    0   
+$EndComp
+$Comp
+L power:+5V #PWR?
+U 1 1 6204320C
+P 7450 1200
+AR Path="/6204320C" Ref="#PWR?"  Part="1" 
+AR Path="/619B58B4/6204320C" Ref="#PWR?"  Part="1" 
+AR Path="/61E50944/61E514A1/6204320C" Ref="#PWR0111"  Part="1" 
+F 0 "#PWR0111" H 7450 1050 50  0001 C CNN
+F 1 "+5V" H 7465 1373 50  0000 C CNN
+F 2 "" H 7450 1200 50  0001 C CNN
+F 3 "" H 7450 1200 50  0001 C CNN
+	1    7450 1200
+	0    1    1    0   
+$EndComp
+$Comp
+L power:+5V #PWR?
+U 1 1 62044C3E
+P 9600 1300
+AR Path="/62044C3E" Ref="#PWR?"  Part="1" 
+AR Path="/619B58B4/62044C3E" Ref="#PWR?"  Part="1" 
+AR Path="/61E50944/61E514A1/62044C3E" Ref="#PWR0112"  Part="1" 
+F 0 "#PWR0112" H 9600 1150 50  0001 C CNN
+F 1 "+5V" H 9615 1473 50  0000 C CNN
+F 2 "" H 9600 1300 50  0001 C CNN
+F 3 "" H 9600 1300 50  0001 C CNN
+	1    9600 1300
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	10100 1800 10400 1800
 Wire Bus Line
 	3850 1150 3850 2300
 Wire Bus Line
@@ -694,6 +744,4 @@ Wire Bus Line
 	8350 1150 8350 2300
 Wire Bus Line
 	3500 1150 3500 2300
-Text Label 10200 1900 0    50   ~ 0
-V_CNT_RST
 $EndSCHEMATC
