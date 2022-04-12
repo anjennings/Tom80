@@ -1,0 +1,31 @@
+GAL16V8
+U2101
+
+MREQ IORQ RD WR RTS0 A7 A15 A19 NC GND
+NC RESET CPURST MWRITE MREAD PIO HRAM LRAM ROM VCC
+
+CPURST = /RESET
+
+/ROM = /MREQ * /A15 * RTS0
+
+/LRAM =   /MREQ * /A19 * A15
+	+ /MREQ * /A19 * /A15 * /RTS0
+
+/HRAM =   /MREQ * A19 * A15
+	+ /MREQ * A19 * /A15 * /RTS0
+
+/PIO = /IORQ * A7
+
+/MREAD = /MREQ * /RD
+
+/MWRITE = /MREQ * /WR
+
+DESCRIPTION
+
+Handles general bus signals as well as reset inversion
+
+ROM is enabled from 0xX0000 - 0xX7FFF when RTS0 is high (by default)
+Low RAM is enabled from 0x00000 - 0x7FFFF, unless Rom is enabled
+High RAM is enabled from 0x80000 - 0xFFFFF, unless Rom is enabled
+PIO has its base at IO 0x80 - 0xFF, internal IO is 0x00 - 0x4F
+MREAD & MWRITE are memory access signals

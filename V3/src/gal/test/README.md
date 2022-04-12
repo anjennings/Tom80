@@ -1,1 +1,0 @@
-Test GAL logic
