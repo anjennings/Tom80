@@ -1,0 +1,17 @@
+GAL16V8
+U102
+
+CLK DS RW nRESET FC0 FC1 FC2 AS NC GND
+OE NC NC NC NC INTACK RESET WRITE READ VCC
+
+RESET = /nRESET
+
+/INTACK = /DS * FC0 * FC1 * FC2
+
+/WRITE = /DS * /RW
+
+/READ = /DS * RW
+
+DESCRIPTION
+
+Handles general bus signals as well as reset inversion
