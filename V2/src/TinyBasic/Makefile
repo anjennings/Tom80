@@ -1,5 +1,5 @@
 #Specify location of assembler
-CC = "C:\Program Files (x86)\Pasmo\pasmo"	
+CC = pasmo	
 #Source filename	
 FILENAME = basic
 #Mode

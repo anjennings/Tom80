@@ -159,7 +159,7 @@ PIO_INIT:
         OUT (PIO_PORTB_CON), A
         
         ;Put port B in a known state
-        LD A, 0xFF
+        LD A, 0x0
         OUT (PIO_PORTB_DAT), A
         
         ;Set port A as bi-directional

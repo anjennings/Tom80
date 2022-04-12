@@ -5,18 +5,31 @@ SimpleDisk DriveA;
 SimpleDisk DriveB;
 SimpleDisk DriveC;
 SimpleDisk DriveD;
-SimpleDisk FuzixFS;
+
+
+/**
+ *  Called after write init command recieved
+ *  Transfer data from PIO into buffer and write buffer to file
+ **/
+/*void handleWrite(SimpleDisk * Drive) {
+  for (int i = 0; i < Drive->SectorSize; i++) {
+    Drive->Buffer[i] = readPIO(); 
+  } 
+  writeSector(Drive);
+}*/
 
 /**
  *  Called after read init command recieved
  *  Read data from file into buffer and transfer buffer to PIO
  **/
 void handleRead(SimpleDisk * Drive) {
-  //print("start sector read\n");
+  printf("starting read...");
   readSector(Drive);
   for (int i = 0; i < Drive->SectorSize; i++) {
-    writePIO(Drive->Buffer[i]);
+    printf("\n%d : 0x%X", i, Drive->Buffer[i]);
+    //print(Drive->Buffer[i]);
   } 
+  printf("\nend read\n\n");
 }  
 
 /**
@@ -34,7 +47,7 @@ void writeSector(SimpleDisk * Drive) {
   if (Drive->image == NULL) {
     return; 
   }    
-  fwrite(Drive->Buffer, 1, Drive->SectorSize, Drive->image);
+  fwrite(Drive->Buffer, 1, 128, Drive->image);
   fflush(Drive->image);
 }
 
@@ -59,7 +72,7 @@ void readSector(SimpleDisk * Drive) {
 void readSectorByte(SimpleDisk * Drive) {
   
   uint8_t data;
-  if (Drive->Index >= Drive->SectorSize) {
+  if (Drive->Index >= 128) {
     data = 0;
   } else {   
     data = Drive->Buffer[Drive->Index];
@@ -75,7 +88,7 @@ void readSectorByte(SimpleDisk * Drive) {
  **/
 void writeSectorByte(SimpleDisk * Drive, uint8_t data) {
   
-  if (Drive->Index >= Drive->SectorSize) {
+  if (Drive->Index >= 128) {
     return;  
   }    
   
@@ -104,7 +117,7 @@ int setSector(SimpleDisk * Drive, uint8_t sector) {
 // Set new drive to be the current drive
 // integer offset corresponds to letter 0=A, 1=B, etc
 int selectDrive(uint8_t drive) {
-  //print("selectDrive\n");
+  
   if (currentDrive != NULL) {
     closeDrive(currentDrive);
   }  
@@ -135,15 +148,7 @@ int selectDrive(uint8_t drive) {
       return 0;
       break;
       
-    case 0xF :
-      initFUZIXDrive();
-      currentDrive = &FuzixFS;
-      //print("selected Fuzix\n");
-      return 0;
-      break;
-      
     default:
-      //print("bad Drive\n");
       return -1;
       break;
       
@@ -167,7 +172,7 @@ int closeDrive(SimpleDisk * Drive) {
 void initDriveA() {
   DriveA.Sectors = 26;
   DriveA.Tracks = 255;
-  DriveA.SectorSize = 128;
+  DriveA.SectorSize = 512;
   DriveA.BlockSize = 1024;
   DriveA.DriveLetter = 'A';
   DriveA.CurrentSector = 0;
@@ -215,18 +220,6 @@ void initDriveD() {
   DriveD.Index = 0;
   DriveD.Buffer = malloc(DriveD.SectorSize * sizeof(uint8_t));
   DriveD.image = fopen("D.IMG", "r+");
-}  
-
-void initFUZIXDrive() {
-  FuzixFS.Sectors = 256;
-  FuzixFS.Tracks = 256;
-  FuzixFS.SectorSize = 512;
-  FuzixFS.DriveLetter = 'F';
-  FuzixFS.CurrentSector = 0;
-  FuzixFS.CurrentTrack = 0;
-  FuzixFS.Index = 0;
-  FuzixFS.Buffer = malloc(FuzixFS.SectorSize * sizeof(uint8_t));
-  FuzixFS.image = fopen("FUZIX.IMG", "r+");
 }  
 
 int initDisk() {
