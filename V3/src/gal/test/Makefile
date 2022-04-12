@@ -1,10 +1,10 @@
 # Path to commandline gal assembler
-CC = "/home/aidan/GALasm/src/galasm"
+CC = ~/dev/GALasm/src/galasm
 PROG = "minipro"
 
 SRC = logic
 
-all:	$(SRC)
+all:	$(SRC).pld
 	$(CC) $(SRC).pld
 
 write: $(SRC).pld $(SRC).jed
