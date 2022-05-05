@@ -496,7 +496,9 @@ A18
 Text Label 1400 3750 0    50   ~ 0
 A19
 Wire Bus Line
-	2400 2750 2500 2750
+	2400 2850 2500 2850
+Entry Wire Line
+	2400 2850 2300 2750
 Entry Wire Line
 	2400 2750 2300 2650
 Entry Wire Line
@@ -511,10 +513,6 @@ Entry Wire Line
 	2400 2250 2300 2150
 Entry Wire Line
 	2400 2150 2300 2050
-Entry Wire Line
-	2400 2050 2300 1950
-Wire Wire Line
-	2300 2250 2100 2250
 Wire Wire Line
 	2300 2350 2100 2350
 Wire Wire Line
@@ -524,26 +522,28 @@ Wire Wire Line
 Wire Wire Line
 	2300 2650 2100 2650
 Wire Wire Line
+	2300 2750 2100 2750
+Wire Wire Line
+	2300 2250 2100 2250
+Wire Wire Line
 	2300 2150 2100 2150
 Wire Wire Line
 	2300 2050 2100 2050
-Wire Wire Line
-	2300 1950 2100 1950
-Text Label 2300 2650 2    50   ~ 0
+Text Label 2300 2750 2    50   ~ 0
 D0
-Text Label 2300 2550 2    50   ~ 0
+Text Label 2300 2650 2    50   ~ 0
 D1
-Text Label 2300 2450 2    50   ~ 0
+Text Label 2300 2550 2    50   ~ 0
 D2
-Text Label 2300 2350 2    50   ~ 0
+Text Label 2300 2450 2    50   ~ 0
 D3
-Text Label 2300 2250 2    50   ~ 0
+Text Label 2300 2350 2    50   ~ 0
 D4
-Text Label 2300 2150 2    50   ~ 0
+Text Label 2300 2250 2    50   ~ 0
 D5
-Text Label 2300 2050 2    50   ~ 0
+Text Label 2300 2150 2    50   ~ 0
 D6
-Text Label 2300 1950 2    50   ~ 0
+Text Label 2300 2050 2    50   ~ 0
 D7
 Text HLabel 2500 2750 2    50   BiDi ~ 0
 D[0..7]
@@ -604,8 +604,8 @@ $EndComp
 Text Label 3700 4650 0    50   ~ 0
 CLK
 Wire Wire Line
-	2100 1850 2350 1850
-Text Label 2350 1850 2    50   ~ 0
+	2100 1950 2350 1950
+Text Label 2350 1950 2    50   ~ 0
 CLK
 Text Notes 5750 6250 0    197  ~ 39
 This page has NOT been checked!
@@ -659,11 +659,11 @@ F 3 "" H 2500 6450 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 NoConn ~ 2000 6850
-Text HLabel 2100 2950 2    50   Input ~ 0
+Text HLabel 2100 3050 2    50   Input ~ 0
 AUX_CS
-Text HLabel 2100 2750 2    50   Input ~ 0
-RD
 Text HLabel 2100 2850 2    50   Input ~ 0
+RD
+Text HLabel 2100 2950 2    50   Input ~ 0
 WR
 $Comp
 L Connector_Generic:Conn_02x20_Counter_Clockwise J2100
@@ -797,12 +797,68 @@ Wire Wire Line
 	10350 5200 10050 5200
 Text Label 10050 5200 0    50   ~ 0
 DREQ1
+Text HLabel 2100 3150 2    50   Output ~ 0
+M1
+Wire Wire Line
+	3000 3750 3300 3750
+Wire Wire Line
+	2100 3250 2400 3250
+Text Label 3300 3750 2    50   ~ 0
+INT2
+Text Label 2400 3250 2    50   ~ 0
+INT1
+Wire Wire Line
+	3000 3650 3300 3650
+Text Label 3300 3650 2    50   ~ 0
+NMI
+Wire Wire Line
+	3000 3450 3300 3450
+Text Label 3300 3450 2    50   ~ 0
+BUSREQ
+Wire Wire Line
+	3000 3550 3300 3550
+Text Label 3300 3550 2    50   ~ 0
+WAIT
+Wire Wire Line
+	2100 3350 2400 3350
+Text Label 2400 3350 2    50   ~ 0
+DREQ0
+Wire Wire Line
+	3000 3350 3300 3350
+Text Label 3300 3350 2    50   ~ 0
+CTS0
+Wire Wire Line
+	3000 3150 3300 3150
+Text Label 3300 3150 2    50   ~ 0
+DREQ1
+$Comp
+L power:GND #PWR?
+U 1 1 6275CB20
+P 2100 3750
+F 0 "#PWR?" H 2100 3500 50  0001 C CNN
+F 1 "GND" H 2105 3577 50  0000 C CNN
+F 2 "" H 2100 3750 50  0001 C CNN
+F 3 "" H 2100 3750 50  0001 C CNN
+	1    2100 3750
+	0    -1   -1   0   
+$EndComp
+$Comp
+L power:+5V #PWR?
+U 1 1 6275CB26
+P 2100 1850
+F 0 "#PWR?" H 2100 1700 50  0001 C CNN
+F 1 "+5V" V 2115 1978 50  0000 L CNN
+F 2 "" H 2100 1850 50  0001 C CNN
+F 3 "" H 2100 1850 50  0001 C CNN
+	1    2100 1850
+	0    1    1    0   
+$EndComp
 Wire Bus Line
 	1600 6550 1600 6750
 Wire Bus Line
 	4300 3550 4300 4250
 Wire Bus Line
-	2400 2050 2400 2750
+	2400 2150 2400 2850
 Wire Bus Line
 	1300 1750 1300 3750
 Wire Bus Line

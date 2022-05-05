@@ -622,7 +622,7 @@ RTS0
 Wire Wire Line
 	2000 6350 1750 6350
 Text Notes 1450 7600 0    50   ~ 0
-RTS0 defaults to 1 and can be controlled via internal registers\nSetting it low disables the ROM window
+RTS0 defaults to 1 and can be controlled via internal registers\nSetting it low disables part of the ROM window
 Wire Wire Line
 	3600 6650 3000 6650
 Wire Wire Line
@@ -816,10 +816,10 @@ Wire Wire Line
 Text Label 2400 3450 2    50   ~ 0
 DREQ0
 $Comp
-L power:GND #PWR?
+L power:GND #PWR0140
 U 1 1 6275CB20
 P 2100 3750
-F 0 "#PWR?" H 2100 3500 50  0001 C CNN
+F 0 "#PWR0140" H 2100 3500 50  0001 C CNN
 F 1 "GND" H 2105 3577 50  0000 C CNN
 F 2 "" H 2100 3750 50  0001 C CNN
 F 3 "" H 2100 3750 50  0001 C CNN
@@ -827,10 +827,10 @@ F 3 "" H 2100 3750 50  0001 C CNN
 	0    -1   -1   0   
 $EndComp
 $Comp
-L power:+5V #PWR?
+L power:+5V #PWR0142
 U 1 1 6275CB26
 P 2100 1850
-F 0 "#PWR?" H 2100 1700 50  0001 C CNN
+F 0 "#PWR0142" H 2100 1700 50  0001 C CNN
 F 1 "+5V" V 2115 1978 50  0000 L CNN
 F 2 "" H 2100 1850 50  0001 C CNN
 F 3 "" H 2100 1850 50  0001 C CNN
@@ -838,10 +838,10 @@ F 3 "" H 2100 1850 50  0001 C CNN
 	0    1    1    0   
 $EndComp
 $Comp
-L power:+5V #PWR?
+L power:+5V #PWR0144
 U 1 1 627A29E2
 P 2100 1950
-F 0 "#PWR?" H 2100 1800 50  0001 C CNN
+F 0 "#PWR0144" H 2100 1800 50  0001 C CNN
 F 1 "+5V" V 2115 2078 50  0000 L CNN
 F 2 "" H 2100 1950 50  0001 C CNN
 F 3 "" H 2100 1950 50  0001 C CNN
