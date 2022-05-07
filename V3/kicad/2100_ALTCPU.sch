@@ -205,7 +205,7 @@ Text HLabel 6750 3500 2    50   Output ~ 0
 ST
 Text HLabel 9500 4150 0    50   Output ~ 0
 M1
-Text HLabel 10350 5400 0    50   Input ~ 0
+Text HLabel 10350 5300 0    50   Input ~ 0
 INT
 NoConn ~ 6750 4000
 NoConn ~ 4600 4750
@@ -622,7 +622,7 @@ RTS0
 Wire Wire Line
 	2000 6350 1750 6350
 Text Notes 1450 7600 0    50   ~ 0
-RTS0 defaults to 1 and can be controlled via internal registers\nSetting it low disables the ROM window
+RTS0 defaults to 1 and can be controlled via internal registers\nSetting it low disables part of the ROM window
 Wire Wire Line
 	3600 6650 3000 6650
 Wire Wire Line
@@ -640,7 +640,7 @@ Wire Wire Line
 Wire Wire Line
 	3700 4650 4600 4650
 Wire Wire Line
-	6750 4500 7450 4500
+	6750 4500 7200 4500
 NoConn ~ 2000 6750
 $Comp
 L Logic_Programmable:GAL16V8 U?
@@ -769,10 +769,6 @@ Wire Wire Line
 	7200 4400 7450 4400
 Text Label 7550 4150 2    50   ~ 0
 RX
-Text Label 10050 5300 0    50   ~ 0
-RX
-Wire Wire Line
-	10350 5300 10050 5300
 Wire Wire Line
 	6750 4100 7050 4100
 Text Label 7050 4100 2    50   ~ 0
@@ -816,10 +812,10 @@ Wire Wire Line
 Text Label 2400 3450 2    50   ~ 0
 DREQ0
 $Comp
-L power:GND #PWR?
+L power:GND #PWR0140
 U 1 1 6275CB20
 P 2100 3750
-F 0 "#PWR?" H 2100 3500 50  0001 C CNN
+F 0 "#PWR0140" H 2100 3500 50  0001 C CNN
 F 1 "GND" H 2105 3577 50  0000 C CNN
 F 2 "" H 2100 3750 50  0001 C CNN
 F 3 "" H 2100 3750 50  0001 C CNN
@@ -827,10 +823,10 @@ F 3 "" H 2100 3750 50  0001 C CNN
 	0    -1   -1   0   
 $EndComp
 $Comp
-L power:+5V #PWR?
+L power:+5V #PWR0142
 U 1 1 6275CB26
 P 2100 1850
-F 0 "#PWR?" H 2100 1700 50  0001 C CNN
+F 0 "#PWR0142" H 2100 1700 50  0001 C CNN
 F 1 "+5V" V 2115 1978 50  0000 L CNN
 F 2 "" H 2100 1850 50  0001 C CNN
 F 3 "" H 2100 1850 50  0001 C CNN
@@ -838,15 +834,37 @@ F 3 "" H 2100 1850 50  0001 C CNN
 	0    1    1    0   
 $EndComp
 $Comp
-L power:+5V #PWR?
+L power:+5V #PWR0144
 U 1 1 627A29E2
 P 2100 1950
-F 0 "#PWR?" H 2100 1800 50  0001 C CNN
+F 0 "#PWR0144" H 2100 1800 50  0001 C CNN
 F 1 "+5V" V 2115 2078 50  0000 L CNN
 F 2 "" H 2100 1950 50  0001 C CNN
 F 3 "" H 2100 1950 50  0001 C CNN
 	1    2100 1950
 	0    1    1    0   
+$EndComp
+Wire Wire Line
+	7200 4800 7550 4800
+Text Label 7550 4800 2    50   ~ 0
+TX
+Connection ~ 7200 4500
+Wire Wire Line
+	7200 4500 7450 4500
+Wire Wire Line
+	7200 4500 7200 4800
+$Comp
+L Connector:Conn_01x02_Male J?
+U 1 1 62765282
+P 6950 3900
+AR Path="/6191B6A2/61EBDADB/62542978/62765282" Ref="J?"  Part="1" 
+AR Path="/6191B6A2/61EBDADB/62765282" Ref="J2101"  Part="1" 
+F 0 "J2101" H 6750 3850 50  0000 C CNN
+F 1 "Conn_01x02_Male" H 6550 3750 50  0000 C CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical" H 6950 3900 50  0001 C CNN
+F 3 "~" H 6950 3900 50  0001 C CNN
+	1    6950 3900
+	-1   0    0    1   
 $EndComp
 Wire Bus Line
 	1600 6550 1600 6750

@@ -119,10 +119,6 @@ F 3 "" H 5050 3300 50  0001 C CNN
 $EndComp
 NoConn ~ 4650 4300
 NoConn ~ 4650 4400
-Text HLabel 4650 4000 0    50   Output ~ 0
-TX
-Text HLabel 4650 4100 0    50   Input ~ 0
-RX
 $Comp
 L Connector:Conn_01x03_Male J?
 U 1 1 6254C2E6
@@ -222,4 +218,64 @@ F 3 "" H 4950 5250 50  0001 C CNN
 	1    4950 5250
 	1    0    0    -1  
 $EndComp
+$Comp
+L Connector:Conn_01x02_Male J2122
+U 1 1 627627D6
+P 3800 4000
+F 0 "J2122" H 3908 4181 50  0000 C CNN
+F 1 "Conn_01x02_Male" H 3908 4090 50  0000 C CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical" H 3800 4000 50  0001 C CNN
+F 3 "~" H 3800 4000 50  0001 C CNN
+	1    3800 4000
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3850 3600 4150 3600
+Wire Wire Line
+	3850 3700 4350 3700
+$Comp
+L power:+5V #PWR?
+U 1 1 6278A36E
+P 4150 3300
+AR Path="/6191B6A2/61EBDADB/6278A36E" Ref="#PWR?"  Part="1" 
+AR Path="/6191B6A2/61EBDADB/62542978/6278A36E" Ref="#PWR0145"  Part="1" 
+F 0 "#PWR0145" H 4150 3150 50  0001 C CNN
+F 1 "+5V" V 4165 3428 50  0000 L CNN
+F 2 "" H 4150 3300 50  0001 C CNN
+F 3 "" H 4150 3300 50  0001 C CNN
+	1    4150 3300
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R2120
+U 1 1 6278730B
+P 4150 3450
+F 0 "R2120" H 3850 3500 50  0000 L CNN
+F 1 "100k" H 3850 3400 50  0000 L CNN
+F 2 "Resistor_THT:R_Axial_DIN0309_L9.0mm_D3.2mm_P2.54mm_Vertical" V 4080 3450 50  0001 C CNN
+F 3 "~" H 4150 3450 50  0001 C CNN
+	1    4150 3450
+	-1   0    0    1   
+$EndComp
+Wire Wire Line
+	4450 3600 4450 4000
+Wire Wire Line
+	4450 4000 4650 4000
+Connection ~ 4450 4000
+Wire Wire Line
+	4450 4000 4000 4000
+Wire Wire Line
+	4650 4100 4350 4100
+Wire Wire Line
+	4000 4100 4350 4100
+Connection ~ 4350 4100
+Wire Wire Line
+	4350 3700 4350 4100
+Text HLabel 3850 3600 0    50   Output ~ 0
+TX
+Text HLabel 3850 3700 0    50   Input ~ 0
+RX
+Connection ~ 4150 3600
+Wire Wire Line
+	4150 3600 4450 3600
 $EndSCHEMATC
