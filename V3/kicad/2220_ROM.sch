@@ -14,26 +14,13 @@ Comment3 ""
 Comment4 ""
 $EndDescr
 $Comp
-L 74xx:74LS07 U?
-U 6 1 62605CEF
-P 6600 2900
-AR Path="/6191B6A2/61F28B7D/62605CEF" Ref="U?"  Part="6" 
-AR Path="/6191B6A2/61F28B7D/62602013/62605CEF" Ref="U2210"  Part="6" 
-F 0 "U2210" H 6600 3217 50  0000 C CNN
-F 1 "74LS07" H 6600 3126 50  0000 C CNN
-F 2 "Package_DIP:DIP-14_W7.62mm_LongPads" H 6600 2900 50  0001 C CNN
-F 3 "www.ti.com/lit/ds/symlink/sn74ls07.pdf" H 6600 2900 50  0001 C CNN
-	6    6600 2900
-	-1   0    0    1   
-$EndComp
-$Comp
 L Memory_EEPROM:25LCxxx U?
 U 1 1 62605CF5
 P 7100 5150
 AR Path="/6191B6A2/61F28B7D/62605CF5" Ref="U?"  Part="1" 
 AR Path="/6191B6A2/61F28B7D/62602013/62605CF5" Ref="U2220"  Part="1" 
-F 0 "U2220" H 7100 5631 50  0000 C CNN
-F 1 "25LCxxx" H 7100 5540 50  0000 C CNN
+F 0 "U2220" H 7100 5750 50  0000 C CNN
+F 1 "25LCxxx" H 7100 5650 50  0000 C CNN
 F 2 "Package_DIP:DIP-8_W7.62mm_LongPads" H 7100 5150 50  0001 C CNN
 F 3 "http://ww1.microchip.com/downloads/en/DeviceDoc/21832H.pdf" H 7100 5150 50  0001 C CNN
 	1    7100 5150
@@ -84,14 +71,14 @@ U 5 1 62605D0D
 P 5150 5500
 AR Path="/6191B6A2/61F28B7D/62605D0D" Ref="U?"  Part="5" 
 AR Path="/6191B6A2/61F28B7D/62602013/62605D0D" Ref="U2221"  Part="5" 
-F 0 "U2221" H 5380 5546 50  0000 L CNN
-F 1 "74HCT126" H 5380 5455 50  0000 L CNN
+F 0 "U2221" V 5550 5350 50  0000 L CNN
+F 1 "74HCT126" V 5450 5300 50  0000 L CNN
 F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 5150 5500 50  0001 C CNN
 F 3 "http://www.ti.com/lit/gpn/sn74LS126" H 5150 5500 50  0001 C CNN
 	5    5150 5500
 	0    -1   -1   0   
 $EndComp
-Text Label 6350 5250 0    50   ~ 0
+Text Label 6250 5250 0    50   ~ 0
 LC_CS
 Text Label 5350 3450 2    50   ~ 0
 LC_MOSI
@@ -126,8 +113,6 @@ Text Label 7850 5150 2    50   ~ 0
 LC_MOSI
 Wire Wire Line
 	7500 5150 7850 5150
-Wire Wire Line
-	6350 5250 6700 5250
 Text Label 7850 5250 2    50   ~ 0
 LC_MISO
 Wire Wire Line
@@ -157,8 +142,6 @@ Text Label 7250 3200 0    50   ~ 0
 LC_MISO
 Wire Wire Line
 	7600 3200 7250 3200
-Wire Wire Line
-	6900 2900 7600 2900
 $Comp
 L power:GND #PWR?
 U 1 1 62605D3C
@@ -240,10 +223,10 @@ F 3 "" H 5650 5500 50  0001 C CNN
 	1    5650 5500
 	0    -1   -1   0   
 $EndComp
-Text Label 9000 3100 0    50   ~ 0
+Text Label 10400 2950 2    50   ~ 0
 PROG_EN
 Wire Wire Line
-	9000 3100 9500 3100
+	10400 2950 9900 2950
 Text Label 2600 3700 0    50   ~ 0
 PROG_EN
 Wire Wire Line
@@ -260,36 +243,34 @@ Text Label 4200 4500 0    50   ~ 0
 PROG_EN
 Wire Wire Line
 	4200 4500 4700 4500
-Text Label 8750 4850 0    50   ~ 0
+Text Label 8900 4950 0    50   ~ 0
 PROG_EN
-Wire Wire Line
-	8750 4850 9250 4850
 $Comp
 L power:GND #PWR0139
 U 1 1 62610C0C
-P 9500 3000
-F 0 "#PWR0139" H 9500 2750 50  0001 C CNN
-F 1 "GND" H 9505 2827 50  0000 C CNN
-F 2 "" H 9500 3000 50  0001 C CNN
-F 3 "" H 9500 3000 50  0001 C CNN
-	1    9500 3000
-	-1   0    0    1   
+P 9900 3050
+F 0 "#PWR0139" H 9900 2800 50  0001 C CNN
+F 1 "GND" H 9905 2877 50  0000 C CNN
+F 2 "" H 9900 3050 50  0001 C CNN
+F 3 "" H 9900 3050 50  0001 C CNN
+	1    9900 3050
+	1    0    0    -1  
 $EndComp
 $Comp
 L Connector:Conn_01x02_Male J2221
 U 1 1 626100FE
-P 9700 3100
-F 0 "J2221" H 9672 2982 50  0000 R CNN
-F 1 "Conn_01x02_Male" H 9672 3073 50  0000 R CNN
-F 2 "Connector_PinHeader_2.54mm:PinHeader_2x01_P2.54mm_Vertical" H 9700 3100 50  0001 C CNN
-F 3 "~" H 9700 3100 50  0001 C CNN
-	1    9700 3100
-	-1   0    0    1   
+P 9700 2950
+F 0 "J2221" H 9672 2832 50  0000 R CNN
+F 1 "Conn_01x02_Male" H 9672 2923 50  0000 R CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_2x01_P2.54mm_Vertical" H 9700 2950 50  0001 C CNN
+F 3 "~" H 9700 2950 50  0001 C CNN
+	1    9700 2950
+	1    0    0    -1  
 $EndComp
 Text Notes 7650 6900 0    118  ~ 24
 This page has been checked!
-Text Notes 7100 6050 0    50   ~ 0
-PROG_EN is high by default, allowing connection to the PIO\nWhen pulled low by an ISP device only the pin header can access the rom
+Text Notes 7100 6200 0    50   ~ 0
+PROG_EN is high by default, allowing connection to the PIO\n\nWhen PROG_EN is pulled low, signals are controlled by the ISP header and the ROM is enabled
 $Comp
 L Device:R_Network05 RN2220
 U 1 1 625F9969
@@ -390,11 +371,11 @@ L power:+5V #PWR0163
 U 1 1 6269622A
 P 7100 4850
 F 0 "#PWR0163" H 7100 4700 50  0001 C CNN
-F 1 "+5V" V 7115 4978 50  0000 L CNN
+F 1 "+5V" H 7150 4850 50  0000 L CNN
 F 2 "" H 7100 4850 50  0001 C CNN
 F 3 "" H 7100 4850 50  0001 C CNN
 	1    7100 4850
-	0    1    1    0   
+	1    0    0    -1  
 $EndComp
 $Comp
 L power:GND #PWR0170
@@ -407,4 +388,57 @@ F 3 "" H 7100 5450 50  0001 C CNN
 	1    7100 5450
 	1    0    0    -1  
 $EndComp
+Wire Wire Line
+	9250 4850 8900 4850
+Text Label 8900 4850 0    50   ~ 0
+LC_HOLD
+Connection ~ 6600 5250
+Wire Wire Line
+	6600 5250 6700 5250
+Wire Wire Line
+	6250 5250 6600 5250
+$Comp
+L power:GND #PWR?
+U 1 1 6291BF5B
+P 6600 5550
+F 0 "#PWR?" H 6600 5300 50  0001 C CNN
+F 1 "GND" H 6605 5377 50  0000 C CNN
+F 2 "" H 6600 5550 50  0001 C CNN
+F 3 "" H 6600 5550 50  0001 C CNN
+	1    6600 5550
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 6291A3FE
+P 6600 5400
+AR Path="/6191B6A2/61EBDADB/62542978/6291A3FE" Ref="R?"  Part="1" 
+AR Path="/6291A3FE" Ref="R?"  Part="1" 
+AR Path="/6191B6A2/61F28B7D/62602013/6291A3FE" Ref="R2200"  Part="1" 
+F 0 "R2200" H 6300 5350 50  0000 L CNN
+F 1 "10k" H 6350 5450 50  0000 L CNN
+F 2 "Resistor_THT:R_Axial_DIN0309_L9.0mm_D3.2mm_P2.54mm_Vertical" V 6530 5400 50  0001 C CNN
+F 3 "~" H 6600 5400 50  0001 C CNN
+	1    6600 5400
+	1    0    0    -1  
+$EndComp
+NoConn ~ 7600 2900
+Wire Wire Line
+	8900 4950 9250 4950
+Wire Wire Line
+	6700 5050 6600 5050
+Wire Wire Line
+	6700 5150 6600 5150
+Wire Wire Line
+	6600 5150 6600 5050
+Wire Wire Line
+	6600 4850 7100 4850
+Connection ~ 6600 5050
+Wire Wire Line
+	6600 5050 6600 4850
+Connection ~ 7100 4850
+Text Label 3750 3450 2    50   ~ 0
+LC_CS
+Wire Wire Line
+	3750 3450 3400 3450
 $EndSCHEMATC

@@ -207,7 +207,6 @@ NoConn ~ 4600 5150
 Connection ~ 6750 1500
 Wire Wire Line
 	6750 1600 6750 1700
-NoConn ~ 6750 2900
 Text Label 4400 1500 0    50   ~ 0
 A0
 Text Label 4400 1600 0    50   ~ 0
@@ -613,7 +612,7 @@ F 3 "" H 2500 6450 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 NoConn ~ 2000 6850
-Text HLabel 2100 2650 2    50   Input ~ 0
+Text HLabel 1600 3850 0    50   Input ~ 0
 AUX_CS
 Wire Wire Line
 	9950 4150 9950 4300
@@ -909,6 +908,14 @@ Text Label 3300 6650 2    50   ~ 0
 C_RST
 Wire Wire Line
 	3000 6650 3300 6650
+Wire Wire Line
+	6750 2900 7050 2900
+Text Label 7050 2900 2    50   ~ 0
+BUSACK
+Wire Wire Line
+	2100 2750 2400 2750
+Text Label 2400 2750 2    50   ~ 0
+BUSACK
 Wire Bus Line
 	1600 6350 1600 6550
 Wire Bus Line
