@@ -22,8 +22,8 @@ AR Path="/62497D60/624C743E" Ref="U?"  Part="1"
 AR Path="/61D852D7/624C743E" Ref="U1000"  Part="1" 
 AR Path="/6191B6A2/624CF3AF/624C743E" Ref="U?"  Part="1" 
 AR Path="/6191B6A2/61EBDADB/62512FB8/624C743E" Ref="U2110"  Part="1" 
-F 0 "U2110" H 5800 4631 50  0000 L TNN
-F 1 "LM555xM" H 5800 4540 50  0000 L TNN
+F 0 "U2110" H 5950 4550 50  0000 L TNN
+F 1 "LM555xM" H 5950 4450 50  0000 L TNN
 F 2 "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm" H 6650 3650 50  0001 C CNN
 F 3 "http://www.ti.com/lit/ds/symlink/lm555.pdf" H 6650 3650 50  0001 C CNN
 	1    5800 4050
@@ -83,12 +83,7 @@ Wire Wire Line
 	3950 4700 3950 3850
 Connection ~ 5800 4700
 Wire Wire Line
-	6300 3850 6700 3850
-Wire Wire Line
 	6300 4050 6700 4050
-Wire Wire Line
-	6700 4050 6700 3850
-Connection ~ 6700 3850
 Wire Wire Line
 	6300 4250 6700 4250
 Wire Wire Line
@@ -117,8 +112,6 @@ Wire Wire Line
 	6700 4250 6700 4400
 Wire Wire Line
 	5000 4050 5000 4400
-Wire Wire Line
-	5800 3350 5800 3650
 $Comp
 L Device:C C1000
 U 1 1 625B99BC
@@ -149,12 +142,10 @@ F 3 "" H 7900 4050 50  0001 C CNN
 	1    7900 4050
 	1    0    0    -1  
 $EndComp
-Text HLabel 6950 3850 2    50   Input ~ 0
+Text HLabel 6300 3850 2    50   Input ~ 0
 Reset
-Wire Wire Line
-	6700 3850 6950 3850
 Text Notes 5100 5400 0    50   ~ 0
-Power on Reset\nReset signal is active high\n
+Power on Reset\nReset signal is active high\nNeeds to be inverted for CPU\n
 $Comp
 L Device:C C?
 U 1 1 62633FFA
@@ -179,39 +170,31 @@ This page has been checked!
 $Comp
 L power:+5V #PWR0103
 U 1 1 61E872A1
-P 5700 2100
+P 3950 3250
 AR Path="/61D852D7/61E872A1" Ref="#PWR0103"  Part="1" 
 AR Path="/6191B6A2/624CF3AF/61E872A1" Ref="#PWR?"  Part="1" 
 AR Path="/6191B6A2/61EBDADB/62512FB8/61E872A1" Ref="#PWR0108"  Part="1" 
-F 0 "#PWR0108" H 5700 1950 50  0001 C CNN
-F 1 "+5V" V 5715 2228 50  0000 L CNN
-F 2 "" H 5700 2100 50  0001 C CNN
-F 3 "" H 5700 2100 50  0001 C CNN
-	1    5700 2100
-	1    0    0    -1  
+F 0 "#PWR0108" H 3950 3100 50  0001 C CNN
+F 1 "+5V" V 3965 3378 50  0000 L CNN
+F 2 "" H 3950 3250 50  0001 C CNN
+F 3 "" H 3950 3250 50  0001 C CNN
+	1    3950 3250
+	0    -1   -1   0   
 $EndComp
 $Comp
 L power:+5V #PWR0104
 U 1 1 61E87BC4
-P 5800 3350
+P 5800 3650
 AR Path="/61D852D7/61E87BC4" Ref="#PWR0104"  Part="1" 
 AR Path="/6191B6A2/624CF3AF/61E87BC4" Ref="#PWR?"  Part="1" 
 AR Path="/6191B6A2/61EBDADB/62512FB8/61E87BC4" Ref="#PWR0109"  Part="1" 
-F 0 "#PWR0109" H 5800 3200 50  0001 C CNN
-F 1 "+5V" V 5815 3478 50  0000 L CNN
-F 2 "" H 5800 3350 50  0001 C CNN
-F 3 "" H 5800 3350 50  0001 C CNN
-	1    5800 3350
+F 0 "#PWR0109" H 5800 3500 50  0001 C CNN
+F 1 "+5V" V 5815 3778 50  0000 L CNN
+F 2 "" H 5800 3650 50  0001 C CNN
+F 3 "" H 5800 3650 50  0001 C CNN
+	1    5800 3650
 	1    0    0    -1  
 $EndComp
-Wire Wire Line
-	5800 2500 5800 2800
-Wire Wire Line
-	4750 2800 5700 2800
-Wire Wire Line
-	4750 2800 4750 3850
-Wire Wire Line
-	5700 2500 5700 2800
 $Comp
 L power:+5V #PWR0105
 U 1 1 61E8CD41
@@ -257,19 +240,23 @@ Wire Wire Line
 	4450 4700 5000 4700
 Wire Wire Line
 	4750 3850 5300 3850
-Wire Wire Line
-	5800 2800 6700 2800
-Wire Wire Line
-	6700 2800 6700 3850
 $Comp
 L Device:R_Network03 RN2110
 U 1 1 6256C4FE
-P 5800 2300
-F 0 "RN2110" H 5988 2346 50  0000 L CNN
-F 1 "R_Network03" H 5988 2255 50  0000 L CNN
-F 2 "Resistor_THT:R_Array_SIP4" V 6075 2300 50  0001 C CNN
-F 3 "http://www.vishay.com/docs/31509/csc.pdf" H 5800 2300 50  0001 C CNN
-	1    5800 2300
-	1    0    0    -1  
+P 4150 3150
+F 0 "RN2110" V 4450 3000 50  0000 L CNN
+F 1 "10k" V 4350 3100 50  0000 L CNN
+F 2 "Resistor_THT:R_Array_SIP4" V 4425 3150 50  0001 C CNN
+F 3 "http://www.vishay.com/docs/31509/csc.pdf" H 4150 3150 50  0001 C CNN
+	1    4150 3150
+	0    -1   -1   0   
 $EndComp
+Wire Wire Line
+	4350 3250 4750 3250
+Wire Wire Line
+	4750 3250 4750 3850
+Wire Wire Line
+	4350 3150 6700 3150
+Wire Wire Line
+	6700 3150 6700 4050
 $EndSCHEMATC
