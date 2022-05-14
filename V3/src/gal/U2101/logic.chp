@@ -17,9 +17,9 @@
                           |                 |
                       A18 |  7           14 | MWRITE
                           |                 |
-                      A19 |  8           13 | CPURST
+                      A19 |  8           13 | NC
                           |                 |
-                       NC |  9           12 | RESET
+                    RESET |  9           12 | CPURST
                           |                 |
                       GND | 10           11 | NC
                           -------------------

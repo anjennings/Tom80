@@ -10,11 +10,11 @@
    6   | A7       | Input
    7   | A18      | Input
    8   | A19      | Input
-   9   | NC       | Input
+   9   | RESET    | Input
   10   | GND      | GND
   11   | NC       | Input
-  12   | RESET    | Input
-  13   | CPURST   | Output
+  12   | CPURST   | Output
+  13   | NC       | NC
   14   | MWRITE   | Output
   15   | MREAD    | Output
   16   | PIO      | Output
