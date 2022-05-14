@@ -772,17 +772,6 @@ Wire Wire Line
 	9750 4400 10350 4400
 Wire Wire Line
 	9750 4150 9950 4150
-$Comp
-L Connector_Generic:Conn_02x24_Counter_Clockwise J2100
-U 1 1 62808857
-P 1800 2950
-F 0 "J2100" H 1850 4400 50  0000 C CNN
-F 1 "Conn_02x24_Counter_Clockwise" H 1850 4300 50  0000 C CNN
-F 2 "Connector_PinSocket_2.54mm:PinSocket_2x24_P2.54mm_Vertical" H 1800 2950 50  0001 C CNN
-F 3 "~" H 1800 2950 50  0001 C CNN
-	1    1800 2950
-	1    0    0    -1  
-$EndComp
 Wire Wire Line
 	2100 3150 2350 3150
 Text Label 2350 3150 2    50   ~ 0
@@ -807,10 +796,8 @@ Wire Wire Line
 	2100 3850 2350 3850
 Wire Wire Line
 	2100 4150 2100 4050
-Connection ~ 2100 4150
 Wire Wire Line
 	1600 4150 1600 4050
-Connection ~ 1600 4150
 Wire Wire Line
 	6750 2300 7050 2300
 Text Label 7050 2300 2    50   ~ 0
@@ -916,6 +903,19 @@ Wire Wire Line
 	2100 2750 2400 2750
 Text Label 2400 2750 2    50   ~ 0
 BUSACK
+$Comp
+L Connector_Generic:Conn_02x24_Odd_Even J2100
+U 1 1 6294FC30
+P 1800 2950
+F 0 "J2100" H 1850 4267 50  0000 C CNN
+F 1 "Conn_02x24_Odd_Even" H 1850 4176 50  0000 C CNN
+F 2 "Connector_PinSocket_2.54mm:PinSocket_2x24_P2.54mm_Vertical" H 1800 2950 50  0001 C CNN
+F 3 "~" H 1800 2950 50  0001 C CNN
+	1    1800 2950
+	1    0    0    -1  
+$EndComp
+Connection ~ 1600 4150
+Connection ~ 2100 4150
 Wire Bus Line
 	1600 6350 1600 6550
 Wire Bus Line
