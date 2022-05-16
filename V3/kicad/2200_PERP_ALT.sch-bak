@@ -69,13 +69,13 @@ MOSI
 $Comp
 L Connector:Conn_01x08_Male J2200
 U 1 1 6207A119
-P 6050 3150
-F 0 "J2200" H 6022 3032 50  0000 R CNN
-F 1 "Conn_01x08_Male" H 6022 3123 50  0000 R CNN
-F 2 "Connector_PinHeader_2.54mm:PinHeader_1x08_P2.54mm_Vertical" H 6050 3150 50  0001 C CNN
-F 3 "~" H 6050 3150 50  0001 C CNN
-	1    6050 3150
-	-1   0    0    1   
+P 6050 3050
+F 0 "J2200" H 6022 2932 50  0000 R CNN
+F 1 "Conn_01x08_Male" H 6022 3023 50  0000 R CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_1x08_P2.54mm_Vertical" H 6050 3050 50  0001 C CNN
+F 3 "~" H 6050 3050 50  0001 C CNN
+	1    6050 3050
+	-1   0    0    -1  
 $EndComp
 Text HLabel 2850 4250 0    50   Input ~ 0
 RD
@@ -193,24 +193,24 @@ Text Label 5350 3150 0    50   ~ 0
 CS0
 Text Label 5350 3050 0    50   ~ 0
 CS1
-Text Label 5350 2850 0    50   ~ 0
+Text Label 5550 2650 0    50   ~ 0
 CS3
 Text Label 5350 2950 0    50   ~ 0
 CS2
-Text Label 5350 2750 0    50   ~ 0
+Text Label 5350 2850 0    50   ~ 0
 CS4
 Text Label 4350 3050 2    50   ~ 0
 CS1
 $Comp
 L Device:R_Network08 RN2200
 U 1 1 6213A6F8
-P 4750 3150
-F 0 "RN2200" V 4133 3150 50  0000 C CNN
-F 1 "10k" V 4224 3150 50  0000 C CNN
-F 2 "Resistor_THT:R_Array_SIP9" V 5225 3150 50  0001 C CNN
-F 3 "http://www.vishay.com/docs/31509/csc.pdf" H 4750 3150 50  0001 C CNN
-	1    4750 3150
-	0    1    1    0   
+P 4750 3050
+F 0 "RN2200" V 4133 3050 50  0000 C CNN
+F 1 "10k" V 4224 3050 50  0000 C CNN
+F 2 "Resistor_THT:R_Array_SIP9" V 5225 3050 50  0001 C CNN
+F 3 "http://www.vishay.com/docs/31509/csc.pdf" H 4750 3050 50  0001 C CNN
+	1    4750 3050
+	0    1    -1   0   
 $EndComp
 Wire Wire Line
 	3850 2750 4550 2750
@@ -231,12 +231,12 @@ Wire Wire Line
 $Comp
 L power:+5V #PWR0128
 U 1 1 621809FF
-P 4950 2750
-F 0 "#PWR0128" H 4950 2600 50  0001 C CNN
-F 1 "+5V" V 4965 2878 50  0000 L CNN
-F 2 "" H 4950 2750 50  0001 C CNN
-F 3 "" H 4950 2750 50  0001 C CNN
-	1    4950 2750
+P 4950 3450
+F 0 "#PWR0128" H 4950 3300 50  0001 C CNN
+F 1 "+5V" V 4965 3578 50  0000 L CNN
+F 2 "" H 4950 3450 50  0001 C CNN
+F 3 "" H 4950 3450 50  0001 C CNN
+	1    4950 3450
 	0    1    1    0   
 $EndComp
 $Comp

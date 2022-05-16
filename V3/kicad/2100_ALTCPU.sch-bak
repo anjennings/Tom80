@@ -58,8 +58,6 @@ F 3 "" H 6750 1900 50  0001 C CNN
 	1    6750 1900
 	0    1    1    0   
 $EndComp
-Wire Bus Line
-	4300 3550 4200 3550
 Entry Wire Line
 	4300 3550 4400 3650
 Entry Wire Line
@@ -108,8 +106,6 @@ Text Label 4400 4250 0    50   ~ 0
 D6
 Text Label 4400 4350 0    50   ~ 0
 D7
-Text HLabel 4200 3550 0    50   BiDi ~ 0
-D[0..7]
 Wire Bus Line
 	4300 1400 4200 1400
 Entry Wire Line
@@ -727,6 +723,10 @@ Wire Wire Line
 	1750 6650 2000 6650
 Text Label 1750 6450 0    50   ~ 0
 A7
+Text HLabel 4200 3550 0    50   BiDi ~ 0
+D[0..7]
+Wire Bus Line
+	4300 3550 4200 3550
 Wire Bus Line
 	4300 3550 4300 4250
 Wire Bus Line

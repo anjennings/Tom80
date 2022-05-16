@@ -14,23 +14,9 @@ Comment3 ""
 Comment4 ""
 $EndDescr
 Wire Bus Line
-	5300 3400 5400 3400
-Wire Bus Line
-	5400 3400 5400 3150
-Wire Bus Line
 	5400 3150 5150 3150
 Wire Bus Line
-	5300 3500 5500 3500
-Wire Bus Line
-	5500 3500 5500 3050
-Wire Bus Line
 	5500 3050 5150 3050
-Wire Bus Line
-	5500 3500 6450 3500
-Connection ~ 5500 3500
-Wire Bus Line
-	5400 3400 6450 3400
-Connection ~ 5400 3400
 Text HLabel 5150 3150 0    50   3State ~ 0
 D[0..7]
 Wire Wire Line
@@ -87,4 +73,18 @@ Wire Wire Line
 	6450 3800 5300 3800
 Text HLabel 5150 3050 0    50   Output ~ 0
 A[0..19]
+Wire Bus Line
+	5300 3400 5500 3400
+Wire Bus Line
+	5300 3500 5400 3500
+Wire Bus Line
+	5400 3150 5400 3500
+Connection ~ 5400 3500
+Wire Bus Line
+	5400 3500 6450 3500
+Wire Bus Line
+	5500 3050 5500 3400
+Connection ~ 5500 3400
+Wire Bus Line
+	5500 3400 6450 3400
 $EndSCHEMATC
