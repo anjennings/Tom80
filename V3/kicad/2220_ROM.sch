@@ -168,18 +168,18 @@ F 3 "" H 8100 3500 50  0001 C CNN
 	1    8100 3500
 	-1   0    0    1   
 $EndComp
-Text Label 8900 4550 0    50   ~ 0
+Text Label 8900 4850 0    50   ~ 0
 LC_MOSI
 Wire Wire Line
-	9250 4550 8900 4550
-Text Label 8900 4650 0    50   ~ 0
+	9250 4850 8900 4850
+Text Label 8900 4750 0    50   ~ 0
 LC_SCK
 Wire Wire Line
-	9250 4650 8900 4650
-Text Label 8900 4750 0    50   ~ 0
+	9250 4750 8900 4750
+Text Label 8900 4650 0    50   ~ 0
 LC_MISO
 Wire Wire Line
-	9250 4750 8900 4750
+	9250 4650 8900 4650
 $Comp
 L power:+5V #PWR?
 U 1 1 62605D54
@@ -243,7 +243,7 @@ Text Label 4200 4500 0    50   ~ 0
 PROG_EN
 Wire Wire Line
 	4200 4500 4700 4500
-Text Label 8900 4850 0    50   ~ 0
+Text Label 8900 4950 0    50   ~ 0
 PROG_EN
 $Comp
 L power:GND #PWR0139
@@ -420,7 +420,7 @@ F 3 "~" H 6600 5400 50  0001 C CNN
 $EndComp
 NoConn ~ 7600 2900
 Wire Wire Line
-	8900 4850 9250 4850
+	8900 4950 9250 4950
 Wire Wire Line
 	6700 5050 6600 5050
 Wire Wire Line
