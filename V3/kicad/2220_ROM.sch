@@ -243,7 +243,7 @@ Text Label 4200 4500 0    50   ~ 0
 PROG_EN
 Wire Wire Line
 	4200 4500 4700 4500
-Text Label 8900 4950 0    50   ~ 0
+Text Label 8900 4850 0    50   ~ 0
 PROG_EN
 $Comp
 L power:GND #PWR0139
@@ -388,10 +388,6 @@ F 3 "" H 7100 5450 50  0001 C CNN
 	1    7100 5450
 	1    0    0    -1  
 $EndComp
-Wire Wire Line
-	9250 4850 8900 4850
-Text Label 8900 4850 0    50   ~ 0
-LC_HOLD
 Connection ~ 6600 5250
 Wire Wire Line
 	6600 5250 6700 5250
@@ -424,7 +420,7 @@ F 3 "~" H 6600 5400 50  0001 C CNN
 $EndComp
 NoConn ~ 7600 2900
 Wire Wire Line
-	8900 4950 9250 4950
+	8900 4850 9250 4850
 Wire Wire Line
 	6700 5050 6600 5050
 Wire Wire Line
