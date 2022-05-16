@@ -163,7 +163,7 @@ Text Label 5350 3450 0    50   ~ 0
 MISO
 Wire Wire Line
 	5350 3450 5850 3450
-Text Label 5350 3250 0    50   ~ 0
+Text Label 5350 2750 0    50   ~ 0
 MOSI
 Wire Wire Line
 	5350 3250 5850 3250
@@ -189,13 +189,13 @@ Wire Wire Line
 	5850 2850 5350 2850
 Wire Wire Line
 	5850 2750 5350 2750
-Text Label 5350 3150 0    50   ~ 0
+Text Label 5350 3250 0    50   ~ 0
 CS0
-Text Label 5350 3050 0    50   ~ 0
+Text Label 5350 3150 0    50   ~ 0
 CS1
-Text Label 5550 2650 0    50   ~ 0
-CS3
 Text Label 5350 2950 0    50   ~ 0
+CS3
+Text Label 5350 3050 0    50   ~ 0
 CS2
 Text Label 5350 2850 0    50   ~ 0
 CS4

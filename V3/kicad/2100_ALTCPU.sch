@@ -517,19 +517,6 @@ Wire Wire Line
 	7200 4500 7450 4500
 Wire Wire Line
 	7200 4500 7200 4800
-$Comp
-L Connector:Conn_01x02_Male J?
-U 1 1 62765282
-P 6950 3900
-AR Path="/6191B6A2/61EBDADB/62542978/62765282" Ref="J?"  Part="1" 
-AR Path="/6191B6A2/61EBDADB/62765282" Ref="J2101"  Part="1" 
-F 0 "J2101" H 6750 3850 50  0000 C CNN
-F 1 "Conn_01x02_Male" H 6550 3750 50  0000 C CNN
-F 2 "Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical" H 6950 3900 50  0001 C CNN
-F 3 "~" H 6950 3900 50  0001 C CNN
-	1    6950 3900
-	-1   0    0    1   
-$EndComp
 Wire Wire Line
 	9950 4300 10350 4300
 Wire Wire Line
@@ -727,6 +714,8 @@ Text HLabel 4200 3550 0    50   BiDi ~ 0
 D[0..7]
 Wire Bus Line
 	4300 3550 4200 3550
+NoConn ~ 6750 3800
+NoConn ~ 6750 3900
 Wire Bus Line
 	4300 3550 4300 4250
 Wire Bus Line
