@@ -62,20 +62,20 @@ F 3 "" H 5800 2950 50  0001 C CNN
 $EndComp
 Text Label 8100 4700 0    50   ~ 0
 SD_SCK
-Text Label 8100 4800 0    50   ~ 0
+Text Label 8100 4600 0    50   ~ 0
 SD_MOSI
 Wire Wire Line
 	8100 4700 8450 4700
 Wire Wire Line
-	8100 4800 8450 4800
+	8100 4600 8450 4600
 Wire Wire Line
 	8450 4500 8100 4500
 Text Label 8100 4500 0    50   ~ 0
 SD_CS
-Text Label 8100 4600 0    50   ~ 0
+Text Label 8100 4800 0    50   ~ 0
 SD_MISO
 Wire Wire Line
-	8100 4600 8450 4600
+	8100 4800 8450 4800
 $Comp
 L power:+3.3V #PWR?
 U 1 1 6259F3FB
