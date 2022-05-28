@@ -136,7 +136,7 @@ Wire Wire Line
 	6150 4200 6250 4200
 Connection ~ 6150 4200
 Text Notes 1250 6500 0    197  ~ 39
-This page has NOT been checked!
+This page has been checked!
 $Comp
 L Device:C C?
 U 1 1 6262DF87

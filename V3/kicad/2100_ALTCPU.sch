@@ -383,8 +383,8 @@ F 3 "" H 3400 4950 50  0001 C CNN
 $EndComp
 Text Label 3700 4650 0    50   ~ 0
 CLK
-Text Notes 5750 6250 0    197  ~ 39
-This page has NOT been checked!
+Text Notes 7700 6950 0    118  ~ 24
+This page has been checked!
 Text Label 7050 2500 2    50   ~ 0
 MREQ
 Text Label 1750 6350 0    50   ~ 0
