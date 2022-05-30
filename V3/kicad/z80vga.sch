@@ -1,0 +1,352 @@
+EESchema Schematic File Version 4
+EELAYER 30 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 1 9
+Title ""
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+Text Notes 1050 10550 0    197  ~ 39
+This page has NOT been checked!
+Wire Bus Line
+	5100 4600 5650 4600
+Wire Bus Line
+	5100 3800 5650 3800
+Wire Wire Line
+	5100 3900 5650 3900
+Wire Wire Line
+	5100 4000 5650 4000
+$Sheet
+S 5650 3700 850  1000
+U 6195D2C9
+F0 "3000_Memory" 50
+F1 "3000_Memory.sch" 50
+F2 "A[0..19]" I L 5650 3800 50 
+F3 "D[0..7]" B L 5650 4600 50 
+F4 "ROM_CS" I L 5650 4300 50 
+F5 "READ" I L 5650 3900 50 
+F6 "RAM_CS" I L 5650 4200 50 
+F7 "WRITE" I L 5650 4000 50 
+$EndSheet
+$Sheet
+S 4350 3700 750  1000
+U 6191B6A2
+F0 "2000_Z80" 50
+F1 "2000_Z80.sch" 50
+F2 "D[0..7]" T R 5100 4600 50 
+F3 "WRITE" O R 5100 4000 50 
+F4 "READ" O R 5100 3900 50 
+F5 "ROM_CS" O R 5100 4300 50 
+F6 "RAM_CS" O R 5100 4200 50 
+F7 "A[0..19]" O R 5100 3800 50 
+$EndSheet
+Text Notes 7800 6950 0    118  ~ 24
+This page has been checked!
+Wire Wire Line
+	5100 4200 5650 4200
+Wire Wire Line
+	5100 4300 5650 4300
+$Comp
+L Regulator_Linear:L7805 U1000
+U 1 1 6255C02F
+P 6200 5450
+F 0 "U1000" H 6200 5692 50  0000 C CNN
+F 1 "L7805" H 6200 5601 50  0000 C CNN
+F 2 "Package_TO_SOT_SMD:TO-263-3_TabPin2" H 6225 5300 50  0001 L CIN
+F 3 "http://www.st.com/content/ccc/resource/technical/document/datasheet/41/4f/b3/b0/12/d4/47/88/CD00000444.pdf/files/CD00000444.pdf/jcr:content/translations/en.CD00000444.pdf" H 6200 5400 50  0001 C CNN
+	1    6200 5450
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:CP1 C1000
+U 1 1 6255CCA4
+P 5600 5600
+F 0 "C1000" H 5715 5646 50  0000 L CNN
+F 1 ".33uF" H 5715 5555 50  0000 L CNN
+F 2 "Capacitor_THT:CP_Radial_D5.0mm_P2.00mm" H 5600 5600 50  0001 C CNN
+F 3 "~" H 5600 5600 50  0001 C CNN
+	1    5600 5600
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:CP1 C1001
+U 1 1 6255DB35
+P 6800 5600
+F 0 "C1001" H 6915 5646 50  0000 L CNN
+F 1 ">.1uF" H 6915 5555 50  0000 L CNN
+F 2 "Capacitor_THT:CP_Radial_D5.0mm_P2.00mm" H 6800 5600 50  0001 C CNN
+F 3 "~" H 6800 5600 50  0001 C CNN
+	1    6800 5600
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5600 5450 5900 5450
+Wire Wire Line
+	6500 5450 6800 5450
+Wire Wire Line
+	5600 5750 6200 5750
+Connection ~ 6200 5750
+Wire Wire Line
+	6200 5750 6800 5750
+$Comp
+L power:GND #PWR0119
+U 1 1 6255E2E4
+P 6200 5750
+F 0 "#PWR0119" H 6200 5500 50  0001 C CNN
+F 1 "GND" H 6205 5577 50  0000 C CNN
+F 2 "" H 6200 5750 50  0001 C CNN
+F 3 "" H 6200 5750 50  0001 C CNN
+	1    6200 5750
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:+5V #PWR0141
+U 1 1 6255EB09
+P 6800 5450
+F 0 "#PWR0141" H 6800 5300 50  0001 C CNN
+F 1 "+5V" V 6815 5578 50  0000 L CNN
+F 2 "" H 6800 5450 50  0001 C CNN
+F 3 "" H 6800 5450 50  0001 C CNN
+	1    6800 5450
+	0    1    1    0   
+$EndComp
+Connection ~ 6800 5450
+$Comp
+L Connector:Barrel_Jack_Switch J1000
+U 1 1 62560114
+P 3550 6050
+F 0 "J1000" H 3607 6367 50  0000 C CNN
+F 1 "Barrel_Jack_Switch" H 3607 6276 50  0000 C CNN
+F 2 "Connector_BarrelJack:BarrelJack_Horizontal" H 3600 6010 50  0001 C CNN
+F 3 "~" H 3600 6010 50  0001 C CNN
+	1    3550 6050
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3850 5950 4150 5950
+Wire Wire Line
+	3850 6050 3950 6050
+Wire Wire Line
+	3950 6050 3950 6150
+Wire Wire Line
+	3950 6150 3850 6150
+Wire Wire Line
+	3950 6150 3950 6250
+Connection ~ 3950 6150
+$Comp
+L Diode:1N4001 D1000
+U 1 1 62563A78
+P 4300 5950
+F 0 "D1000" H 4300 5733 50  0000 C CNN
+F 1 "1N4001" H 4300 5824 50  0000 C CNN
+F 2 "Diode_THT:D_DO-41_SOD81_P10.16mm_Horizontal" H 4300 5775 50  0001 C CNN
+F 3 "http://www.vishay.com/docs/88503/1n4001.pdf" H 4300 5950 50  0001 C CNN
+	1    4300 5950
+	-1   0    0    1   
+$EndComp
+$Comp
+L Mechanical:MountingHole H0
+U 1 1 6269D181
+P 1250 5350
+F 0 "H0" H 1350 5396 50  0000 L CNN
+F 1 "MountingHole" H 1350 5305 50  0000 L CNN
+F 2 "MountingHole:MountingHole_3.5mm" H 1250 5350 50  0001 C CNN
+F 3 "~" H 1250 5350 50  0001 C CNN
+	1    1250 5350
+	1    0    0    -1  
+$EndComp
+$Comp
+L Mechanical:MountingHole H2
+U 1 1 6269D7FE
+P 1250 5750
+F 0 "H2" H 1350 5796 50  0000 L CNN
+F 1 "MountingHole" H 1350 5705 50  0000 L CNN
+F 2 "MountingHole:MountingHole_3.5mm" H 1250 5750 50  0001 C CNN
+F 3 "~" H 1250 5750 50  0001 C CNN
+	1    1250 5750
+	1    0    0    -1  
+$EndComp
+$Comp
+L Mechanical:MountingHole H1
+U 1 1 6269DB56
+P 2150 5350
+F 0 "H1" H 2250 5396 50  0000 L CNN
+F 1 "MountingHole" H 2250 5305 50  0000 L CNN
+F 2 "MountingHole:MountingHole_3.5mm" H 2150 5350 50  0001 C CNN
+F 3 "~" H 2150 5350 50  0001 C CNN
+	1    2150 5350
+	1    0    0    -1  
+$EndComp
+$Comp
+L Mechanical:MountingHole H3
+U 1 1 6269E018
+P 2150 5750
+F 0 "H3" H 2250 5796 50  0000 L CNN
+F 1 "MountingHole" H 2250 5705 50  0000 L CNN
+F 2 "MountingHole:MountingHole_3.5mm" H 2150 5750 50  0001 C CNN
+F 3 "~" H 2150 5750 50  0001 C CNN
+	1    2150 5750
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:LED D?
+U 1 1 62A5A6D1
+P 4150 7050
+AR Path="/6191B6A2/61EBDADB/62A5A6D1" Ref="D?"  Part="1" 
+AR Path="/62A5A6D1" Ref="D1001"  Part="1" 
+F 0 "D1001" H 4150 7200 50  0000 C TNN
+F 1 "LED" H 4150 6950 50  0000 C CNN
+F 2 "LED_THT:LED_D3.0mm" H 4150 7050 50  0001 C CNN
+F 3 "~" H 4150 7050 50  0001 C CNN
+	1    4150 7050
+	-1   0    0    1   
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 62A5A6D8
+P 4300 7050
+AR Path="/6191B6A2/61EBDADB/62A5A6D8" Ref="#PWR?"  Part="1" 
+AR Path="/62A5A6D8" Ref="#PWR0123"  Part="1" 
+F 0 "#PWR0123" H 4300 6800 50  0001 C CNN
+F 1 "GND" V 4305 6922 50  0000 R CNN
+F 2 "" H 4300 7050 50  0001 C CNN
+F 3 "" H 4300 7050 50  0001 C CNN
+	1    4300 7050
+	0    -1   -1   0   
+$EndComp
+$Comp
+L power:+5V #PWR0144
+U 1 1 62A5BC7A
+P 3700 7050
+F 0 "#PWR0144" H 3700 6900 50  0001 C CNN
+F 1 "+5V" V 3715 7178 50  0000 L CNN
+F 2 "" H 3700 7050 50  0001 C CNN
+F 3 "" H 3700 7050 50  0001 C CNN
+	1    3700 7050
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 62A654EB
+P 3850 7050
+AR Path="/6191B6A2/61EBDADB/62542978/62A654EB" Ref="R?"  Part="1" 
+AR Path="/62A654EB" Ref="R1000"  Part="1" 
+F 0 "R1000" V 3950 6900 50  0000 L CNN
+F 1 "2.2K" V 3750 6950 50  0000 L CNN
+F 2 "Resistor_THT:R_Axial_DIN0309_L9.0mm_D3.2mm_P2.54mm_Vertical" V 3780 7050 50  0001 C CNN
+F 3 "~" H 3850 7050 50  0001 C CNN
+	1    3850 7050
+	0    1    1    0   
+$EndComp
+$Comp
+L Regulator_Linear:LD39150DT33 U?
+U 1 1 6290B173
+P 6200 6400
+AR Path="/6191B6A2/61F28B7D/6290B173" Ref="U?"  Part="1" 
+AR Path="/6191B6A2/61F28B7D/62590ED9/6290B173" Ref="U?"  Part="1" 
+AR Path="/6290B173" Ref="U1001"  Part="1" 
+F 0 "U1001" H 6200 6642 50  0000 C CNN
+F 1 "TL760M33" H 6200 6551 50  0000 C CNN
+F 2 "Package_TO_SOT_SMD:TO-252-3_TabPin2" H 6200 6600 50  0001 C CNN
+F 3 "https://www.st.com/resource/en/datasheet/ld39150.pdf" H 6300 6150 50  0001 C CNN
+	1    6200 6400
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:+3.3V #PWR?
+U 1 1 6290B179
+P 6600 6400
+AR Path="/6191B6A2/61F28B7D/6290B179" Ref="#PWR?"  Part="1" 
+AR Path="/6191B6A2/61F28B7D/62590ED9/6290B179" Ref="#PWR?"  Part="1" 
+AR Path="/6290B179" Ref="#PWR0120"  Part="1" 
+F 0 "#PWR0120" H 6600 6250 50  0001 C CNN
+F 1 "+3.3V" V 6615 6528 50  0000 L CNN
+F 2 "" H 6600 6400 50  0001 C CNN
+F 3 "" H 6600 6400 50  0001 C CNN
+	1    6600 6400
+	0    1    1    0   
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 6290B17F
+P 6200 6700
+AR Path="/6191B6A2/61F28B7D/6290B17F" Ref="#PWR?"  Part="1" 
+AR Path="/6191B6A2/61F28B7D/62590ED9/6290B17F" Ref="#PWR?"  Part="1" 
+AR Path="/6290B17F" Ref="#PWR0124"  Part="1" 
+F 0 "#PWR0124" H 6200 6450 50  0001 C CNN
+F 1 "GND" H 6205 6527 50  0000 C CNN
+F 2 "" H 6200 6700 50  0001 C CNN
+F 3 "" H 6200 6700 50  0001 C CNN
+	1    6200 6700
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5850 6700 6200 6700
+Wire Wire Line
+	6200 6700 6550 6700
+Connection ~ 6200 6700
+$Comp
+L Device:CP1 C1003
+U 1 1 6290B18E
+P 6550 6550
+AR Path="/6290B18E" Ref="C1003"  Part="1" 
+AR Path="/6191B6A2/61F28B7D/62590ED9/6290B18E" Ref="C?"  Part="1" 
+F 0 "C1003" H 6665 6596 50  0000 L CNN
+F 1 "22uF" H 6665 6505 50  0000 L CNN
+F 2 "Capacitor_THT:CP_Radial_D5.0mm_P2.00mm" H 6550 6550 50  0001 C CNN
+F 3 "~" H 6550 6550 50  0001 C CNN
+	1    6550 6550
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	6500 6400 6550 6400
+Connection ~ 6550 6400
+Wire Wire Line
+	6550 6400 6600 6400
+Wire Wire Line
+	5850 6400 5900 6400
+$Comp
+L Device:CP1 C1002
+U 1 1 6290B196
+P 5850 6550
+AR Path="/6290B196" Ref="C1002"  Part="1" 
+AR Path="/6191B6A2/61F28B7D/62590ED9/6290B196" Ref="C?"  Part="1" 
+F 0 "C1002" H 5965 6596 50  0000 L CNN
+F 1 ".1uF" H 5965 6505 50  0000 L CNN
+F 2 "Capacitor_THT:CP_Radial_D5.0mm_P2.00mm" H 5850 6550 50  0001 C CNN
+F 3 "~" H 5850 6550 50  0001 C CNN
+	1    5850 6550
+	-1   0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR0140
+U 1 1 629120EB
+P 3950 6250
+F 0 "#PWR0140" H 3950 6000 50  0001 C CNN
+F 1 "GND" H 3955 6077 50  0000 C CNN
+F 2 "" H 3950 6250 50  0001 C CNN
+F 3 "" H 3950 6250 50  0001 C CNN
+	1    3950 6250
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4450 5950 5150 5950
+Wire Wire Line
+	5150 5950 5150 5450
+Wire Wire Line
+	5150 5450 5600 5450
+Connection ~ 5600 5450
+Wire Wire Line
+	5150 5950 5150 6400
+Wire Wire Line
+	5150 6400 5850 6400
+Connection ~ 5150 5950
+Connection ~ 5850 6400
+$EndSCHEMATC

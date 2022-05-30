@@ -1,0 +1,25 @@
+
+
+ Pin # | Name     | Pin Type
+-----------------------------
+   1   | MREQ     | Input
+   2   | IORQ     | Input
+   3   | RD       | Input
+   4   | WR       | Input
+   5   | RTS0     | Input
+   6   | A7       | Input
+   7   | A18      | Input
+   8   | A19      | Input
+   9   | RESET    | Input
+  10   | GND      | GND
+  11   | NC       | Input
+  12   | CPURST   | Output
+  13   | NC       | NC
+  14   | MWRITE   | Output
+  15   | MREAD    | Output
+  16   | PIO      | Output
+  17   | AUX      | Output
+  18   | RAM      | Output
+  19   | ROM      | Output
+  20   | VCC      | VCC
+

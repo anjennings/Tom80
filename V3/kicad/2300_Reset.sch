@@ -1,0 +1,272 @@
+EESchema Schematic File Version 4
+EELAYER 30 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 6 6
+Title ""
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L Timer:LM555xM U?
+U 1 1 624C743E
+P 5800 4050
+AR Path="/624C743E" Ref="U?"  Part="1" 
+AR Path="/62497D60/624C743E" Ref="U?"  Part="1" 
+AR Path="/61D852D7/624C743E" Ref="U1000"  Part="1" 
+AR Path="/6191B6A2/624CF3AF/624C743E" Ref="U?"  Part="1" 
+F 0 "U?" H 5800 4631 50  0000 L TNN
+F 1 "LM555xM" H 5800 4540 50  0000 L TNN
+F 2 "Package_DIP:DIP-8_W7.62mm_LongPads" H 6650 3650 50  0001 C CNN
+F 3 "http://www.ti.com/lit/ds/symlink/lm555.pdf" H 6650 3650 50  0001 C CNN
+	1    5800 4050
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 624C7444
+P 5800 4700
+AR Path="/624C7444" Ref="#PWR?"  Part="1" 
+AR Path="/62497D60/624C7444" Ref="#PWR?"  Part="1" 
+AR Path="/61D852D7/624C7444" Ref="#PWR0101"  Part="1" 
+AR Path="/6191B6A2/624CF3AF/624C7444" Ref="#PWR?"  Part="1" 
+F 0 "#PWR?" H 5800 4450 50  0001 C CNN
+F 1 "GND" H 5805 4527 50  0000 C CNN
+F 2 "" H 5800 4700 50  0001 C CNN
+F 3 "" H 5800 4700 50  0001 C CNN
+	1    5800 4700
+	1    0    0    -1  
+$EndComp
+$Comp
+L Switch:SW_Push SW?
+U 1 1 624C744A
+P 4350 3850
+AR Path="/624C744A" Ref="SW?"  Part="1" 
+AR Path="/62497D60/624C744A" Ref="SW?"  Part="1" 
+AR Path="/61D852D7/624C744A" Ref="SW1000"  Part="1" 
+AR Path="/6191B6A2/624CF3AF/624C744A" Ref="SW?"  Part="1" 
+F 0 "SW?" H 4350 4135 50  0000 C CNN
+F 1 "SW_Push" H 4350 4044 50  0000 C CNN
+F 2 "Button_Switch_THT:SW_PUSH_6mm" H 4350 4050 50  0001 C CNN
+F 3 "~" H 4350 4050 50  0001 C CNN
+	1    4350 3850
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:C C?
+U 1 1 624C7456
+P 5000 4550
+AR Path="/624C7456" Ref="C?"  Part="1" 
+AR Path="/62497D60/624C7456" Ref="C?"  Part="1" 
+AR Path="/61D852D7/624C7456" Ref="C1001"  Part="1" 
+AR Path="/6191B6A2/624CF3AF/624C7456" Ref="C?"  Part="1" 
+F 0 "C?" H 5115 4596 50  0000 L CNN
+F 1 "C" H 5115 4505 50  0000 L CNN
+F 2 "Capacitor_THT:C_Rect_L4.0mm_W2.5mm_P2.50mm" H 5038 4400 50  0001 C CNN
+F 3 "~" H 5000 4550 50  0001 C CNN
+	1    5000 4550
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5800 4450 5800 4700
+Wire Wire Line
+	4150 4700 4150 3850
+Connection ~ 5800 4700
+Wire Wire Line
+	6300 3850 6700 3850
+Wire Wire Line
+	6300 4050 6700 4050
+Wire Wire Line
+	6700 4050 6700 3850
+Connection ~ 6700 3850
+Wire Wire Line
+	6300 4250 6700 4250
+Wire Wire Line
+	6700 4250 6700 4050
+Connection ~ 6700 4050
+$Comp
+L Device:C C?
+U 1 1 624C7467
+P 6700 4550
+AR Path="/624C7467" Ref="C?"  Part="1" 
+AR Path="/62497D60/624C7467" Ref="C?"  Part="1" 
+AR Path="/61D852D7/624C7467" Ref="C1002"  Part="1" 
+AR Path="/6191B6A2/624CF3AF/624C7467" Ref="C?"  Part="1" 
+F 0 "C?" H 6815 4596 50  0000 L CNN
+F 1 "C" H 6815 4505 50  0000 L CNN
+F 2 "Capacitor_THT:C_Rect_L4.0mm_W2.5mm_P2.50mm" H 6738 4400 50  0001 C CNN
+F 3 "~" H 6700 4550 50  0001 C CNN
+	1    6700 4550
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5800 4700 6700 4700
+Connection ~ 6700 4250
+Wire Wire Line
+	6700 4250 6700 4400
+Wire Wire Line
+	5000 4050 5000 4400
+Wire Wire Line
+	5250 3850 5300 3850
+Wire Wire Line
+	5800 3350 5800 3650
+$Comp
+L Device:C C1000
+U 1 1 625B99BC
+P 7900 3900
+AR Path="/61D852D7/625B99BC" Ref="C1000"  Part="1" 
+AR Path="/6191B6A2/624CF3AF/625B99BC" Ref="C?"  Part="1" 
+F 0 "C?" H 8015 3946 50  0000 L CNN
+F 1 "C" H 8015 3855 50  0000 L CNN
+F 2 "Capacitor_THT:C_Rect_L4.0mm_W2.5mm_P2.50mm" H 7938 3750 50  0001 C CNN
+F 3 "~" H 7900 3900 50  0001 C CNN
+	1    7900 3900
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 625BC077
+P 7900 4050
+AR Path="/625BC077" Ref="#PWR?"  Part="1" 
+AR Path="/62497D60/625BC077" Ref="#PWR?"  Part="1" 
+AR Path="/61D852D7/625BC077" Ref="#PWR0102"  Part="1" 
+AR Path="/6191B6A2/624CF3AF/625BC077" Ref="#PWR?"  Part="1" 
+F 0 "#PWR?" H 7900 3800 50  0001 C CNN
+F 1 "GND" H 7905 3877 50  0000 C CNN
+F 2 "" H 7900 4050 50  0001 C CNN
+F 3 "" H 7900 4050 50  0001 C CNN
+	1    7900 4050
+	1    0    0    -1  
+$EndComp
+Text HLabel 6950 3850 2    50   Input ~ 0
+Reset
+Wire Wire Line
+	6700 3850 6950 3850
+Text Notes 5100 5400 0    50   ~ 0
+Power on Reset\nReset signal is active high\n
+$Comp
+L Device:C C?
+U 1 1 62633FFA
+P 4550 4550
+AR Path="/62633FFA" Ref="C?"  Part="1" 
+AR Path="/62497D60/62633FFA" Ref="C?"  Part="1" 
+AR Path="/61D852D7/62633FFA" Ref="C1003"  Part="1" 
+AR Path="/6191B6A2/624CF3AF/62633FFA" Ref="C?"  Part="1" 
+F 0 "C?" H 4665 4596 50  0000 L CNN
+F 1 "C" H 4665 4505 50  0000 L CNN
+F 2 "Capacitor_THT:C_Rect_L4.0mm_W2.5mm_P2.50mm" H 4588 4400 50  0001 C CNN
+F 3 "~" H 4550 4550 50  0001 C CNN
+	1    4550 4550
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4550 4400 4550 3850
+Connection ~ 4750 3850
+Wire Wire Line
+	4750 3850 5250 3850
+Connection ~ 5250 3850
+Wire Wire Line
+	4150 4700 4550 4700
+Text Notes 1200 7100 0    197  ~ 39
+This page has NOT been checked!
+$Comp
+L Device:R_Network04 RN1000
+U 1 1 61A98508
+P 5900 2300
+AR Path="/61D852D7/61A98508" Ref="RN1000"  Part="1" 
+AR Path="/6191B6A2/624CF3AF/61A98508" Ref="RN?"  Part="1" 
+F 0 "RN?" H 6088 2346 50  0000 L CNN
+F 1 "R_Network04" H 6088 2255 50  0000 L CNN
+F 2 "Resistor_THT:R_Array_SIP5" V 6175 2300 50  0001 C CNN
+F 3 "http://www.vishay.com/docs/31509/csc.pdf" H 5900 2300 50  0001 C CNN
+	1    5900 2300
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:+5V #PWR0103
+U 1 1 61E872A1
+P 5700 2100
+AR Path="/61D852D7/61E872A1" Ref="#PWR0103"  Part="1" 
+AR Path="/6191B6A2/624CF3AF/61E872A1" Ref="#PWR?"  Part="1" 
+F 0 "#PWR?" H 5700 1950 50  0001 C CNN
+F 1 "+5V" V 5715 2228 50  0000 L CNN
+F 2 "" H 5700 2100 50  0001 C CNN
+F 3 "" H 5700 2100 50  0001 C CNN
+	1    5700 2100
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:+5V #PWR0104
+U 1 1 61E87BC4
+P 5800 3350
+AR Path="/61D852D7/61E87BC4" Ref="#PWR0104"  Part="1" 
+AR Path="/6191B6A2/624CF3AF/61E87BC4" Ref="#PWR?"  Part="1" 
+F 0 "#PWR?" H 5800 3200 50  0001 C CNN
+F 1 "+5V" V 5815 3478 50  0000 L CNN
+F 2 "" H 5800 3350 50  0001 C CNN
+F 3 "" H 5800 3350 50  0001 C CNN
+	1    5800 3350
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5900 2900 6700 2900
+Wire Wire Line
+	6700 2900 6700 3850
+Wire Wire Line
+	5900 2500 5900 2900
+Wire Wire Line
+	5800 2900 5250 2900
+Wire Wire Line
+	5250 2900 5250 3850
+Wire Wire Line
+	5800 2500 5800 2900
+Wire Wire Line
+	4750 2800 5700 2800
+Wire Wire Line
+	4750 2800 4750 3850
+Wire Wire Line
+	5700 2500 5700 2800
+$Comp
+L power:+5V #PWR0105
+U 1 1 61E8CD41
+P 7900 3750
+AR Path="/61D852D7/61E8CD41" Ref="#PWR0105"  Part="1" 
+AR Path="/6191B6A2/624CF3AF/61E8CD41" Ref="#PWR?"  Part="1" 
+F 0 "#PWR?" H 7900 3600 50  0001 C CNN
+F 1 "+5V" V 7915 3878 50  0000 L CNN
+F 2 "" H 7900 3750 50  0001 C CNN
+F 3 "" H 7900 3750 50  0001 C CNN
+	1    7900 3750
+	1    0    0    -1  
+$EndComp
+Connection ~ 4550 3850
+Connection ~ 4550 4700
+Wire Wire Line
+	4550 3850 4750 3850
+Wire Wire Line
+	4550 4700 5000 4700
+Connection ~ 5000 4700
+Wire Wire Line
+	5000 4700 5800 4700
+Wire Wire Line
+	5000 4050 5300 4050
+$Comp
+L power:+5V #PWR0106
+U 1 1 620357A9
+P 5300 4250
+AR Path="/61D852D7/620357A9" Ref="#PWR0106"  Part="1" 
+AR Path="/6191B6A2/624CF3AF/620357A9" Ref="#PWR?"  Part="1" 
+F 0 "#PWR?" H 5300 4100 50  0001 C CNN
+F 1 "+5V" V 5315 4378 50  0000 L CNN
+F 2 "" H 5300 4250 50  0001 C CNN
+F 3 "" H 5300 4250 50  0001 C CNN
+	1    5300 4250
+	0    -1   -1   0   
+$EndComp
+$EndSCHEMATC
