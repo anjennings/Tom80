@@ -1,7 +1,7 @@
 (export (version D)
   (design
     (source C:\Users\aidan\Documents\GitHub\Tom80\V3\kicad\z80vga.sch)
-    (date "5/28/2022 3:51:01 PM")
+    (date "6/19/2022 1:51:04 PM")
     (tool "Eeschema (5.1.10)-1")
     (sheet (number 1) (name /) (tstamps /)
       (title_block
@@ -217,7 +217,7 @@
       (tstamp 61A8DC9F))
     (comp (ref U3001)
       (value AS6C4008-55PCN)
-      (footprint Package_SO:TSOP-II-32_21.0x10.2mm_P1.27mm)
+      (footprint Package_SO:SSOP-32_11.305x20.495mm_P1.27mm)
       (datasheet https://www.digikey.com/en/products/detail/alliance-memory-inc/AS6C4008-55ZIN/4234590)
       (libsource (lib Memory_RAM) (part AS6C4008-55PCN) (description "512K x 8 Low Power CMOS RAM, DIP-32"))
       (sheetpath (names /3000_Memory/) (tstamps /6195D2C9/))
@@ -357,7 +357,7 @@
       (tstamp 6291A3FE))
     (comp (ref U2100)
       (value Z8-L180-S180-180-PQFP-80)
-      (footprint Package_QFP:PQFP-80_14x20mm_P0.8mm)
+      (footprint Z180-Custom-Footprint:PQFP-80_14x20mm_P0.8mm)
       (datasheet http://www.zilog.com/docs/z180/z8s180ps.pdf)
       (fields
         (field (name Description) "Microprocessors - MPU 20MHz STATIC Z180 XT")

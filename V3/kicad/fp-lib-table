@@ -1,0 +1,3 @@
+(fp_lib_table
+  (lib (name Z180-Custom-Footprint)(type KiCad)(uri ${KIPRJMOD}/Z180-Custom-Footprint.pretty)(options "")(descr ""))
+)

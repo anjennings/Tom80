@@ -383,7 +383,7 @@ F 3 "" H 3400 4950 50  0001 C CNN
 $EndComp
 Text Label 3700 4650 0    50   ~ 0
 CLK
-Text Notes 5750 6250 0    197  ~ 39
+Text Notes 7700 6950 0    118  ~ 24
 This page has been checked!
 Text Label 7050 2500 2    50   ~ 0
 MREQ
@@ -719,6 +719,23 @@ Wire Wire Line
 	6750 4900 7050 4900
 Text Label 7050 4900 2    50   ~ 0
 RXS
+$Comp
+L Zilog_Z180:Z8-L180-S180-180-PQFP-80 U1
+U 1 1 62AF3810
+P 1000 -400
+F 0 "U1" H 1200 -350 50  0000 R TNN
+F 1 "Z8-L180-S180-180-PQFP-80" V 710 -1250 50  0001 C CNN
+F 2 "Z180-Custom-Footprint:PQFP-80_14x20mm_P0.8mm" H 1250 450 50  0001 L CNN
+F 3 "http://www.zilog.com/docs/z180/z8s180ps.pdf" V 1100 -350 50  0001 L CNN
+F 4 "Microprocessors - MPU 20MHz STATIC Z180 XT" H 1250 650 50  0001 L CNN "Description"
+F 5 "3.1" H 1250 550 50  0001 L CNN "Height"
+F 6 "Zilog" H 1200 850 50  0001 L CNN "Manufacturer_Name"
+F 7 "Z8S18020FEG" H 1200 950 50  0001 L CNN "Manufacturer_Part_Number"
+F 8 "692-Z8S18020FEG" H 1250 1050 50  0001 L CNN "Mouser Part Number"
+F 9 "https://www.mouser.com/Search/Refine.aspx?Keyword=692-Z8S18020FEG" H 1250 1150 50  0001 L CNN "Mouser Price/Stock"
+	1    1000 -400
+	1    0    0    -1  
+$EndComp
 Wire Bus Line
 	4300 3550 4300 4250
 Wire Bus Line
