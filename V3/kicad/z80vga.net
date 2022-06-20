@@ -1,7 +1,7 @@
 (export (version D)
   (design
     (source C:\Users\aidan\Documents\GitHub\Tom80\V3\kicad\z80vga.sch)
-    (date "6/19/2022 1:51:04 PM")
+    (date "6/20/2022 7:34:39 AM")
     (tool "Eeschema (5.1.10)-1")
     (sheet (number 1) (name /) (tstamps /)
       (title_block
