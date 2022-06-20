@@ -309,7 +309,7 @@ Text Label 1750 5950 0    50   ~ 0
 MREQ
 Text Label 1750 6050 0    50   ~ 0
 IORQ
-Text HLabel 3000 5950 2    50   Output ~ 0
+Text HLabel 3000 6650 2    50   Output ~ 0
 ROM_CS
 Text Label 1750 6650 0    50   ~ 0
 A19
@@ -603,10 +603,10 @@ Wire Wire Line
 	4300 4550 4600 4550
 Text Label 4300 4550 0    50   ~ 0
 PHI
-Text Label 3300 6650 2    50   ~ 0
+Text Label 3300 5950 2    50   ~ 0
 C_RST
 Wire Wire Line
-	3000 6650 3300 6650
+	3000 5950 3300 5950
 Wire Wire Line
 	6750 2900 7050 2900
 Text Label 7050 2900 2    50   ~ 0
