@@ -13,13 +13,13 @@
    9   | RESET    | Input
   10   | GND      | GND
   11   | NC       | Input
-  12   | CPURST   | Output
+  12   | ROM      | Output
   13   | NC       | NC
   14   | MWRITE   | Output
   15   | MREAD    | Output
   16   | PIO      | Output
   17   | AUX      | Output
   18   | RAM      | Output
-  19   | ROM      | Output
+  19   | CRST     | Output
   20   | VCC      | VCC
 
