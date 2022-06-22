@@ -195,7 +195,7 @@ F 3 "" H 9650 4550 50  0001 C CNN
 $EndComp
 Text HLabel 2800 3450 0    50   Input ~ 0
 CS
-Text HLabel 2750 4250 0    50   Output ~ 0
+Text HLabel 2450 4250 0    50   Output ~ 0
 MISO
 Text HLabel 4400 4250 0    50   Input ~ 0
 SCK
@@ -438,4 +438,17 @@ LC_CS
 Wire Wire Line
 	3750 3450 3400 3450
 NoConn ~ 9250 4550
+$Comp
+L Device:R R?
+U 1 1 62B6033E
+P 2600 4250
+AR Path="/6191B6A2/61EBDADB/62542978/62B6033E" Ref="R?"  Part="1" 
+AR Path="/6191B6A2/61F28B7D/62602013/62B6033E" Ref="R2220"  Part="1" 
+F 0 "R2220" V 2700 4250 50  0000 L CNN
+F 1 "100k" V 2700 4050 50  0000 L CNN
+F 2 "Resistor_THT:R_Axial_DIN0309_L9.0mm_D3.2mm_P2.54mm_Vertical" V 2530 4250 50  0001 C CNN
+F 3 "~" H 2600 4250 50  0001 C CNN
+	1    2600 4250
+	0    1    1    0   
+$EndComp
 $EndSCHEMATC
