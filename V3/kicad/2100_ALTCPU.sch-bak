@@ -195,8 +195,6 @@ Text HLabel 7050 2600 2    50   Output ~ 0
 IORQ
 Text HLabel 7050 3100 2    50   Output ~ 0
 RD
-Text HLabel 7050 3200 2    50   Output ~ 0
-WR
 NoConn ~ 6750 4000
 NoConn ~ 4600 4750
 NoConn ~ 4600 5150
@@ -309,14 +307,12 @@ Text Label 1750 5950 0    50   ~ 0
 MREQ
 Text Label 1750 6050 0    50   ~ 0
 IORQ
-Text HLabel 3000 5950 2    50   Output ~ 0
+Text HLabel 3000 6650 2    50   Output ~ 0
 ROM_CS
 Text Label 1750 6650 0    50   ~ 0
 A19
 Text HLabel 3000 6050 2    50   Output ~ 0
 H_RAM_CS
-Text HLabel 3000 6150 2    50   Output ~ 0
-AUX_CS
 Text HLabel 3000 6250 2    50   Output ~ 0
 PIO_EN
 Wire Wire Line
@@ -603,10 +599,10 @@ Wire Wire Line
 	4300 4550 4600 4550
 Text Label 4300 4550 0    50   ~ 0
 PHI
-Text Label 3300 6650 2    50   ~ 0
+Text Label 3300 5950 2    50   ~ 0
 C_RST
 Wire Wire Line
-	3000 6650 3300 6650
+	3000 5950 3300 5950
 Wire Wire Line
 	6750 2900 7050 2900
 Text Label 7050 2900 2    50   ~ 0
@@ -719,6 +715,9 @@ Wire Wire Line
 	6750 4900 7050 4900
 Text Label 7050 4900 2    50   ~ 0
 RXS
+NoConn ~ 3000 6550
+NoConn ~ 3000 6150
+NoConn ~ 7050 2900
 Wire Bus Line
 	4300 3550 4300 4250
 Wire Bus Line
