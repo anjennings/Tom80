@@ -3,7 +3,7 @@ EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 4 9
+Sheet 4 8
 Title ""
 Date ""
 Rev ""
@@ -239,28 +239,6 @@ F 3 "" H 4950 3450 50  0001 C CNN
 	1    4950 3450
 	0    1    1    0   
 $EndComp
-$Comp
-L Device:R_Network08 RN2201
-U 1 1 62184408
-P 5000 5100
-F 0 "RN2201" H 4350 5000 50  0000 C CNN
-F 1 "10k" H 4400 5100 50  0000 C CNN
-F 2 "Resistor_THT:R_Array_SIP9" V 5475 5100 50  0001 C CNN
-F 3 "http://www.vishay.com/docs/31509/csc.pdf" H 5000 5100 50  0001 C CNN
-	1    5000 5100
-	1    0    0    1   
-$EndComp
-$Comp
-L power:+5V #PWR0129
-U 1 1 62184416
-P 4600 5300
-F 0 "#PWR0129" H 4600 5150 50  0001 C CNN
-F 1 "+5V" V 4615 5428 50  0000 L CNN
-F 2 "" H 4600 5300 50  0001 C CNN
-F 3 "" H 4600 5300 50  0001 C CNN
-	1    4600 5300
-	-1   0    0    1   
-$EndComp
 $Sheet
 S 7600 2850 600  600 
 U 62590ED9
@@ -287,101 +265,19 @@ Text Label 7350 3000 0    50   ~ 0
 CS0
 Wire Wire Line
 	7350 3000 7600 3000
-$Sheet
-S 8850 2850 550  600 
-U 62602013
-F0 "2220_ROM" 50
-F1 "2220_ROM.sch" 50
-F2 "CS" I L 8850 3000 50 
-F3 "MOSI" I L 8850 3100 50 
-F4 "MISO" O L 8850 3300 50 
-F5 "SCK" I L 8850 3200 50 
-$EndSheet
 Text Notes 7850 6950 0    118  ~ 24
 This page has been checked!
-Wire Wire Line
-	8850 3100 8600 3100
-Wire Wire Line
-	8850 3200 8600 3200
-Text Label 8600 3100 0    50   ~ 0
-MOSI
-Text Label 8600 3200 0    50   ~ 0
-SCK
-Text Label 8600 3300 0    50   ~ 0
-MISO
-Wire Wire Line
-	8850 3300 8600 3300
-Text Label 8600 3000 0    50   ~ 0
-CS1
-Wire Wire Line
-	8600 3000 8850 3000
 $Comp
 L Connector:Conn_01x08_Male J2201
 U 1 1 6261A38A
-P 6050 4350
-F 0 "J2201" H 6022 4232 50  0000 R CNN
-F 1 "Conn_01x08_Male" H 6022 4323 50  0000 R CNN
-F 2 "Connector_PinHeader_2.54mm:PinHeader_1x08_P2.54mm_Vertical" H 6050 4350 50  0001 C CNN
-F 3 "~" H 6050 4350 50  0001 C CNN
-	1    6050 4350
+P 4050 4350
+F 0 "J2201" H 4022 4232 50  0000 R CNN
+F 1 "Conn_01x08_Male" H 4022 4323 50  0000 R CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_1x08_P2.54mm_Vertical" H 4050 4350 50  0001 C CNN
+F 3 "~" H 4050 4350 50  0001 C CNN
+	1    4050 4350
 	-1   0    0    1   
 $EndComp
-Wire Wire Line
-	3850 4650 4600 4650
-Wire Wire Line
-	4600 4900 4600 4650
-Connection ~ 4600 4650
-Wire Wire Line
-	4600 4650 5850 4650
-Wire Wire Line
-	3850 4550 4700 4550
-Wire Wire Line
-	3850 4450 4800 4450
-Wire Wire Line
-	4700 4900 4700 4550
-Connection ~ 4700 4550
-Wire Wire Line
-	4700 4550 5850 4550
-Wire Wire Line
-	4800 4900 4800 4450
-Connection ~ 4800 4450
-Wire Wire Line
-	4800 4450 5850 4450
-Wire Wire Line
-	3850 4350 4900 4350
-Wire Wire Line
-	3850 4250 5000 4250
-Wire Wire Line
-	3850 4150 5100 4150
-Wire Wire Line
-	3850 4050 5200 4050
-Wire Wire Line
-	3850 3950 5300 3950
-Wire Wire Line
-	4900 4900 4900 4350
-Connection ~ 4900 4350
-Wire Wire Line
-	5100 4900 5100 4150
-Connection ~ 5100 4150
-Wire Wire Line
-	5100 4150 5850 4150
-Connection ~ 5000 4250
-Wire Wire Line
-	5000 4250 5850 4250
-Wire Wire Line
-	5000 4250 5000 4900
-Wire Wire Line
-	4900 4350 5850 4350
-Wire Wire Line
-	5200 4900 5200 4050
-Connection ~ 5200 4050
-Wire Wire Line
-	5200 4050 5850 4050
-Wire Wire Line
-	5300 4900 5300 3950
-Connection ~ 5300 3950
-Wire Wire Line
-	5300 3950 5850 3950
 $Comp
 L Device:C C?
 U 1 1 6260F3EE
@@ -390,7 +286,7 @@ AR Path="/6195D2C9/6260F3EE" Ref="C?"  Part="1"
 AR Path="/6191B6A2/61F28B7D/6260F3EE" Ref="C2200"  Part="1" 
 F 0 "C2200" H 1365 3046 50  0000 L CNN
 F 1 "22pf" H 1365 2955 50  0000 L CNN
-F 2 "Capacitor_THT:C_Rect_L4.0mm_W2.5mm_P2.50mm" H 1288 2850 50  0001 C CNN
+F 2 "Capacitor_SMD:C_1206_3216Metric" H 1288 2850 50  0001 C CNN
 F 3 "~" H 1250 3000 50  0001 C CNN
 	1    1250 3000
 	1    0    0    -1  

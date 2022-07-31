@@ -3,7 +3,7 @@ EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 5 9
+Sheet 5 8
 Title ""
 Date ""
 Rev ""
@@ -46,7 +46,7 @@ F 3 "" H 5800 3150 50  0001 C CNN
 	0    1    1    0   
 $EndComp
 Wire Wire Line
-	5000 3750 4650 3750
+	5000 2800 4650 2800
 $Comp
 L power:+3.3V #PWR?
 U 1 1 6259F3ED
@@ -108,12 +108,12 @@ U 1 1 625A5E8B
 P 4350 2800
 AR Path="/6191B6A2/61F28B7D/625A5E8B" Ref="U?"  Part="1" 
 AR Path="/6191B6A2/61F28B7D/62590ED9/625A5E8B" Ref="U2210"  Part="1" 
-F 0 "U2210" H 3500 2900 50  0000 C CNN
-F 1 "74LS07" H 3500 2800 50  0000 C CNN
+F 0 "U2210" H 5200 2700 50  0000 C CNN
+F 1 "74LS07" H 5200 2800 50  0000 C CNN
 F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 4350 2800 50  0001 C CNN
 F 3 "www.ti.com/lit/ds/symlink/sn74ls07.pdf" H 4350 2800 50  0001 C CNN
 	1    4350 2800
-	1    0    0    -1  
+	-1   0    0    1   
 $EndComp
 $Comp
 L 74xx:74LS07 U?
@@ -134,12 +134,12 @@ U 3 1 625A5E97
 P 4350 3750
 AR Path="/6191B6A2/61F28B7D/625A5E97" Ref="U?"  Part="3" 
 AR Path="/6191B6A2/61F28B7D/62590ED9/625A5E97" Ref="U2210"  Part="3" 
-F 0 "U2210" H 5200 3800 50  0000 C CNN
-F 1 "74LS07" H 5200 3700 50  0000 C CNN
+F 0 "U2210" H 3500 3850 50  0000 C CNN
+F 1 "74LS07" H 3500 3750 50  0000 C CNN
 F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 4350 3750 50  0001 C CNN
 F 3 "www.ti.com/lit/ds/symlink/sn74ls07.pdf" H 4350 3750 50  0001 C CNN
 	3    4350 3750
-	-1   0    0    1   
+	1    0    0    -1  
 $EndComp
 $Comp
 L 74xx:74LS07 U?
@@ -183,7 +183,7 @@ $EndComp
 Wire Wire Line
 	4650 3300 5000 3300
 Wire Wire Line
-	4650 2800 5000 2800
+	4650 3750 5000 3750
 $Comp
 L power:+5V #PWR?
 U 1 1 625BC2E4
@@ -212,19 +212,19 @@ F 3 "" H 5000 4650 50  0001 C CNN
 $EndComp
 Text HLabel 4050 2300 0    50   Input ~ 0
 CS
-Text HLabel 4050 2800 0    50   Input ~ 0
+Text HLabel 4050 3750 0    50   Input ~ 0
 MOSI
 Text HLabel 4050 3300 0    50   Input ~ 0
 SCK
-Text HLabel 4050 3750 0    50   Output ~ 0
+Text HLabel 4050 2800 0    50   Output ~ 0
 MISO
 Text Label 5000 2300 2    50   ~ 0
 SD_CS
-Text Label 5000 2800 2    50   ~ 0
+Text Label 5000 3750 2    50   ~ 0
 SD_MOSI
 Text Label 5000 3300 2    50   ~ 0
 SD_SCK
-Text Label 5000 3750 2    50   ~ 0
+Text Label 5000 2800 2    50   ~ 0
 SD_MISO
 Text Notes 7800 6900 0    118  ~ 24
 This page has been checked!
@@ -236,7 +236,7 @@ AR Path="/6195D2C9/62613B08" Ref="C?"  Part="1"
 AR Path="/6191B6A2/61F28B7D/62590ED9/62613B08" Ref="C2210"  Part="1" 
 F 0 "C2210" H 2265 4446 50  0000 L CNN
 F 1 "22pf" H 2265 4355 50  0000 L CNN
-F 2 "Capacitor_THT:C_Rect_L4.0mm_W2.5mm_P2.50mm" H 2188 4250 50  0001 C CNN
+F 2 "Capacitor_SMD:C_1206_3216Metric" H 2188 4250 50  0001 C CNN
 F 3 "~" H 2150 4400 50  0001 C CNN
 	1    2150 4400
 	1    0    0    -1  
@@ -341,4 +341,57 @@ $EndComp
 NoConn ~ 6150 3450
 NoConn ~ 6150 3550
 NoConn ~ 8450 4900
+$Comp
+L Regulator_Linear:LP2985-3.3 U1
+U 1 1 62E8B900
+P 4100 6400
+F 0 "U1" H 4100 6742 50  0000 C CNN
+F 1 "LP2985-3.3" H 4100 6651 50  0000 C CNN
+F 2 "Package_TO_SOT_SMD:SOT-23-5" H 4100 6725 50  0001 C CNN
+F 3 "http://www.ti.com/lit/ds/symlink/lp2985.pdf" H 4100 6400 50  0001 C CNN
+	1    4100 6400
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 62E8CAC5
+P 4100 6700
+AR Path="/62E8CAC5" Ref="#PWR?"  Part="1" 
+AR Path="/62497D60/62E8CAC5" Ref="#PWR?"  Part="1" 
+AR Path="/61D852D7/62E8CAC5" Ref="#PWR?"  Part="1" 
+AR Path="/6195D2C9/62E8CAC5" Ref="#PWR?"  Part="1" 
+AR Path="/6191B6A2/61F28B7D/62590ED9/62E8CAC5" Ref="#PWR0119"  Part="1" 
+F 0 "#PWR0119" H 4100 6450 50  0001 C CNN
+F 1 "GND" H 4105 6527 50  0000 C CNN
+F 2 "" H 4100 6700 50  0001 C CNN
+F 3 "" H 4100 6700 50  0001 C CNN
+	1    4100 6700
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:+5V #PWR?
+U 1 1 62E8D6CF
+P 3400 6300
+AR Path="/6195D2C9/62E8D6CF" Ref="#PWR?"  Part="1" 
+AR Path="/6191B6A2/61F28B7D/62590ED9/62E8D6CF" Ref="#PWR0120"  Part="1" 
+F 0 "#PWR0120" H 3400 6150 50  0001 C CNN
+F 1 "+5V" H 3415 6473 50  0000 C CNN
+F 2 "" H 3400 6300 50  0001 C CNN
+F 3 "" H 3400 6300 50  0001 C CNN
+	1    3400 6300
+	0    -1   -1   0   
+$EndComp
+$Comp
+L power:+3.3V #PWR?
+U 1 1 62E8E7FD
+P 4800 6300
+AR Path="/6191B6A2/61F28B7D/62E8E7FD" Ref="#PWR?"  Part="1" 
+AR Path="/6191B6A2/61F28B7D/62590ED9/62E8E7FD" Ref="#PWR0124"  Part="1" 
+F 0 "#PWR0124" H 4800 6150 50  0001 C CNN
+F 1 "+3.3V" V 4815 6428 50  0000 L CNN
+F 2 "" H 4800 6300 50  0001 C CNN
+F 3 "" H 4800 6300 50  0001 C CNN
+	1    4800 6300
+	0    1    1    0   
+$EndComp
 $EndSCHEMATC
