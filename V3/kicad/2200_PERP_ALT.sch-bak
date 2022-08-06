@@ -135,7 +135,7 @@ F 3 "" H 3350 5150 50  0001 C CNN
 	1    3350 5150
 	1    0    0    -1  
 $EndComp
-Text Notes 6100 3250 0    50   ~ 0
+Text Notes 6100 3300 0    50   ~ 0
 MSB first
 Text HLabel 2850 4650 0    50   Output ~ 0
 INT
@@ -324,6 +324,39 @@ NoConn ~ 3850 4850
 NoConn ~ 3850 4950
 NoConn ~ 3850 3650
 NoConn ~ 3850 3750
+$Comp
+L Connector:Conn_01x02_Male J2202
+U 1 1 62EBE199
+P 6050 3750
+F 0 "J2202" H 6022 3632 50  0000 R CNN
+F 1 "Conn_01x02_Male" H 6022 3723 50  0000 R CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical" H 6050 3750 50  0001 C CNN
+F 3 "~" H 6050 3750 50  0001 C CNN
+	1    6050 3750
+	-1   0    0    1   
+$EndComp
+$Comp
+L power:+5V #PWR0159
+U 1 1 62EBEF84
+P 5850 3750
+F 0 "#PWR0159" H 5850 3600 50  0001 C CNN
+F 1 "+5V" V 5865 3878 50  0000 L CNN
+F 2 "" H 5850 3750 50  0001 C CNN
+F 3 "" H 5850 3750 50  0001 C CNN
+	1    5850 3750
+	0    -1   -1   0   
+$EndComp
+$Comp
+L power:GND #PWR0163
+U 1 1 62EBFB90
+P 5850 3650
+F 0 "#PWR0163" H 5850 3400 50  0001 C CNN
+F 1 "GND" H 5850 3350 50  0001 R CNN
+F 2 "" H 5850 3650 50  0001 C CNN
+F 3 "" H 5850 3650 50  0001 C CNN
+	1    5850 3650
+	0    1    1    0   
+$EndComp
 Wire Bus Line
 	2600 2650 2600 3350
 $EndSCHEMATC

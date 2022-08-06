@@ -51,20 +51,13 @@ F5 "RD" O R 5300 4100 50
 F6 "PHI" O R 5300 3600 50 
 F7 "ROM_CS" O L 4400 4000 50 
 F8 "PIO_EN" O R 5300 3900 50 
-F9 "MREAD" O L 4400 3900 50 
-F10 "MWRITE" O L 4400 3800 50 
-F11 "INT" I R 5300 3800 50 
-F12 "H_RAM_CS" O L 4400 4100 50 
-F13 "A[0..19]" O R 5300 3400 50 
+F9 "INT" I R 5300 3800 50 
+F10 "A[0..19]" O R 5300 3400 50 
+F11 "RAM_CS" O L 4400 4100 50 
+F12 "WR" O R 5300 4200 50 
 $EndSheet
 Wire Wire Line
-	5300 4100 6450 4100
-Wire Wire Line
 	5300 3900 6450 3900
-Text HLabel 4400 3800 0    50   Output ~ 0
-WRITE
-Text HLabel 4400 3900 0    50   Output ~ 0
-READ
 Text HLabel 4400 4000 0    50   Output ~ 0
 ROM_CS
 Text HLabel 4400 4100 0    50   Output ~ 0
@@ -87,4 +80,17 @@ Wire Bus Line
 Connection ~ 5500 3400
 Wire Bus Line
 	5500 3400 6450 3400
+Text HLabel 5300 4200 2    50   Output ~ 0
+WR
+Text HLabel 5850 4200 2    50   Output ~ 0
+RD
+Wire Wire Line
+	5300 4100 5750 4100
+Wire Wire Line
+	5850 4200 5750 4200
+Wire Wire Line
+	5750 4200 5750 4100
+Connection ~ 5750 4100
+Wire Wire Line
+	5750 4100 6450 4100
 $EndSCHEMATC

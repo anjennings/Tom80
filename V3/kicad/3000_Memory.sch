@@ -331,8 +331,6 @@ F 3 "" H 6600 2800 50  0001 C CNN
 	1    6600 2800
 	1    0    0    -1  
 $EndComp
-Text HLabel 7100 4200 2    50   Input ~ 0
-WRITE
 $Comp
 L power:GND #PWR0181
 U 1 1 61F61A4C
@@ -379,24 +377,9 @@ F 3 "https://www.digikey.com/en/products/detail/alliance-memory-inc/AS6C4008-55Z
 $EndComp
 Text HLabel 7100 4000 2    50   Input ~ 0
 RAM_CS
-Text HLabel 7100 4100 2    50   Input ~ 0
-READ
 Text HLabel 3800 5150 0    50   Input ~ 0
 ROM_CS
-Text HLabel 3800 5250 0    50   Input ~ 0
-READ
 Connection ~ 7600 2400
-$Comp
-L Memory_Flash:SST39SF040 U3000
-U 1 1 625638C2
-P 4400 4150
-F 0 "U3000" H 4400 5750 50  0000 C CNN
-F 1 "SST39SF040" H 4400 5650 50  0000 C CNN
-F 2 "Package_DIP:DIP-32_W15.24mm_LongPads" H 4400 4450 50  0001 C CNN
-F 3 "http://ww1.microchip.com/downloads/en/DeviceDoc/25022B.pdf" H 4400 4450 50  0001 C CNN
-	1    4400 4150
-	1    0    0    -1  
-$EndComp
 Entry Wire Line
 	3200 2850 3300 2950
 Entry Wire Line
@@ -516,6 +499,12 @@ Wire Bus Line
 Connection ~ 3200 5700
 Wire Bus Line
 	3200 5700 5700 5700
+Text HLabel 7100 4100 2    50   Input ~ 0
+RD
+Text HLabel 7100 4200 2    50   Input ~ 0
+WR
+Text HLabel 3800 5250 0    50   Input ~ 0
+RD
 Wire Bus Line
 	5500 2400 5500 3750
 Wire Bus Line
@@ -524,4 +513,15 @@ Wire Bus Line
 	5700 2850 5700 5700
 Wire Bus Line
 	3200 2850 3200 5700
+$Comp
+L Memory_Flash:SST39SF040 U3000
+U 1 1 625638C2
+P 4400 4150
+F 0 "U3000" H 4400 5750 50  0000 C CNN
+F 1 "SST39SF040" H 4400 5650 50  0000 C CNN
+F 2 "Package_DIP:DIP-32_W15.24mm_LongPads" H 4400 4450 50  0001 C CNN
+F 3 "http://ww1.microchip.com/downloads/en/DeviceDoc/25022B.pdf" H 4400 4450 50  0001 C CNN
+	1    4400 4150
+	1    0    0    -1  
+$EndComp
 $EndSCHEMATC

@@ -46,7 +46,7 @@ F 3 "" H 5800 3150 50  0001 C CNN
 	0    1    1    0   
 $EndComp
 Wire Wire Line
-	5000 3750 4650 3750
+	5000 2800 4650 2800
 $Comp
 L power:+3.3V #PWR?
 U 1 1 6259F3ED
@@ -108,12 +108,12 @@ U 1 1 625A5E8B
 P 4350 2800
 AR Path="/6191B6A2/61F28B7D/625A5E8B" Ref="U?"  Part="1" 
 AR Path="/6191B6A2/61F28B7D/62590ED9/625A5E8B" Ref="U2210"  Part="1" 
-F 0 "U2210" H 3500 2900 50  0000 C CNN
-F 1 "74LS07" H 3500 2800 50  0000 C CNN
+F 0 "U2210" H 5200 2700 50  0000 C CNN
+F 1 "74LS07" H 5200 2800 50  0000 C CNN
 F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 4350 2800 50  0001 C CNN
 F 3 "www.ti.com/lit/ds/symlink/sn74ls07.pdf" H 4350 2800 50  0001 C CNN
 	1    4350 2800
-	1    0    0    -1  
+	-1   0    0    1   
 $EndComp
 $Comp
 L 74xx:74LS07 U?
@@ -134,12 +134,12 @@ U 3 1 625A5E97
 P 4350 3750
 AR Path="/6191B6A2/61F28B7D/625A5E97" Ref="U?"  Part="3" 
 AR Path="/6191B6A2/61F28B7D/62590ED9/625A5E97" Ref="U2210"  Part="3" 
-F 0 "U2210" H 5200 3800 50  0000 C CNN
-F 1 "74LS07" H 5200 3700 50  0000 C CNN
+F 0 "U2210" H 3500 3850 50  0000 C CNN
+F 1 "74LS07" H 3500 3750 50  0000 C CNN
 F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 4350 3750 50  0001 C CNN
 F 3 "www.ti.com/lit/ds/symlink/sn74ls07.pdf" H 4350 3750 50  0001 C CNN
 	3    4350 3750
-	-1   0    0    1   
+	1    0    0    -1  
 $EndComp
 $Comp
 L 74xx:74LS07 U?
@@ -183,7 +183,7 @@ $EndComp
 Wire Wire Line
 	4650 3300 5000 3300
 Wire Wire Line
-	4650 2800 5000 2800
+	4650 3750 5000 3750
 $Comp
 L power:+5V #PWR?
 U 1 1 625BC2E4
@@ -212,19 +212,19 @@ F 3 "" H 5000 4650 50  0001 C CNN
 $EndComp
 Text HLabel 4050 2300 0    50   Input ~ 0
 CS
-Text HLabel 4050 2800 0    50   Input ~ 0
+Text HLabel 4050 3750 0    50   Input ~ 0
 MOSI
 Text HLabel 4050 3300 0    50   Input ~ 0
 SCK
-Text HLabel 4050 3750 0    50   Output ~ 0
+Text HLabel 4050 2800 0    50   Output ~ 0
 MISO
 Text Label 5000 2300 2    50   ~ 0
 SD_CS
-Text Label 5000 2800 2    50   ~ 0
+Text Label 5000 3750 2    50   ~ 0
 SD_MOSI
 Text Label 5000 3300 2    50   ~ 0
 SD_SCK
-Text Label 5000 3750 2    50   ~ 0
+Text Label 5000 2800 2    50   ~ 0
 SD_MISO
 Text Notes 7800 6900 0    118  ~ 24
 This page has been checked!
