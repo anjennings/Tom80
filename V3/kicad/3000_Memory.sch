@@ -505,14 +505,6 @@ Text HLabel 7100 4200 2    50   Input ~ 0
 WR
 Text HLabel 3800 5250 0    50   Input ~ 0
 RD
-Wire Bus Line
-	5500 2400 5500 3750
-Wire Bus Line
-	7600 2400 7600 3800
-Wire Bus Line
-	5700 2850 5700 5700
-Wire Bus Line
-	3200 2850 3200 5700
 $Comp
 L Memory_Flash:SST39SF040 U3000
 U 1 1 625638C2
@@ -524,4 +516,12 @@ F 3 "http://ww1.microchip.com/downloads/en/DeviceDoc/25022B.pdf" H 4400 4450 50 
 	1    4400 4150
 	1    0    0    -1  
 $EndComp
+Wire Bus Line
+	5500 2400 5500 3750
+Wire Bus Line
+	7600 2400 7600 3800
+Wire Bus Line
+	5700 2850 5700 5700
+Wire Bus Line
+	3200 2850 3200 5700
 $EndSCHEMATC

@@ -82,14 +82,15 @@ Wire Bus Line
 	5500 3400 6450 3400
 Text HLabel 5300 4200 2    50   Output ~ 0
 WR
+Text HLabel 5850 4200 2    50   Output ~ 0
+RD
 Wire Wire Line
-	5300 4100 5450 4100
+	5300 4100 5750 4100
 Wire Wire Line
-	6450 4100 6300 4100
-Text Label 5450 4100 2    50   ~ 0
-RD
-Text Label 6300 4100 0    50   ~ 0
-RD
-Text HLabel 5450 4100 2    50   Output ~ 0
-RD
+	5850 4200 5750 4200
+Wire Wire Line
+	5750 4200 5750 4100
+Connection ~ 5750 4100
+Wire Wire Line
+	5750 4100 6450 4100
 $EndSCHEMATC
