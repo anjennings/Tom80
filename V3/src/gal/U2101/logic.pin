@@ -18,7 +18,7 @@
   14   | MWRITE   | Output
   15   | MREAD    | Output
   16   | PIO      | Output
-  17   | AUX      | Output
+  17   | AUX      | NC
   18   | RAM      | Output
   19   | CRST     | Output
   20   | VCC      | VCC
