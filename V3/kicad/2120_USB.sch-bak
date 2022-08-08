@@ -278,4 +278,8 @@ RX
 Connection ~ 4150 3600
 Wire Wire Line
 	4150 3600 4450 3600
+NoConn ~ 4650 3500
+NoConn ~ 4650 3600
+NoConn ~ 4650 3700
+NoConn ~ 4650 3800
 $EndSCHEMATC

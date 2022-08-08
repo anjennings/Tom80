@@ -437,4 +437,5 @@ Text Label 3750 3450 2    50   ~ 0
 LC_CS
 Wire Wire Line
 	3750 3450 3400 3450
+NoConn ~ 9250 4550
 $EndSCHEMATC
