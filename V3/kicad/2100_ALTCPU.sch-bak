@@ -364,10 +364,10 @@ INT2
 Text Label 4450 1800 2    50   ~ 0
 INT1
 Wire Wire Line
-	7250 2450 6950 2450
+	7250 2250 6950 2250
 Wire Wire Line
 	7250 2350 6950 2350
-Text Label 6950 2450 0    50   ~ 0
+Text Label 6950 2250 0    50   ~ 0
 INT2
 Text Label 6950 2350 0    50   ~ 0
 INT1
@@ -410,8 +410,8 @@ Wire Wire Line
 Text Label 9450 5900 0    50   ~ 0
 CTS0
 Wire Wire Line
-	9750 3850 9450 3850
-Text Label 9450 3850 0    50   ~ 0
+	7250 2950 6950 2950
+Text Label 6950 2950 0    50   ~ 0
 DREQ1
 Wire Wire Line
 	8500 6150 8150 6150
@@ -440,16 +440,12 @@ WR
 Text Label 4450 3000 2    50   ~ 0
 M1
 Wire Wire Line
-	7250 2250 6950 2250
-Text Label 6950 2250 0    50   ~ 0
+	7250 2450 6950 2450
+Text Label 6950 2450 0    50   ~ 0
 INT0
 Wire Wire Line
 	2000 4550 1700 4550
 Text Label 1700 4550 0    50   ~ 0
-DCD0
-Wire Wire Line
-	10350 750  10050 750 
-Text Label 10050 750  0    50   ~ 0
 DCD0
 NoConn ~ 3700 5350
 Text Label 4450 2300 2    50   ~ 0
@@ -459,12 +455,8 @@ Wire Wire Line
 NoConn ~ 4150 3800
 NoConn ~ 4150 4300
 Wire Wire Line
-	9750 5550 9450 5550
-Text Label 9450 5550 0    50   ~ 0
-RXS
-Wire Wire Line
-	9750 4150 9450 4150
-Text Label 9450 4150 0    50   ~ 0
+	7250 3050 6950 3050
+Text Label 6950 3050 0    50   ~ 0
 CKS
 Wire Wire Line
 	4150 4600 4450 4600
@@ -604,50 +596,6 @@ F 3 "~" H 9900 3050 50  0001 C CNN
 	0    1    1    0   
 $EndComp
 $Comp
-L Device:R R6
-U 1 1 62EE459D
-P 9900 3850
-F 0 "R6" V 9693 3850 50  0000 C CNN
-F 1 "R" V 9784 3850 50  0000 C CNN
-F 2 "Resistor_SMD:R_1206_3216Metric" V 9830 3850 50  0001 C CNN
-F 3 "~" H 9900 3850 50  0001 C CNN
-	1    9900 3850
-	0    1    1    0   
-$EndComp
-$Comp
-L power:+5V #PWR0122
-U 1 1 62EE45A3
-P 10050 3850
-F 0 "#PWR0122" H 10050 3700 50  0001 C CNN
-F 1 "+5V" V 10065 3978 50  0000 L CNN
-F 2 "" H 10050 3850 50  0001 C CNN
-F 3 "" H 10050 3850 50  0001 C CNN
-	1    10050 3850
-	0    1    1    0   
-$EndComp
-$Comp
-L Device:R R7
-U 1 1 62EEEA1B
-P 9900 4150
-F 0 "R7" V 9693 4150 50  0000 C CNN
-F 1 "R" V 9784 4150 50  0000 C CNN
-F 2 "Resistor_SMD:R_1206_3216Metric" V 9830 4150 50  0001 C CNN
-F 3 "~" H 9900 4150 50  0001 C CNN
-	1    9900 4150
-	0    1    1    0   
-$EndComp
-$Comp
-L power:+5V #PWR0135
-U 1 1 62EEEA21
-P 10050 4150
-F 0 "#PWR0135" H 10050 4000 50  0001 C CNN
-F 1 "+5V" V 10065 4278 50  0000 L CNN
-F 2 "" H 10050 4150 50  0001 C CNN
-F 3 "" H 10050 4150 50  0001 C CNN
-	1    10050 4150
-	0    1    1    0   
-$EndComp
-$Comp
 L Device:R R8
 U 1 1 62EF9277
 P 9900 4500
@@ -692,28 +640,6 @@ F 3 "" H 10050 5200 50  0001 C CNN
 	0    1    1    0   
 $EndComp
 $Comp
-L Device:R R11
-U 1 1 62F03FB9
-P 9900 5550
-F 0 "R11" V 9693 5550 50  0000 C CNN
-F 1 "R" V 9784 5550 50  0000 C CNN
-F 2 "Resistor_SMD:R_1206_3216Metric" V 9830 5550 50  0001 C CNN
-F 3 "~" H 9900 5550 50  0001 C CNN
-	1    9900 5550
-	0    1    1    0   
-$EndComp
-$Comp
-L power:+5V #PWR0139
-U 1 1 62F03FBF
-P 10050 5550
-F 0 "#PWR0139" H 10050 5400 50  0001 C CNN
-F 1 "+5V" V 10065 5678 50  0000 L CNN
-F 2 "" H 10050 5550 50  0001 C CNN
-F 3 "" H 10050 5550 50  0001 C CNN
-	1    10050 5550
-	0    1    1    0   
-$EndComp
-$Comp
 L Device:R R12
 U 1 1 62F0767B
 P 9900 5900
@@ -733,28 +659,6 @@ F 1 "+5V" V 10065 6028 50  0000 L CNN
 F 2 "" H 10050 5900 50  0001 C CNN
 F 3 "" H 10050 5900 50  0001 C CNN
 	1    10050 5900
-	0    1    1    0   
-$EndComp
-$Comp
-L Device:R R13
-U 1 1 62F0AE91
-P 10500 750
-F 0 "R13" V 10293 750 50  0000 C CNN
-F 1 "R" V 10384 750 50  0000 C CNN
-F 2 "Resistor_SMD:R_1206_3216Metric" V 10430 750 50  0001 C CNN
-F 3 "~" H 10500 750 50  0001 C CNN
-	1    10500 750 
-	0    1    1    0   
-$EndComp
-$Comp
-L power:+5V #PWR0141
-U 1 1 62F0AE97
-P 10650 750
-F 0 "#PWR0141" H 10650 600 50  0001 C CNN
-F 1 "+5V" V 10665 878 50  0000 L CNN
-F 2 "" H 10650 750 50  0001 C CNN
-F 3 "" H 10650 750 50  0001 C CNN
-	1    10650 750 
 	0    1    1    0   
 $EndComp
 Wire Wire Line
@@ -947,10 +851,8 @@ Wire Wire Line
 	9150 3050 9450 3050
 Wire Wire Line
 	9150 2650 9450 2650
-Text Label 8250 5150 0    50   ~ 0
+Text Label 8200 5150 0    50   ~ 0
 CS0
-Wire Wire Line
-	8250 5150 8500 5150
 Wire Wire Line
 	4150 4700 4450 4700
 Text Label 4450 4700 2    50   ~ 0
@@ -1180,6 +1082,52 @@ Wire Wire Line
 	7250 2550 6950 2550
 Text Label 6950 2550 0    50   ~ 0
 NMI
+$Comp
+L Device:R_Pack04 RN?
+U 1 1 639E8FD4
+P 7450 3050
+AR Path="/6191B6A2/61EBDADB/636B5B34/639E8FD4" Ref="RN?"  Part="1" 
+AR Path="/6191B6A2/61EBDADB/639E8FD4" Ref="RN2101"  Part="1" 
+F 0 "RN2101" V 7775 3050 50  0000 C CNN
+F 1 "4 x 10K" V 7684 3050 50  0000 C CNN
+F 2 "Resistor_SMD:R_Array_Convex_4x1206" V 7725 3050 50  0001 C CNN
+F 3 "~" H 7450 3050 50  0001 C CNN
+	1    7450 3050
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	7250 3150 6950 3150
+Text Label 6950 3150 0    50   ~ 0
+RXS
+Wire Wire Line
+	7250 3250 6950 3250
+Text Label 6950 3250 0    50   ~ 0
+DCD0
+$Comp
+L power:+5V #PWR?
+U 1 1 63A14D5D
+P 7650 2950
+AR Path="/6195D2C9/63A14D5D" Ref="#PWR?"  Part="1" 
+AR Path="/6191B6A2/61F28B7D/63A14D5D" Ref="#PWR?"  Part="1" 
+AR Path="/6191B6A2/61EBDADB/63A14D5D" Ref="#PWR0122"  Part="1" 
+F 0 "#PWR0122" H 7650 2800 50  0001 C CNN
+F 1 "+5V" H 7665 3123 50  0000 C CNN
+F 2 "" H 7650 2950 50  0001 C CNN
+F 3 "" H 7650 2950 50  0001 C CNN
+	1    7650 2950
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	7650 2950 7650 3050
+Connection ~ 7650 2950
+Connection ~ 7650 3050
+Wire Wire Line
+	7650 3050 7650 3150
+Connection ~ 7650 3150
+Wire Wire Line
+	7650 3150 7650 3250
+Wire Wire Line
+	8200 5150 8500 5150
 Wire Bus Line
 	1700 3150 1700 3850
 Wire Bus Line

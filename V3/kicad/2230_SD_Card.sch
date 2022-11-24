@@ -72,13 +72,13 @@ Wire Wire Line
 Wire Wire Line
 	7350 4600 7700 4600
 Wire Wire Line
-	7700 4500 7350 4500
-Text Label 7350 4500 0    50   ~ 0
-SD_CS
+	7700 4800 7350 4800
 Text Label 7350 4800 0    50   ~ 0
+SD_CS
+Text Label 7350 4500 0    50   ~ 0
 SD_MISO
 Wire Wire Line
-	7350 4800 7700 4800
+	7350 4500 7700 4500
 $Comp
 L power:+3.3V #PWR?
 U 1 1 6259F3FB
