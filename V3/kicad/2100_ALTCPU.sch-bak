@@ -3,7 +3,7 @@ EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 6 8
+Sheet 4 7
 Title ""
 Date ""
 Rev ""
@@ -492,7 +492,6 @@ Text Label 7050 2700 2    50   ~ 0
 C_RST
 Wire Wire Line
 	6750 2700 7050 2700
-NoConn ~ 6750 5100
 NoConn ~ 6750 4200
 NoConn ~ 6750 4700
 Wire Wire Line
@@ -959,10 +958,8 @@ Text Label 9150 3450 0    50   ~ 0
 ST
 Wire Wire Line
 	9450 3450 9150 3450
-Text Label 8950 3050 0    50   ~ 0
+Text Label 9150 3050 0    50   ~ 0
 HALT
-Wire Wire Line
-	8950 3050 9450 3050
 $Comp
 L Device:LED D2101/H1
 U 1 1 62ECA51D
@@ -974,10 +971,8 @@ F 3 "~" H 9600 3050 50  0001 C CNN
 	1    9600 3050
 	1    0    0    -1  
 $EndComp
-Text Label 8950 2650 0    50   ~ 0
+Text Label 9150 2650 0    50   ~ 0
 M1
-Wire Wire Line
-	8950 2650 9450 2650
 $Comp
 L Device:LED D2100/M1
 U 1 1 6215FBC4
@@ -1078,6 +1073,52 @@ F 3 "" H 8750 1100 50  0001 C CNN
 	1    8750 1100
 	1    0    0    -1  
 $EndComp
+Wire Wire Line
+	9150 3050 9450 3050
+Wire Wire Line
+	9150 2650 9450 2650
+$Sheet
+S 1550 1800 600  600 
+U 636B5B34
+F0 "sheet636B5B2E" 50
+F1 "2210_SD_Card.sch" 50
+F2 "CS" I L 1550 1950 50 
+F3 "MOSI" I L 1550 2050 50 
+F4 "SCK" I L 1550 2150 50 
+F5 "MISO" O L 1550 2250 50 
+$EndSheet
+Wire Wire Line
+	1550 2050 1300 2050
+Wire Wire Line
+	1550 2150 1300 2150
+Text Label 1300 2050 0    50   ~ 0
+MOSI
+Text Label 1300 2150 0    50   ~ 0
+SCK
+Text Label 1300 2250 0    50   ~ 0
+MISO
+Wire Wire Line
+	1550 2250 1300 2250
+Text Label 1300 1950 0    50   ~ 0
+CS0
+Wire Wire Line
+	1300 1950 1550 1950
+Wire Wire Line
+	6750 5100 7050 5100
+Text Label 7050 5100 2    50   ~ 0
+TXS
+Wire Wire Line
+	1650 2850 1350 2850
+Text Label 1350 2850 0    50   ~ 0
+CKS
+Wire Wire Line
+	1650 2950 1350 2950
+Text Label 1350 2950 0    50   ~ 0
+RXS
+Wire Wire Line
+	1650 2750 1350 2750
+Text Label 1350 2750 0    50   ~ 0
+TXS
 Wire Bus Line
 	4300 3550 4300 4250
 Wire Bus Line
