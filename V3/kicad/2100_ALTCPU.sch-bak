@@ -474,12 +474,6 @@ Wire Wire Line
 	4150 4600 4450 4600
 Text Label 4450 4600 2    50   ~ 0
 CKS
-Text HLabel 1700 4150 0    50   Output ~ 0
-PHI
-Wire Wire Line
-	1700 4150 2000 4150
-Text Label 1700 4150 0    50   ~ 0
-PHI
 Text Label 2950 6250 2    50   ~ 0
 C_RST
 Wire Wire Line
@@ -1223,12 +1217,6 @@ Wire Wire Line
 	6350 7150 6550 7150
 Wire Wire Line
 	1250 7050 1650 7050
-Wire Bus Line
-	1700 3150 1700 3850
-Wire Bus Line
-	3650 6150 3650 6850
-Wire Bus Line
-	1700 1000 1700 3000
 $Sheet
 S 8500 5000 600  600 
 U 636B5B34
@@ -1239,4 +1227,14 @@ F3 "MOSI" I L 8500 5250 50
 F4 "SCK" I L 8500 5350 50 
 F5 "MISO" O L 8500 5450 50 
 $EndSheet
+Text Label 1800 4250 0    50   ~ 0
+CLK
+Wire Wire Line
+	2000 4250 1800 4250
+Wire Bus Line
+	1700 3150 1700 3850
+Wire Bus Line
+	3650 6150 3650 6850
+Wire Bus Line
+	1700 1000 1700 3000
 $EndSCHEMATC
