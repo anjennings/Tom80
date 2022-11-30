@@ -66,14 +66,14 @@ F 3 "" H 5800 2950 50  0001 C CNN
 	1    5800 2950
 	0    -1   -1   0   
 $EndComp
-Text Label 7350 4700 0    50   ~ 0
-SD_SCK
 Text Label 7350 4600 0    50   ~ 0
+SD_SCK
+Text Label 7350 4700 0    50   ~ 0
 SD_MOSI
 Wire Wire Line
-	7350 4700 7700 4700
-Wire Wire Line
 	7350 4600 7700 4600
+Wire Wire Line
+	7350 4700 7700 4700
 Wire Wire Line
 	7700 4800 7350 4800
 Text Label 7350 4800 0    50   ~ 0
