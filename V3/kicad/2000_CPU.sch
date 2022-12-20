@@ -412,8 +412,8 @@ Wire Wire Line
 Text Label 4450 4200 2    50   ~ 0
 CTS0
 Wire Wire Line
-	9750 4500 9450 4500
-Text Label 9450 4500 0    50   ~ 0
+	1650 6750 1350 6750
+Text Label 1350 6750 0    50   ~ 0
 CTS0
 Wire Wire Line
 	7250 2950 6950 2950
@@ -663,32 +663,6 @@ F 3 "" H 10050 4150 50  0001 C CNN
 	1    10050 4150
 	0    1    1    0   
 $EndComp
-$Comp
-L Device:R R12
-U 1 1 62F0767B
-P 9900 4500
-AR Path="/6191B6A2/61EBDADB/62F0767B" Ref="R12"  Part="1" 
-AR Path="/63A83936/62F0767B" Ref="R2006"  Part="1" 
-F 0 "R2006" V 9693 4500 50  0000 C CNN
-F 1 "R" V 9784 4500 50  0000 C CNN
-F 2 "Resistor_SMD:R_1206_3216Metric" V 9830 4500 50  0001 C CNN
-F 3 "~" H 9900 4500 50  0001 C CNN
-	1    9900 4500
-	0    1    1    0   
-$EndComp
-$Comp
-L power:+5V #PWR0140
-U 1 1 62F07681
-P 10050 4500
-AR Path="/6191B6A2/61EBDADB/62F07681" Ref="#PWR0140"  Part="1" 
-AR Path="/63A83936/62F07681" Ref="#PWR0136"  Part="1" 
-F 0 "#PWR0136" H 10050 4350 50  0001 C CNN
-F 1 "+5V" V 10065 4628 50  0000 L CNN
-F 2 "" H 10050 4500 50  0001 C CNN
-F 3 "" H 10050 4500 50  0001 C CNN
-	1    10050 4500
-	0    1    1    0   
-$EndComp
 Wire Wire Line
 	4150 3100 4450 3100
 Text Label 4450 3100 2    50   ~ 0
@@ -708,7 +682,6 @@ F 3 "~" H 9900 3450 50  0001 C CNN
 $EndComp
 Text HLabel 4450 2800 2    50   Output ~ 0
 WR
-NoConn ~ 1650 6750
 NoConn ~ 1650 6850
 NoConn ~ 1650 6950
 Wire Wire Line

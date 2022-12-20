@@ -501,12 +501,12 @@ F 3 "http://ww1.microchip.com/downloads/en/DeviceDoc/25022B.pdf" H 4400 4450 50 
 	1    0    0    -1  
 $EndComp
 $Comp
-L as6c8008-55_tsop:AS6C8008-55_TSOP U?
+L as6c8008-55_tsop:AS6C8008-55_TSOP U3001
 U 1 1 63A1386B
 P 6600 3900
-F 0 "U?" H 6600 5155 50  0000 C CNN
-F 1 "AS6C8008-55_TSOP" H 6600 5064 50  0000 C CNN
-F 2 "Package_SO:TSOP-II-44_10.16x18.41mm_P0.8mm" H 6600 4973 50  0000 C CNN
+F 0 "U3001" H 6600 5065 50  0000 C CNN
+F 1 "AS6C8008-55_TSOP" H 6600 4974 50  0000 C CNN
+F 2 "Package_SO:TSOP-II-44_10.16x18.41mm_P0.8mm" H 6600 4973 50  0001 C CNN
 F 3 "https://www.alliancememory.com/wp-content/uploads/pdf/AS6C4008.pdf" H 6600 4000 50  0001 C CNN
 	1    6600 3900
 	1    0    0    -1  

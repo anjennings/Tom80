@@ -412,8 +412,8 @@ Wire Wire Line
 Text Label 4450 4200 2    50   ~ 0
 CTS0
 Wire Wire Line
-	9750 4500 9450 4500
-Text Label 9450 4500 0    50   ~ 0
+	1650 6750 1350 6750
+Text Label 1350 6750 0    50   ~ 0
 CTS0
 Wire Wire Line
 	7250 2950 6950 2950
@@ -708,7 +708,6 @@ F 3 "~" H 9900 3450 50  0001 C CNN
 $EndComp
 Text HLabel 4450 2800 2    50   Output ~ 0
 WR
-NoConn ~ 1650 6750
 NoConn ~ 1650 6850
 NoConn ~ 1650 6950
 Wire Wire Line
