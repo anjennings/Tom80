@@ -3,7 +3,7 @@ EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 1 6
+Sheet 1 5
 Title ""
 Date ""
 Rev ""
@@ -27,9 +27,9 @@ F1 "3000_Memory.sch" 50
 F2 "A[0..19]" I L 5650 3800 50 
 F3 "D[0..7]" B L 5650 4600 50 
 F4 "ROM_CS" I L 5650 4300 50 
-F5 "RAM_CS" I L 5650 4200 50 
-F6 "RD" I L 5650 3900 50 
-F7 "WR" I L 5650 4000 50 
+F5 "RD" I L 5650 3900 50 
+F6 "WR" I L 5650 4000 50 
+F7 "RAM_CS" I L 5650 4200 50 
 $EndSheet
 Text Notes 7800 6950 0    118  ~ 24
 This page has been checked!
@@ -143,8 +143,8 @@ F1 "2000_CPU.sch" 50
 F2 "A[0..19]" O R 5100 3800 50 
 F3 "RD" O R 5100 3900 50 
 F4 "ROM_CS" O R 5100 4300 50 
-F5 "RAM_CS" O R 5100 4200 50 
-F6 "D[0..7]" B R 5100 4600 50 
-F7 "WR" O R 5100 4000 50 
+F5 "D[0..7]" B R 5100 4600 50 
+F6 "WR" O R 5100 4000 50 
+F7 "RAM_CS" O R 5100 4200 50 
 $EndSheet
 $EndSCHEMATC
