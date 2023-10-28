@@ -3,7 +3,7 @@ EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 2 9
+Sheet 2 6
 Title ""
 Date ""
 Rev ""
@@ -199,10 +199,6 @@ Text Label 5300 3550 0    50   ~ 0
 D6
 Text Label 5300 3650 0    50   ~ 0
 D7
-Wire Bus Line
-	5500 2400 7600 2400
-Wire Bus Line
-	7600 2400 7900 2400
 Text HLabel 2800 5700 0    50   Input ~ 0
 A[0..19]
 Text HLabel 7900 2400 2    50   BiDi ~ 0
@@ -239,7 +235,7 @@ U 1 1 61A8BF94
 P 2250 3300
 F 0 "C3000" H 2365 3346 50  0000 L CNN
 F 1 "22pf" H 2365 3255 50  0000 L CNN
-F 2 "Capacitor_THT:C_Rect_L4.0mm_W2.5mm_P2.50mm" H 2288 3150 50  0001 C CNN
+F 2 "Capacitor_SMD:C_1206_3216Metric" H 2288 3150 50  0001 C CNN
 F 3 "~" H 2250 3300 50  0001 C CNN
 	1    2250 3300
 	1    0    0    -1  
@@ -265,7 +261,7 @@ U 1 1 61A8DC9F
 P 2750 3300
 F 0 "C3001" H 2865 3346 50  0000 L CNN
 F 1 "22pf" H 2865 3255 50  0000 L CNN
-F 2 "Capacitor_THT:C_Rect_L4.0mm_W2.5mm_P2.50mm" H 2788 3150 50  0001 C CNN
+F 2 "Capacitor_SMD:C_1206_3216Metric" H 2788 3150 50  0001 C CNN
 F 3 "~" H 2750 3300 50  0001 C CNN
 	1    2750 3300
 	1    0    0    -1  
@@ -323,25 +319,23 @@ A18
 $Comp
 L power:+5V #PWR0180
 U 1 1 61F46407
-P 6600 2800
-F 0 "#PWR0180" H 6600 2650 50  0001 C CNN
-F 1 "+5V" H 6650 2850 50  0000 L CNN
-F 2 "" H 6600 2800 50  0001 C CNN
-F 3 "" H 6600 2800 50  0001 C CNN
-	1    6600 2800
-	1    0    0    -1  
+P 7100 5500
+F 0 "#PWR0180" H 7100 5350 50  0001 C CNN
+F 1 "+5V" H 7150 5550 50  0000 L CNN
+F 2 "" H 7100 5500 50  0001 C CNN
+F 3 "" H 7100 5500 50  0001 C CNN
+	1    7100 5500
+	-1   0    0    1   
 $EndComp
-Text HLabel 7100 4200 2    50   Input ~ 0
-WRITE
 $Comp
 L power:GND #PWR0181
 U 1 1 61F61A4C
-P 6600 5000
-F 0 "#PWR0181" H 6600 4750 50  0001 C CNN
-F 1 "GND" H 6605 4827 50  0000 C CNN
-F 2 "" H 6600 5000 50  0001 C CNN
-F 3 "" H 6600 5000 50  0001 C CNN
-	1    6600 5000
+P 6100 5500
+F 0 "#PWR0181" H 6100 5250 50  0001 C CNN
+F 1 "GND" H 6105 5327 50  0000 C CNN
+F 2 "" H 6100 5500 50  0001 C CNN
+F 3 "" H 6100 5500 50  0001 C CNN
+	1    6100 5500
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -366,37 +360,10 @@ F 3 "" H 2250 3150 50  0001 C CNN
 	1    2250 3150
 	1    0    0    -1  
 $EndComp
-$Comp
-L Memory_RAM:AS6C4008-55PCN U3001
-U 1 1 62109604
-P 6600 3900
-F 0 "U3001" H 6600 5300 50  0000 C CNN
-F 1 "AS6C4008-55PCN" H 6600 5200 50  0000 C CNN
-F 2 "Package_SO:TSOP-II-32_21.0x10.2mm_P1.27mm" H 6600 4000 50  0001 C CNN
-F 3 "https://www.digikey.com/en/products/detail/alliance-memory-inc/AS6C4008-55ZIN/4234590" H 6600 4000 50  0001 C CNN
-	1    6600 3900
-	1    0    0    -1  
-$EndComp
 Text HLabel 7100 4000 2    50   Input ~ 0
 RAM_CS
-Text HLabel 7100 4100 2    50   Input ~ 0
-READ
 Text HLabel 3800 5150 0    50   Input ~ 0
 ROM_CS
-Text HLabel 3800 5250 0    50   Input ~ 0
-READ
-Connection ~ 7600 2400
-$Comp
-L Memory_Flash:SST39SF040 U3000
-U 1 1 625638C2
-P 4400 4150
-F 0 "U3000" H 4400 5750 50  0000 C CNN
-F 1 "SST39SF040" H 4400 5650 50  0000 C CNN
-F 2 "Package_DIP:DIP-32_W15.24mm_LongPads" H 4400 4450 50  0001 C CNN
-F 3 "http://ww1.microchip.com/downloads/en/DeviceDoc/25022B.pdf" H 4400 4450 50  0001 C CNN
-	1    4400 4150
-	1    0    0    -1  
-$EndComp
 Entry Wire Line
 	3200 2850 3300 2950
 Entry Wire Line
@@ -516,6 +483,63 @@ Wire Bus Line
 Connection ~ 3200 5700
 Wire Bus Line
 	3200 5700 5700 5700
+Text HLabel 7100 4100 2    50   Input ~ 0
+RD
+Text HLabel 7100 4200 2    50   Input ~ 0
+WR
+Text HLabel 3800 5250 0    50   Input ~ 0
+RD
+$Comp
+L Memory_Flash:SST39SF040 U3000
+U 1 1 625638C2
+P 4400 4150
+F 0 "U3000" H 4400 5750 50  0000 C CNN
+F 1 "SST39SF040" H 4400 5650 50  0000 C CNN
+F 2 "Package_DIP:DIP-32_W15.24mm_LongPads" H 4400 4450 50  0001 C CNN
+F 3 "http://ww1.microchip.com/downloads/en/DeviceDoc/25022B.pdf" H 4400 4450 50  0001 C CNN
+	1    4400 4150
+	1    0    0    -1  
+$EndComp
+$Comp
+L as6c8008-55_tsop:AS6C8008-55_TSOP U3001
+U 1 1 63A1386B
+P 6600 3900
+F 0 "U3001" H 6600 5065 50  0000 C CNN
+F 1 "AS6C8008-55_TSOP" H 6600 4974 50  0000 C CNN
+F 2 "Package_SO:TSOP-II-44_10.16x18.41mm_P0.8mm" H 6600 4973 50  0001 C CNN
+F 3 "https://www.alliancememory.com/wp-content/uploads/pdf/AS6C4008.pdf" H 6600 4000 50  0001 C CNN
+	1    6600 3900
+	1    0    0    -1  
+$EndComp
+Entry Wire Line
+	5700 4800 5800 4900
+Wire Wire Line
+	5800 4900 6100 4900
+Text Label 5850 4900 0    50   ~ 0
+A19
+Wire Bus Line
+	5500 2400 7600 2400
+Connection ~ 7600 2400
+Wire Bus Line
+	7600 2400 7900 2400
+Wire Wire Line
+	7100 5250 7100 5350
+Connection ~ 7100 5350
+Wire Wire Line
+	7100 5350 7100 5500
+Wire Wire Line
+	6100 5250 6100 5350
+Connection ~ 6100 5350
+Wire Wire Line
+	6100 5350 6100 5500
+NoConn ~ 7100 4350
+NoConn ~ 7100 4450
+NoConn ~ 7100 4550
+NoConn ~ 7100 4650
+NoConn ~ 7100 4750
+NoConn ~ 7100 4850
+NoConn ~ 7100 4950
+NoConn ~ 7100 5050
 Wire Bus Line
 	5500 2400 5500 3750
 Wire Bus Line

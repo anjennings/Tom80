@@ -1,0 +1,4 @@
+	ORG	0100H
+	MVI	A,00H
+	OUT	128
+	RET

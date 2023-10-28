@@ -5,7 +5,7 @@
                           -------\___/-------
                      MREQ |  1           20 | VCC
                           |                 |
-                     IORQ |  2           19 | ROM
+                     IORQ |  2           19 | CRST
                           |                 |
                        RD |  3           18 | RAM
                           |                 |
@@ -19,7 +19,7 @@
                           |                 |
                       A19 |  8           13 | NC
                           |                 |
-                    RESET |  9           12 | CPURST
+                    RESET |  9           12 | ROM
                           |                 |
                       GND | 10           11 | NC
                           -------------------
