@@ -218,14 +218,12 @@ F 3 "" H 2800 5400 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	2300 5700 2050 5700
-Text Label 2050 5700 0    50   ~ 0
+	-50  7150 -300 7150
+Text Label -300 7150 0    50   ~ 0
 MREQ
-Text HLabel 3300 5800 2    50   Output ~ 0
+Text HLabel 1800 7350 2    50   Output ~ 0
 ROM_CS
-Text Label 2050 5800 0    50   ~ 0
-A19
-Text HLabel 3300 5700 2    50   Output ~ 0
+Text HLabel 1800 7900 2    50   Output ~ 0
 RAM_CS
 $Comp
 L Oscillator:ACO-xxxMHz X?
@@ -478,8 +476,6 @@ F 3 "" H 8200 1100 50  0001 C CNN
 	1    8200 1100
 	1    0    0    -1  
 $EndComp
-Wire Wire Line
-	2050 5800 2300 5800
 Text HLabel 4750 3500 2    50   BiDi ~ 0
 D[0..7]
 Wire Bus Line
@@ -1033,7 +1029,7 @@ SD_CD
 $Comp
 L Switch:SW_Push SW?
 U 1 1 6545E409
-P 5300 5200
+P 5100 5200
 AR Path="/6545E409" Ref="SW?"  Part="1" 
 AR Path="/62497D60/6545E409" Ref="SW?"  Part="1" 
 AR Path="/61D852D7/6545E409" Ref="SW?"  Part="1" 
@@ -1041,11 +1037,11 @@ AR Path="/6191B6A2/624CF3AF/6545E409" Ref="SW?"  Part="1"
 AR Path="/6191B6A2/61EBDADB/62512FB8/6545E409" Ref="SW?"  Part="1" 
 AR Path="/63A83936/62512FB8/6545E409" Ref="SW?"  Part="1" 
 AR Path="/63A83936/6545E409" Ref="SW?"  Part="1" 
-F 0 "SW?" H 5300 5485 50  0000 C CNN
-F 1 "SW_Push" H 5300 5394 50  0000 C CNN
-F 2 "Button_Switch_THT:SW_PUSH_6mm" H 5300 5400 50  0001 C CNN
-F 3 "~" H 5300 5400 50  0001 C CNN
-	1    5300 5200
+F 0 "SW?" H 5100 5485 50  0000 C CNN
+F 1 "SW_Push" H 5100 5394 50  0000 C CNN
+F 2 "Button_Switch_THT:SW_PUSH_6mm" H 5100 5400 50  0001 C CNN
+F 3 "~" H 5100 5400 50  0001 C CNN
+	1    5100 5200
 	-1   0    0    1   
 $EndComp
 $Comp
@@ -1078,26 +1074,211 @@ Text Label 5950 5200 2    50   ~ 0
 C_RST
 Wire Wire Line
 	5500 5200 5950 5200
+Wire Wire Line
+	4900 5200 4800 5200
+Wire Wire Line
+	4800 5200 4800 5300
+$Comp
+L power:GND #PWR?
+U 1 1 6547BF82
+P 4800 5300
+F 0 "#PWR?" H 4800 5050 50  0001 C CNN
+F 1 "GND" H 4805 5127 50  0000 C CNN
+F 2 "" H 4800 5300 50  0001 C CNN
+F 3 "" H 4800 5300 50  0001 C CNN
+	1    4800 5300
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:C C?
+U 1 1 65481B20
+P 5500 5350
+AR Path="/6195D2C9/65481B20" Ref="C?"  Part="1" 
+AR Path="/6191B6A2/61F28B7D/65481B20" Ref="C?"  Part="1" 
+AR Path="/6191B6A2/61EBDADB/65481B20" Ref="C?"  Part="1" 
+AR Path="/63A83936/65481B20" Ref="C2003"  Part="1" 
+F 0 "C2003" H 5615 5396 50  0000 L CNN
+F 1 "22pf" H 5615 5305 50  0000 L CNN
+F 2 "Capacitor_SMD:C_1206_3216Metric" H 5538 5200 50  0001 C CNN
+F 3 "~" H 5500 5350 50  0001 C CNN
+	1    5500 5350
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 65481B26
+P 5500 5500
+AR Path="/65481B26" Ref="#PWR?"  Part="1" 
+AR Path="/62497D60/65481B26" Ref="#PWR?"  Part="1" 
+AR Path="/61D852D7/65481B26" Ref="#PWR?"  Part="1" 
+AR Path="/6195D2C9/65481B26" Ref="#PWR?"  Part="1" 
+AR Path="/6191B6A2/61F28B7D/65481B26" Ref="#PWR?"  Part="1" 
+AR Path="/6191B6A2/61EBDADB/65481B26" Ref="#PWR?"  Part="1" 
+AR Path="/63A83936/65481B26" Ref="#PWR?"  Part="1" 
+F 0 "#PWR?" H 5500 5250 50  0001 C CNN
+F 1 "GND" H 5505 5327 50  0000 C CNN
+F 2 "" H 5500 5500 50  0001 C CNN
+F 3 "" H 5500 5500 50  0001 C CNN
+	1    5500 5500
+	1    0    0    -1  
+$EndComp
 Connection ~ 5500 5200
 Wire Wire Line
-	5100 5200 5000 5200
+	5300 5200 5500 5200
+$Comp
+L 74xx:74HCT00 U?
+U 1 1 6548B5B9
+P 1500 7350
+F 0 "U?" H 1500 7675 50  0000 C CNN
+F 1 "74HCT00" H 1500 7584 50  0000 C CNN
+F 2 "" H 1500 7350 50  0001 C CNN
+F 3 "http://www.ti.com/lit/gpn/sn74hct00" H 1500 7350 50  0001 C CNN
+	1    1500 7350
+	1    0    0    -1  
+$EndComp
+$Comp
+L 74xx:74HCT00 U?
+U 2 1 6548F371
+P 1500 7900
+F 0 "U?" H 1500 8225 50  0000 C CNN
+F 1 "74HCT00" H 1500 8134 50  0000 C CNN
+F 2 "" H 1500 7900 50  0001 C CNN
+F 3 "http://www.ti.com/lit/gpn/sn74hct00" H 1500 7900 50  0001 C CNN
+	2    1500 7900
+	1    0    0    -1  
+$EndComp
+$Comp
+L 74xx:74HCT00 U?
+U 3 1 65490F1D
+P 250 7900
+F 0 "U?" H 250 8225 50  0000 C CNN
+F 1 "74HCT00" H 250 8134 50  0000 C CNN
+F 2 "" H 250 7900 50  0001 C CNN
+F 3 "http://www.ti.com/lit/gpn/sn74hct00" H 250 7900 50  0001 C CNN
+	3    250  7900
+	1    0    0    -1  
+$EndComp
+$Comp
+L 74xx:74HCT00 U?
+U 4 1 65492729
+P 250 7250
+F 0 "U?" H 250 7575 50  0000 C CNN
+F 1 "74HCT00" H 250 7484 50  0000 C CNN
+F 2 "" H 250 7250 50  0001 C CNN
+F 3 "http://www.ti.com/lit/gpn/sn74hct00" H 250 7250 50  0001 C CNN
+	4    250  7250
+	1    0    0    -1  
+$EndComp
+$Comp
+L 74xx:74HCT00 U?
+U 5 1 65493A9A
+P 2600 8950
+F 0 "U?" V 2233 8950 50  0000 C CNN
+F 1 "74HCT00" V 2324 8950 50  0000 C CNN
+F 2 "" H 2600 8950 50  0001 C CNN
+F 3 "http://www.ti.com/lit/gpn/sn74hct00" H 2600 8950 50  0001 C CNN
+	5    2600 8950
+	0    1    1    0   
+$EndComp
 Wire Wire Line
-	5000 5200 5000 5300
+	-300 7800 -50  7800
+Text Label -300 7800 0    50   ~ 0
+A19
+Wire Wire Line
+	-50  7800 -50  8000
+Connection ~ -50  7800
+Wire Wire Line
+	-50  7150 -50  7350
+Connection ~ -50  7150
+Wire Wire Line
+	550  7250 950  7250
+Wire Wire Line
+	550  7900 550  7450
+Wire Wire Line
+	550  7450 1200 7450
+Wire Wire Line
+	-50  8000 -50  8200
+Wire Wire Line
+	-50  8200 1200 8200
+Wire Wire Line
+	1200 8200 1200 8000
+Connection ~ -50  8000
+Wire Wire Line
+	950  7250 950  7800
+Wire Wire Line
+	950  7800 1200 7800
+Connection ~ 950  7250
+Wire Wire Line
+	950  7250 1200 7250
+$Comp
+L Device:C C?
+U 1 1 654D569F
+P 450 8850
+AR Path="/6195D2C9/654D569F" Ref="C?"  Part="1" 
+AR Path="/6191B6A2/61F28B7D/654D569F" Ref="C?"  Part="1" 
+AR Path="/6191B6A2/61EBDADB/654D569F" Ref="C?"  Part="1" 
+AR Path="/63A83936/654D569F" Ref="C?"  Part="1" 
+F 0 "C?" H 565 8896 50  0000 L CNN
+F 1 "22pf" H 565 8805 50  0000 L CNN
+F 2 "Capacitor_SMD:C_1206_3216Metric" H 488 8700 50  0001 C CNN
+F 3 "~" H 450 8850 50  0001 C CNN
+	1    450  8850
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 654D56A5
+P 2100 8950
+AR Path="/654D56A5" Ref="#PWR?"  Part="1" 
+AR Path="/62497D60/654D56A5" Ref="#PWR?"  Part="1" 
+AR Path="/61D852D7/654D56A5" Ref="#PWR?"  Part="1" 
+AR Path="/6195D2C9/654D56A5" Ref="#PWR?"  Part="1" 
+AR Path="/6191B6A2/61F28B7D/654D56A5" Ref="#PWR?"  Part="1" 
+AR Path="/6191B6A2/61EBDADB/654D56A5" Ref="#PWR?"  Part="1" 
+AR Path="/63A83936/654D56A5" Ref="#PWR?"  Part="1" 
+F 0 "#PWR?" H 2100 8700 50  0001 C CNN
+F 1 "GND" H 2105 8777 50  0000 C CNN
+F 2 "" H 2100 8950 50  0001 C CNN
+F 3 "" H 2100 8950 50  0001 C CNN
+	1    2100 8950
+	0    1    1    0   
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 654DEDD5
+P 450 9000
+AR Path="/654DEDD5" Ref="#PWR?"  Part="1" 
+AR Path="/62497D60/654DEDD5" Ref="#PWR?"  Part="1" 
+AR Path="/61D852D7/654DEDD5" Ref="#PWR?"  Part="1" 
+AR Path="/6195D2C9/654DEDD5" Ref="#PWR?"  Part="1" 
+AR Path="/6191B6A2/61F28B7D/654DEDD5" Ref="#PWR?"  Part="1" 
+AR Path="/6191B6A2/61EBDADB/654DEDD5" Ref="#PWR?"  Part="1" 
+AR Path="/63A83936/654DEDD5" Ref="#PWR?"  Part="1" 
+F 0 "#PWR?" H 450 8750 50  0001 C CNN
+F 1 "GND" H 455 8827 50  0000 C CNN
+F 2 "" H 450 9000 50  0001 C CNN
+F 3 "" H 450 9000 50  0001 C CNN
+	1    450  9000
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:+5V #PWR?
+U 1 1 654E21FC
+P 450 8700
+AR Path="/6191B6A2/654E21FC" Ref="#PWR?"  Part="1" 
+AR Path="/6191B6A2/61EBDADB/654E21FC" Ref="#PWR?"  Part="1" 
+AR Path="/63A83936/654E21FC" Ref="#PWR?"  Part="1" 
+F 0 "#PWR?" H 450 8550 50  0001 C CNN
+F 1 "+5V" H 465 8873 50  0000 C CNN
+F 2 "" H 450 8700 50  0001 C CNN
+F 3 "" H 450 8700 50  0001 C CNN
+	1    450  8700
+	1    0    0    -1  
+$EndComp
 Wire Bus Line
 	1850 3200 1850 4300
 Wire Bus Line
 	4650 2800 4650 3500
 Wire Bus Line
 	1850 4300 4650 4300
-$Comp
-L power:GND #PWR?
-U 1 1 6547BF82
-P 5000 5300
-F 0 "#PWR?" H 5000 5050 50  0001 C CNN
-F 1 "GND" H 5005 5127 50  0000 C CNN
-F 2 "" H 5000 5300 50  0001 C CNN
-F 3 "" H 5000 5300 50  0001 C CNN
-	1    5000 5300
-	1    0    0    -1  
-$EndComp
 $EndSCHEMATC

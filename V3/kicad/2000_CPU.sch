@@ -185,47 +185,11 @@ Text Label 3950 4200 1    50   ~ 0
 A18
 Text Label 4550 3600 2    50   ~ 0
 A19
-$Comp
-L power:GND #PWR?
-U 1 1 624D98DF
-P 2800 6800
-AR Path="/624D98DF" Ref="#PWR?"  Part="1" 
-AR Path="/6191B6A2/624D98DF" Ref="#PWR?"  Part="1" 
-AR Path="/6191B6A2/61F0BDAE/624D98DF" Ref="#PWR?"  Part="1" 
-AR Path="/6195D2C9/624D98DF" Ref="#PWR?"  Part="1" 
-AR Path="/6191B6A2/61EBDADB/624D98DF" Ref="#PWR0101"  Part="1" 
-AR Path="/63A83936/624D98DF" Ref="#PWR0103"  Part="1" 
-F 0 "#PWR0103" H 2800 6550 50  0001 C CNN
-F 1 "GND" H 2805 6627 50  0000 C CNN
-F 2 "" H 2800 6800 50  0001 C CNN
-F 3 "" H 2800 6800 50  0001 C CNN
-	1    2800 6800
-	1    0    0    -1  
-$EndComp
-$Comp
-L power:+5V #PWR?
-U 1 1 624D98F5
-P 2800 5400
-AR Path="/6195D2C9/624D98F5" Ref="#PWR?"  Part="1" 
-AR Path="/6191B6A2/624D98F5" Ref="#PWR?"  Part="1" 
-AR Path="/6191B6A2/61EBDADB/624D98F5" Ref="#PWR0102"  Part="1" 
-AR Path="/63A83936/624D98F5" Ref="#PWR0104"  Part="1" 
-F 0 "#PWR0104" H 2800 5250 50  0001 C CNN
-F 1 "+5V" H 2815 5573 50  0000 C CNN
-F 2 "" H 2800 5400 50  0001 C CNN
-F 3 "" H 2800 5400 50  0001 C CNN
-	1    2800 5400
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	2300 5700 2050 5700
-Text Label 2050 5700 0    50   ~ 0
+Text Label 1050 5350 0    50   ~ 0
 MREQ
-Text HLabel 3300 5800 2    50   Output ~ 0
+Text HLabel 3150 5550 2    50   Output ~ 0
 ROM_CS
-Text Label 2050 5800 0    50   ~ 0
-A19
-Text HLabel 3300 5700 2    50   Output ~ 0
+Text HLabel 3150 6100 2    50   Output ~ 0
 RAM_CS
 $Comp
 L Oscillator:ACO-xxxMHz X?
@@ -275,23 +239,6 @@ Text Notes 7700 6950 0    118  ~ 24
 This page has NOT been checked!
 Text Label 2950 1250 3    50   ~ 0
 MREQ
-$Comp
-L Logic_Programmable:GAL16V8 U?
-U 1 1 624D98D9
-P 2800 6100
-AR Path="/624D98D9" Ref="U?"  Part="1" 
-AR Path="/6191B6A2/624D98D9" Ref="U?"  Part="1" 
-AR Path="/6191B6A2/61F0BDAE/624D98D9" Ref="U?"  Part="1" 
-AR Path="/6195D2C9/624D98D9" Ref="U?"  Part="1" 
-AR Path="/6191B6A2/61EBDADB/624D98D9" Ref="U2101"  Part="1" 
-AR Path="/63A83936/624D98D9" Ref="U2001"  Part="1" 
-F 0 "U2001" H 3250 6950 50  0000 C CNN
-F 1 "GAL16V8" H 3250 6850 50  0000 C CNN
-F 2 "Package_DIP:DIP-20_W7.62mm_Socket_LongPads" H 2800 6100 50  0001 C CNN
-F 3 "" H 2800 6100 50  0001 C CNN
-	1    2800 6100
-	1    0    0    -1  
-$EndComp
 Wire Wire Line
 	2150 3100 1850 3100
 Wire Wire Line
@@ -478,8 +425,6 @@ F 3 "" H 8200 1100 50  0001 C CNN
 	1    8200 1100
 	1    0    0    -1  
 $EndComp
-Wire Wire Line
-	2050 5800 2300 5800
 Text HLabel 4750 3500 2    50   BiDi ~ 0
 D[0..7]
 Wire Bus Line
@@ -583,18 +528,10 @@ F 3 "~" H 9900 3450 50  0001 C CNN
 $EndComp
 Text HLabel 2650 1250 1    50   Output ~ 0
 WR
-NoConn ~ 2300 6200
-NoConn ~ 2300 6300
-Wire Wire Line
-	2300 6500 2300 6800
-Wire Wire Line
-	2300 6800 2800 6800
-Connection ~ 2800 6800
 Text Label 4650 2600 2    50   ~ 0
 RTS0
 Wire Wire Line
 	4650 2600 4350 2600
-NoConn ~ 2300 5600
 $Comp
 L Device:LED D2102/ST1
 U 1 1 62ECE42D
@@ -955,7 +892,6 @@ F 3 "" H 4350 3500 50  0001 C CNN
 	1    4350 3500
 	0    -1   -1   0   
 $EndComp
-NoConn ~ 2300 6100
 Wire Wire Line
 	2150 3200 1950 3200
 $Comp
@@ -1129,6 +1065,111 @@ $EndComp
 Connection ~ 5500 5200
 Wire Wire Line
 	5300 5200 5500 5200
+$Comp
+L 74xx:74HCT00 U2001
+U 1 1 6548B5B9
+P 2850 5550
+F 0 "U2001" H 2850 5875 50  0000 C CNN
+F 1 "74HCT00" H 2850 5784 50  0000 C CNN
+F 2 "" H 2850 5550 50  0001 C CNN
+F 3 "http://www.ti.com/lit/gpn/sn74hct00" H 2850 5550 50  0001 C CNN
+	1    2850 5550
+	1    0    0    -1  
+$EndComp
+$Comp
+L 74xx:74HCT00 U2001
+U 2 1 6548F371
+P 2850 6100
+F 0 "U2001" H 2850 6425 50  0000 C CNN
+F 1 "74HCT00" H 2850 6334 50  0000 C CNN
+F 2 "" H 2850 6100 50  0001 C CNN
+F 3 "http://www.ti.com/lit/gpn/sn74hct00" H 2850 6100 50  0001 C CNN
+	2    2850 6100
+	1    0    0    -1  
+$EndComp
+$Comp
+L 74xx:74HCT00 U2001
+U 3 1 65490F1D
+P 1600 6100
+F 0 "U2001" H 1600 6425 50  0000 C CNN
+F 1 "74HCT00" H 1600 6334 50  0000 C CNN
+F 2 "" H 1600 6100 50  0001 C CNN
+F 3 "http://www.ti.com/lit/gpn/sn74hct00" H 1600 6100 50  0001 C CNN
+	3    1600 6100
+	1    0    0    -1  
+$EndComp
+$Comp
+L 74xx:74HCT00 U2001
+U 5 1 65493A9A
+P 2250 6950
+F 0 "U2001" V 1883 6950 50  0000 C CNN
+F 1 "74HCT00" V 1974 6950 50  0000 C CNN
+F 2 "" H 2250 6950 50  0001 C CNN
+F 3 "http://www.ti.com/lit/gpn/sn74hct00" H 2250 6950 50  0001 C CNN
+	5    2250 6950
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	1050 6000 1300 6000
+Text Label 1050 6000 0    50   ~ 0
+A19
+Wire Wire Line
+	1300 6000 1300 6200
+Connection ~ 1300 6000
+Wire Wire Line
+	1900 5450 2300 5450
+Wire Wire Line
+	1900 6100 1900 5650
+Wire Wire Line
+	1900 5650 2550 5650
+Wire Wire Line
+	1300 6200 1300 6400
+Wire Wire Line
+	1300 6400 2550 6400
+Wire Wire Line
+	2550 6400 2550 6200
+Connection ~ 1300 6200
+Wire Wire Line
+	2300 5450 2300 6000
+Wire Wire Line
+	2300 6000 2550 6000
+Connection ~ 2300 5450
+Wire Wire Line
+	2300 5450 2550 5450
+$Comp
+L power:GND #PWR?
+U 1 1 654D56A5
+P 1750 6950
+AR Path="/654D56A5" Ref="#PWR?"  Part="1" 
+AR Path="/62497D60/654D56A5" Ref="#PWR?"  Part="1" 
+AR Path="/61D852D7/654D56A5" Ref="#PWR?"  Part="1" 
+AR Path="/6195D2C9/654D56A5" Ref="#PWR?"  Part="1" 
+AR Path="/6191B6A2/61F28B7D/654D56A5" Ref="#PWR?"  Part="1" 
+AR Path="/6191B6A2/61EBDADB/654D56A5" Ref="#PWR?"  Part="1" 
+AR Path="/63A83936/654D56A5" Ref="#PWR?"  Part="1" 
+F 0 "#PWR?" H 1750 6700 50  0001 C CNN
+F 1 "GND" H 1755 6777 50  0000 C CNN
+F 2 "" H 1750 6950 50  0001 C CNN
+F 3 "" H 1750 6950 50  0001 C CNN
+	1    1750 6950
+	0    1    1    0   
+$EndComp
+Connection ~ 1300 5350
+Wire Wire Line
+	1300 5350 1300 5550
+$Comp
+L 74xx:74HCT00 U2001
+U 4 1 65492729
+P 1600 5450
+F 0 "U2001" H 1600 5775 50  0000 C CNN
+F 1 "74HCT00" H 1600 5684 50  0000 C CNN
+F 2 "" H 1600 5450 50  0001 C CNN
+F 3 "http://www.ti.com/lit/gpn/sn74hct00" H 1600 5450 50  0001 C CNN
+	4    1600 5450
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	1300 5350 1050 5350
 Wire Bus Line
 	1850 3200 1850 4300
 Wire Bus Line
