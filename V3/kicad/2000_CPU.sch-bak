@@ -344,8 +344,8 @@ Wire Wire Line
 Text Label 6950 2950 0    50   ~ 0
 DREQ1
 Wire Wire Line
-	8500 6150 8150 6150
-Text Label 8150 6150 0    50   ~ 0
+	8900 5450 8550 5450
+Text Label 8550 5450 0    50   ~ 0
 TX
 Wire Wire Line
 	2150 2900 1850 2900
@@ -761,20 +761,20 @@ Wire Wire Line
 Text Label 6750 4950 0    50   ~ 0
 TXS
 $Sheet
-S 8500 5950 550  300 
+S 8900 5250 550  300 
 U 62542978
 F0 "2120_USB" 50
 F1 "2120_USB.sch" 50
-F2 "TX" O L 8500 6050 50 
-F3 "RX" I L 8500 6150 50 
+F2 "TX" O L 8900 5350 50 
+F3 "RX" I L 8900 5450 50 
 $EndSheet
 Wire Wire Line
 	4350 2200 4700 2200
 Text Label 4700 2200 2    50   ~ 0
 RX
 Wire Wire Line
-	8500 6050 8150 6050
-Text Label 8150 6050 0    50   ~ 0
+	8900 5350 8550 5350
+Text Label 8550 5350 0    50   ~ 0
 RX
 Wire Wire Line
 	4350 2300 4700 2300

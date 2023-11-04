@@ -515,6 +515,7 @@ F 3 "https://www.alliancememory.com/wp-content/uploads/pdf/AS6C4008.pdf" H 6600 
 $EndComp
 Wire Bus Line
 	7600 2400 7950 2400
+Connection ~ 7600 2400
 Wire Bus Line
 	5500 2400 5500 3750
 Wire Bus Line
@@ -523,5 +524,4 @@ Wire Bus Line
 	5700 2850 5700 5700
 Wire Bus Line
 	3200 2850 3200 5700
-Connection ~ 7600 2400
 $EndSCHEMATC
