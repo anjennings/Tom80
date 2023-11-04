@@ -3,7 +3,7 @@ EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 3 5
+Sheet 3 4
 Title ""
 Date ""
 Rev ""
@@ -227,13 +227,6 @@ Text Label 2050 5800 0    50   ~ 0
 A19
 Text HLabel 3300 5700 2    50   Output ~ 0
 RAM_CS
-$Sheet
-S 1350 6300 550  200 
-U 62512FB8
-F0 "2110_Reset" 50
-F1 "2110_Reset.sch" 50
-F2 "Reset" I R 1900 6400 50 
-$EndSheet
 $Comp
 L Oscillator:ACO-xxxMHz X?
 U 1 1 6255C3DA
@@ -389,10 +382,6 @@ Wire Wire Line
 	3550 1550 3550 1250
 Text Label 3550 1250 3    50   ~ 0
 CKS
-Text Label 3600 5600 2    50   ~ 0
-C_RST
-Wire Wire Line
-	3300 5600 3600 5600
 $Comp
 L Device:C C?
 U 1 1 62809F42
@@ -782,8 +771,6 @@ Text Label 4700 2300 2    50   ~ 0
 TX
 Wire Wire Line
 	5150 6600 5350 6600
-Wire Wire Line
-	1900 6400 2300 6400
 Text Label 1950 2200 2    50   ~ 0
 CLK
 Wire Wire Line
@@ -1043,10 +1030,74 @@ Wire Wire Line
 	6750 4750 7050 4750
 Text Label 6750 4750 0    50   ~ 0
 SD_CD
+$Comp
+L Switch:SW_Push SW?
+U 1 1 6545E409
+P 5300 5200
+AR Path="/6545E409" Ref="SW?"  Part="1" 
+AR Path="/62497D60/6545E409" Ref="SW?"  Part="1" 
+AR Path="/61D852D7/6545E409" Ref="SW?"  Part="1" 
+AR Path="/6191B6A2/624CF3AF/6545E409" Ref="SW?"  Part="1" 
+AR Path="/6191B6A2/61EBDADB/62512FB8/6545E409" Ref="SW?"  Part="1" 
+AR Path="/63A83936/62512FB8/6545E409" Ref="SW?"  Part="1" 
+AR Path="/63A83936/6545E409" Ref="SW?"  Part="1" 
+F 0 "SW?" H 5300 5485 50  0000 C CNN
+F 1 "SW_Push" H 5300 5394 50  0000 C CNN
+F 2 "Button_Switch_THT:SW_PUSH_6mm" H 5300 5400 50  0001 C CNN
+F 3 "~" H 5300 5400 50  0001 C CNN
+	1    5300 5200
+	-1   0    0    1   
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 6546AA6A
+P 5500 5050
+AR Path="/6191B6A2/61EBDADB/6546AA6A" Ref="R?"  Part="1" 
+AR Path="/63A83936/6546AA6A" Ref="R2007"  Part="1" 
+F 0 "R2007" H 5300 5050 50  0000 C CNN
+F 1 "R" H 5650 5050 50  0000 C CNN
+F 2 "Resistor_SMD:R_1206_3216Metric" V 5430 5050 50  0001 C CNN
+F 3 "~" H 5500 5050 50  0001 C CNN
+	1    5500 5050
+	-1   0    0    1   
+$EndComp
+$Comp
+L power:+5V #PWR?
+U 1 1 6546C304
+P 5500 4900
+AR Path="/6191B6A2/61EBDADB/6546C304" Ref="#PWR?"  Part="1" 
+AR Path="/63A83936/6546C304" Ref="#PWR?"  Part="1" 
+F 0 "#PWR?" H 5500 4750 50  0001 C CNN
+F 1 "+5V" V 5515 5028 50  0000 L CNN
+F 2 "" H 5500 4900 50  0001 C CNN
+F 3 "" H 5500 4900 50  0001 C CNN
+	1    5500 4900
+	1    0    0    -1  
+$EndComp
+Text Label 5950 5200 2    50   ~ 0
+C_RST
+Wire Wire Line
+	5500 5200 5950 5200
+Connection ~ 5500 5200
+Wire Wire Line
+	5100 5200 5000 5200
+Wire Wire Line
+	5000 5200 5000 5300
 Wire Bus Line
 	1850 3200 1850 4300
 Wire Bus Line
 	4650 2800 4650 3500
 Wire Bus Line
 	1850 4300 4650 4300
+$Comp
+L power:GND #PWR?
+U 1 1 6547BF82
+P 5000 5300
+F 0 "#PWR?" H 5000 5050 50  0001 C CNN
+F 1 "GND" H 5005 5127 50  0000 C CNN
+F 2 "" H 5000 5300 50  0001 C CNN
+F 3 "" H 5000 5300 50  0001 C CNN
+	1    5000 5300
+	1    0    0    -1  
+$EndComp
 $EndSCHEMATC
