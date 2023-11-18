@@ -708,10 +708,8 @@ Text Label 4700 2300 2    50   ~ 0
 TX
 Wire Wire Line
 	5150 6600 5350 6600
-Text Label 1950 2200 2    50   ~ 0
+Text Label 1850 2300 0    50   ~ 0
 CLK
-Wire Wire Line
-	2150 2200 1950 2200
 $Comp
 L Device:R_Pack04 RN?
 U 1 1 63966909
@@ -1231,6 +1229,19 @@ F 3 "" H 6300 1100 50  0001 C CNN
 	1    6300 1100
 	1    0    0    -1  
 $EndComp
+NoConn ~ 4350 2000
+NoConn ~ 3950 1550
+NoConn ~ 4050 1550
+NoConn ~ 3850 1550
+NoConn ~ 3350 1550
+NoConn ~ 2150 2500
+NoConn ~ 4350 2100
+NoConn ~ 3150 1550
+NoConn ~ 2850 1550
+NoConn ~ 2450 1550
+Wire Wire Line
+	1850 2300 2150 2300
+NoConn ~ 2150 2200
 Wire Bus Line
 	1850 3200 1850 4300
 Wire Bus Line
