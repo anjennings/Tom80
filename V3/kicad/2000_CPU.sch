@@ -251,9 +251,9 @@ Wire Wire Line
 	7250 2250 6950 2250
 Wire Wire Line
 	7250 2350 6950 2350
-Text Label 6950 2250 0    50   ~ 0
+Text Label 6950 2550 0    50   ~ 0
 INT2
-Text Label 6950 2350 0    50   ~ 0
+Text Label 6950 2450 0    50   ~ 0
 INT1
 Wire Wire Line
 	2150 2800 1850 2800
@@ -311,7 +311,7 @@ Text Label 2750 1250 3    50   ~ 0
 M1
 Wire Wire Line
 	7250 2450 6950 2450
-Text Label 6950 2450 0    50   ~ 0
+Text Label 6950 2350 0    50   ~ 0
 INT0
 Wire Wire Line
 	4350 2400 4650 2400
@@ -323,7 +323,7 @@ Wire Wire Line
 	2150 2700 1850 2700
 Wire Wire Line
 	7250 3050 6950 3050
-Text Label 6950 3050 0    50   ~ 0
+Text Label 6950 3150 0    50   ~ 0
 CKS
 Wire Wire Line
 	3550 1550 3550 1250
@@ -752,7 +752,7 @@ Wire Wire Line
 	7650 2450 7650 2350
 Wire Wire Line
 	7250 2550 6950 2550
-Text Label 6950 2550 0    50   ~ 0
+Text Label 6950 2250 0    50   ~ 0
 NMI
 $Comp
 L Device:R_Pack04 RN?
@@ -770,7 +770,7 @@ F 3 "~" H 7450 3050 50  0001 C CNN
 $EndComp
 Wire Wire Line
 	7250 3150 6950 3150
-Text Label 6950 3150 0    50   ~ 0
+Text Label 6950 3050 0    50   ~ 0
 RXS
 Wire Wire Line
 	7250 3250 6950 3250
@@ -1175,13 +1175,61 @@ L power:+5V #PWR?
 U 1 1 65505CDB
 P 2750 6950
 AR Path="/6191B6A2/61EBDADB/65505CDB" Ref="#PWR?"  Part="1" 
-AR Path="/63A83936/65505CDB" Ref="#PWR?"  Part="1" 
-F 0 "#PWR?" H 2750 6800 50  0001 C CNN
+AR Path="/63A83936/65505CDB" Ref="#PWR0108"  Part="1" 
+F 0 "#PWR0108" H 2750 6800 50  0001 C CNN
 F 1 "+5V" V 2765 7078 50  0000 L CNN
 F 2 "" H 2750 6950 50  0001 C CNN
 F 3 "" H 2750 6950 50  0001 C CNN
 	1    2750 6950
 	0    1    1    0   
+$EndComp
+$Comp
+L Device:C C?
+U 1 1 655BB3DF
+P 6300 1250
+AR Path="/6195D2C9/655BB3DF" Ref="C?"  Part="1" 
+AR Path="/6191B6A2/61F28B7D/655BB3DF" Ref="C?"  Part="1" 
+AR Path="/6191B6A2/61EBDADB/655BB3DF" Ref="C?"  Part="1" 
+AR Path="/63A83936/655BB3DF" Ref="C2004"  Part="1" 
+F 0 "C2004" H 6415 1296 50  0000 L CNN
+F 1 "1uF" H 6415 1205 50  0000 L CNN
+F 2 "Capacitor_THT:CP_Radial_D6.3mm_P2.50mm" H 6338 1100 50  0001 C CNN
+F 3 "~" H 6300 1250 50  0001 C CNN
+	1    6300 1250
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 655BB3E5
+P 6300 1400
+AR Path="/655BB3E5" Ref="#PWR?"  Part="1" 
+AR Path="/62497D60/655BB3E5" Ref="#PWR?"  Part="1" 
+AR Path="/61D852D7/655BB3E5" Ref="#PWR?"  Part="1" 
+AR Path="/6195D2C9/655BB3E5" Ref="#PWR?"  Part="1" 
+AR Path="/6191B6A2/61F28B7D/655BB3E5" Ref="#PWR?"  Part="1" 
+AR Path="/6191B6A2/61EBDADB/655BB3E5" Ref="#PWR?"  Part="1" 
+AR Path="/63A83936/655BB3E5" Ref="#PWR0109"  Part="1" 
+F 0 "#PWR0109" H 6300 1150 50  0001 C CNN
+F 1 "GND" H 6305 1227 50  0000 C CNN
+F 2 "" H 6300 1400 50  0001 C CNN
+F 3 "" H 6300 1400 50  0001 C CNN
+	1    6300 1400
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:+5V #PWR?
+U 1 1 655BB3EB
+P 6300 1100
+AR Path="/6195D2C9/655BB3EB" Ref="#PWR?"  Part="1" 
+AR Path="/6191B6A2/61F28B7D/655BB3EB" Ref="#PWR?"  Part="1" 
+AR Path="/6191B6A2/61EBDADB/655BB3EB" Ref="#PWR?"  Part="1" 
+AR Path="/63A83936/655BB3EB" Ref="#PWR0115"  Part="1" 
+F 0 "#PWR0115" H 6300 950 50  0001 C CNN
+F 1 "+5V" H 6315 1273 50  0000 C CNN
+F 2 "" H 6300 1100 50  0001 C CNN
+F 3 "" H 6300 1100 50  0001 C CNN
+	1    6300 1100
+	1    0    0    -1  
 $EndComp
 Wire Bus Line
 	1850 3200 1850 4300
