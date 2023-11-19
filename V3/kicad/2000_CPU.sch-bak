@@ -1241,6 +1241,7 @@ NoConn ~ 2850 1550
 NoConn ~ 2450 1550
 Wire Wire Line
 	1850 2300 2150 2300
+NoConn ~ 2150 2200
 Wire Bus Line
 	1850 3200 1850 4300
 Wire Bus Line

@@ -251,7 +251,7 @@ Wire Wire Line
 	7250 2250 6950 2250
 Wire Wire Line
 	7250 2350 6950 2350
-Text Label 6950 2550 0    50   ~ 0
+Text Label 6950 2250 0    50   ~ 0
 INT2
 Text Label 6950 2450 0    50   ~ 0
 INT1
@@ -750,7 +750,7 @@ Wire Wire Line
 	7650 2450 7650 2350
 Wire Wire Line
 	7250 2550 6950 2550
-Text Label 6950 2250 0    50   ~ 0
+Text Label 6950 2550 0    50   ~ 0
 NMI
 $Comp
 L Device:R_Pack04 RN?
