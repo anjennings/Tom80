@@ -251,7 +251,7 @@ Wire Wire Line
 	7250 2250 6950 2250
 Wire Wire Line
 	7250 2350 6950 2350
-Text Label 6950 2550 0    50   ~ 0
+Text Label 6950 2250 0    50   ~ 0
 INT2
 Text Label 6950 2450 0    50   ~ 0
 INT1
@@ -750,7 +750,7 @@ Wire Wire Line
 	7650 2450 7650 2350
 Wire Wire Line
 	7250 2550 6950 2550
-Text Label 6950 2250 0    50   ~ 0
+Text Label 6950 2550 0    50   ~ 0
 NMI
 $Comp
 L Device:R_Pack04 RN?
@@ -960,10 +960,6 @@ $EndComp
 NoConn ~ 7050 5350
 Wire Wire Line
 	6750 4850 7050 4850
-Wire Wire Line
-	6750 4750 7050 4750
-Text Label 6750 4750 0    50   ~ 0
-SD_CD
 $Comp
 L Switch:SW_Push SW?
 U 1 1 6545E409
@@ -1242,6 +1238,7 @@ NoConn ~ 2450 1550
 Wire Wire Line
 	1850 2300 2150 2300
 NoConn ~ 2150 2200
+NoConn ~ 7050 4750
 Wire Bus Line
 	1850 3200 1850 4300
 Wire Bus Line

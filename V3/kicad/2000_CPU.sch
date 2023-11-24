@@ -294,10 +294,6 @@ INT0
 Wire Wire Line
 	2950 1550 2950 1250
 Wire Wire Line
-	3050 1550 3050 1250
-Text Label 3050 1250 3    50   ~ 0
-IORQ
-Wire Wire Line
 	2550 1550 2550 1250
 Wire Wire Line
 	2650 1550 2650 1250
@@ -960,10 +956,6 @@ $EndComp
 NoConn ~ 7050 5350
 Wire Wire Line
 	6750 4850 7050 4850
-Wire Wire Line
-	6750 4750 7050 4750
-Text Label 6750 4750 0    50   ~ 0
-SD_CD
 $Comp
 L Switch:SW_Push SW?
 U 1 1 6545E409
@@ -1242,6 +1234,8 @@ NoConn ~ 2450 1550
 Wire Wire Line
 	1850 2300 2150 2300
 NoConn ~ 2150 2200
+NoConn ~ 7050 4750
+NoConn ~ 3050 1550
 Wire Bus Line
 	1850 3200 1850 4300
 Wire Bus Line
